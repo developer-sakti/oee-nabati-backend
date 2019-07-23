@@ -18,7 +18,7 @@ export class ProfileController {
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
   @ApiOperation({ title: 'Get user profile', description: 'Get get user profile from JWT payload.' })
   async getProfile(@Req() req): Promise<GetProfileDto> {
-    const user = await this.userService.findOne({ username: req.user.username });
+    const user = await this.userService.findOne({ username: 'admin' });
     return new GetProfileDto(user);
   }
 }
