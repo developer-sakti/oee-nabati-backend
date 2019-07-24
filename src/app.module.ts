@@ -11,9 +11,11 @@ import { MachineModule } from './machine/machine.module';
 import { InitialShiftModule } from './initial-shift/initial-shift.module';
 import { InitialSkuModule } from './initial-sku/initial-sku.module';
 import { RencanaProduksiModule } from './rencana-produksi/rencana-produksi.module';
+import { DowntimeModule } from './downtime/downtime.module';
+import { DowntimeCategoryModule } from './downtime-category/downtime-category.module';
 
 @Module({
-  imports: [AuthModule, UserModule, ProfileModule, TypeOrmModule.forRoot(), HmiModule, LineModule, MachineModule, InitialShiftModule, InitialSkuModule, RencanaProduksiModule],
+  imports: [AuthModule, UserModule, ProfileModule, TypeOrmModule.forRoot(), HmiModule, LineModule, MachineModule, InitialShiftModule, InitialSkuModule, RencanaProduksiModule, DowntimeModule, DowntimeCategoryModule],
   controllers: [AppController],
   providers: [AppService],
 })
