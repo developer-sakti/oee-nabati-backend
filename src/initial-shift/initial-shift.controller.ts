@@ -3,7 +3,7 @@ import { InitialShiftService } from './initial-shift.service';
 import { ApiResponse, ApiOperation, ApiBearerAuth, ApiUseTags } from '@nestjs/swagger';
 import { GetInitialShiftDto } from './dto/get-initial-shift.dto';
 
-@ApiUseTags('initialSku')
+@ApiUseTags('initialShift')
 @ApiBearerAuth()
 @Controller('api/v1/initial-shift')
 export class InitialShiftController {

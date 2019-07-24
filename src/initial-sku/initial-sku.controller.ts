@@ -4,9 +4,9 @@ import { ApiResponse, ApiOperation, ApiBearerAuth, ApiUseTags } from '@nestjs/sw
 import { GetInitialSkuDto } from './dto/get-initial-sku.dto';
 import { InitialSkuService } from './initial-sku.service';
 
-@ApiUseTags('initialShift')
+@ApiUseTags('initialSku')
 @ApiBearerAuth()
-@Controller('initial-sku')
+@Controller('api/v1/initial-sku')
 export class InitialSkuController {
     constructor(private readonly initialSkuService: InitialSkuService) {}
 

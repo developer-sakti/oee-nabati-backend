@@ -10,9 +10,10 @@ import { LineModule } from './line/line.module';
 import { MachineModule } from './machine/machine.module';
 import { InitialShiftModule } from './initial-shift/initial-shift.module';
 import { InitialSkuModule } from './initial-sku/initial-sku.module';
+import { RencanaProduksiModule } from './rencana-produksi/rencana-produksi.module';
 
 @Module({
-  imports: [AuthModule, UserModule, ProfileModule, TypeOrmModule.forRoot(), HmiModule, LineModule, MachineModule, InitialShiftModule, InitialSkuModule],
+  imports: [AuthModule, UserModule, ProfileModule, TypeOrmModule.forRoot(), HmiModule, LineModule, MachineModule, InitialShiftModule, InitialSkuModule, RencanaProduksiModule],
   controllers: [AppController],
   providers: [AppService],
 })
