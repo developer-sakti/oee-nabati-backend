@@ -3,6 +3,7 @@ import { Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTabl
 import { IHmi } from './interface/hmi.interface';
 import { type } from 'os';
 import { Line } from '@app/line/line.entity';
+import { Machine } from '@app/machine/machine.entity';
 
 @Entity()
 export class Hmi implements IHmi {
@@ -11,6 +12,7 @@ export class Hmi implements IHmi {
       this.id = data.id;
       this.name = data.name;
       this.lines = data.lines;
+      this.machines = data.machines;
     }
   }
 
@@ -18,7 +20,12 @@ export class Hmi implements IHmi {
 
   @Column() public name: string;
 
+  @ManyToMany(type => Machine)
+  @JoinTable()
+  machines : Machine[];
+  
   @ManyToMany(type => Line)
   @JoinTable()
   lines : Line[];
+
 }

@@ -1,16 +1,14 @@
 import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
-import { ILine } from './interface/line.interface';
-import { Machine } from '@app/machine/machine.entity';
-import { type } from 'os';
+import { IMachine } from './interface/machine.interface';
 
 @Entity()
-export class Line implements ILine{
-  constructor(data: ILine) {
+export class Machine implements IMachine{
+  constructor(data: IMachine) {
     if (!!data) {
       this.id = data.id;
       this.name = data.name;
-      // this.machines = data.machines;
+      this.hmi_id = data.hmi_id;
     }
   }
 
@@ -18,8 +16,5 @@ export class Line implements ILine{
 
   @Column() public name: string;
 
-  // @ManyToMany(type => Machine)
-  // @JoinTable()
-  // machines : Machine[];
-
+  @Column() public hmi_id: number;
 }

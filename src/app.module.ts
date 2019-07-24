@@ -7,9 +7,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from 'user/user.module';
 import { HmiModule } from './hmi/hmi.module';
 import { LineModule } from './line/line.module';
+import { MachineModule } from './machine/machine.module';
 
 @Module({
-  imports: [AuthModule, UserModule, ProfileModule, TypeOrmModule.forRoot(), HmiModule, LineModule],
+  imports: [AuthModule, UserModule, ProfileModule, TypeOrmModule.forRoot(), HmiModule, LineModule, MachineModule],
   controllers: [AppController],
   providers: [AppService],
 })

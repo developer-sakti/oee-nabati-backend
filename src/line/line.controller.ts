@@ -14,7 +14,7 @@ export class LineController {
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
     @ApiOperation({ title: 'Get line', description: 'Get get line from JWT payload.' })
     async findAll(@Req() req): Promise<GetLineDto[]> {
-        const hmiList = (await this.lineService.findAll()).map(line => new GetLineDto(line));
-        return Promise.resolve(hmiList);
+        const lineList = (await this.lineService.findAll()).map(line => new GetLineDto(line));
+        return Promise.resolve(lineList);
     }
 }

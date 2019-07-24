@@ -9,7 +9,7 @@ export class HmiService {
 
     public async findAll(): Promise<Hmi[]> {
         return await this.hmiRepository.find({
-            relations : ['lines']
+            relations : ['lines', 'machines']
         });
     }
 }
