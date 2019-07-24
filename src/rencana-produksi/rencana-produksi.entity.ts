@@ -11,6 +11,18 @@ export class RencanaProduksi implements IRencanaProduksi{
   constructor(data: IRencanaProduksi) {
     if (!!data) {
       this.id = data.id;
+      this.po_number = data.po_number;
+      this.standart_ct = data.standart_ct;
+      this.target_produksi = data.target_produksi;
+      this.date = data.date;
+      this.created_at = data.created_at;
+      this.updated_at = data.updated_at;
+      this.deleted_at = data.deleted_at;
+
+      this.shift = data.shift;
+      this.line = data.line;
+      this.sku = data.sku;
+      this.supervisor = data.supervisor;
     }
   }
 

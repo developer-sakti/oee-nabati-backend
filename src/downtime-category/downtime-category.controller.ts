@@ -1,9 +1,11 @@
 import { Controller, Get, HttpStatus, Req } from '@nestjs/common';
-import { ApiResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiResponse, ApiOperation, ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { GetDowntimeCategoryDto } from './dto/get-downtime-category.dto';
 import { DowntimeCategoryService } from './downtime-category.service';
 
-@Controller('downtime-category')
+@ApiUseTags('downtime')
+@ApiBearerAuth()
+@Controller('api/v1/downtime-category')
 export class DowntimeCategoryController {
     constructor(private readonly downtimeCategoryService: DowntimeCategoryService) {}
 
