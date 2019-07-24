@@ -5,9 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Hmi } from './hmi.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Hmi])],
   providers: [HmiService],
   controllers: [HmiController],
+  imports: [TypeOrmModule.forFeature([Hmi])],
   exports: [HmiService],
 })
 export class HmiModule {}

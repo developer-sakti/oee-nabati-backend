@@ -8,6 +8,8 @@ export class HmiService {
     constructor(@InjectRepository(Hmi) private readonly hmiRepository: Repository<Hmi>) {}
 
     public async findAll(): Promise<Hmi[]> {
-        return await this.hmiRepository.find();
+        return await this.hmiRepository.find({
+            relations : ['lines', 'machines']
+        });
     }
 }
