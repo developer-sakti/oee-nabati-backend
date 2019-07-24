@@ -26,7 +26,7 @@ export class DowntimeReasonMachineService {
             //                     // .where("machineId = 1")
             //                     .getMany();
             downtimeReasonMachine = await this.downtimeReasonMachineRepository
-                                .query('select * from downtime_reason_machine a, machine b, downtime_category c, downtime_reason d where a.machineId = b.id and a.downtimeCategoryId = c.id and a.downtimeReasonId = d.id and a. b.id = ?', [params.machine_id]);
+                                .query('select * from downtime_reason_machine a, machine b, downtime_category c, downtime_reason d where a.machineId = b.id and a.downtimeCategoryId = c.id and a.downtimeReasonId = d.id and b.id = ?', [params.machine_id]);
         } catch (error) {}
         if (!downtimeReasonMachine) {
           throw new NotFoundException(`downtimeReasonMachine with ${JSON.stringify(params)} does not exist`);
