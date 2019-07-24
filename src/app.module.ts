@@ -8,9 +8,11 @@ import { UserModule } from 'user/user.module';
 import { HmiModule } from './hmi/hmi.module';
 import { LineModule } from './line/line.module';
 import { MachineModule } from './machine/machine.module';
+import { InitialShiftModule } from './initial-shift/initial-shift.module';
+import { InitialSkuModule } from './initial-sku/initial-sku.module';
 
 @Module({
-  imports: [AuthModule, UserModule, ProfileModule, TypeOrmModule.forRoot(), HmiModule, LineModule, MachineModule],
+  imports: [AuthModule, UserModule, ProfileModule, TypeOrmModule.forRoot(), HmiModule, LineModule, MachineModule, InitialShiftModule, InitialSkuModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,9 +1,11 @@
 import { Controller, Get, HttpStatus, Req } from '@nestjs/common';
-import { ApiResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiResponse, ApiOperation, ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { GetLineDto } from './dto/get-line.dto';
 import { LineService } from './line.service';
 import { Connection } from 'typeorm';
 
+@ApiUseTags('line')
+@ApiBearerAuth()
 @Controller('api/v1/line')
 export class LineController {
     constructor(private readonly lineService: LineService) {}

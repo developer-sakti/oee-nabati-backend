@@ -1,8 +1,10 @@
 import { Controller, Get, HttpStatus, Req } from '@nestjs/common';
 import { MachineService } from './machine.service';
-import { ApiResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiResponse, ApiOperation, ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { GetMachineDto } from './dto/get-machine.dto';
 
+@ApiUseTags('machine')
+@ApiBearerAuth()
 @Controller('api/v1/machine')
 export class MachineController {
     constructor(private readonly machineService: MachineService) {}
