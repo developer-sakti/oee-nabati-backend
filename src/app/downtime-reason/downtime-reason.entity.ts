@@ -6,6 +6,7 @@ import { Line } from '@app/app/line/line.entity';
 import { InitialSku } from '@app/app/initial-sku/initial-sku.entity';
 import { User } from '@app/app/user/user.entity';
 import { DowntimeReasonMachine } from '@app/app/downtime-reason-machine/downtime-reason-machine.entity';
+import { Downtime } from '../downtime/downtime.entity';
 
 @Entity()
 export class DowntimeReason implements IDowntimeReason {
@@ -22,4 +23,7 @@ export class DowntimeReason implements IDowntimeReason {
 
   @OneToMany(type => DowntimeReasonMachine, downtime_reason_machine => downtime_reason_machine.downtime_category)
   downtime_reason_machines: DowntimeReasonMachine[];
+
+  @OneToMany(type => Downtime, downtime => downtime.downtime_reason)
+  public downtime: Downtime;
 }

@@ -4,6 +4,7 @@ import { Machine } from '@app/app/machine/machine.entity';
 import { type } from 'os';
 import { IDowntimeCategory } from './interface/downtime-category.interface';
 import { DowntimeReasonMachine } from '@app/app/downtime-reason-machine/downtime-reason-machine.entity';
+import { Downtime } from '../downtime/downtime.entity';
 
 @Entity()
 export class DowntimeCategory implements IDowntimeCategory{
@@ -20,4 +21,7 @@ export class DowntimeCategory implements IDowntimeCategory{
 
   @OneToMany(type => DowntimeReasonMachine, downtime_reason_machine => downtime_reason_machine.downtime_category)
   public downtime_reason_machines: DowntimeReasonMachine[];
+
+  @OneToMany(type => Downtime, downtime => downtime.downtime_category)
+  public downtime: Downtime;
 }
