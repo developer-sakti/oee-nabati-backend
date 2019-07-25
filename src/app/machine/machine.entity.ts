@@ -3,6 +3,7 @@ import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTabl
 import { IMachine } from './interface/machine.interface';
 import { DowntimeReasonMachine } from '@app/app/downtime-reason-machine/downtime-reason-machine.entity';
 import { Downtime } from '../downtime/downtime.entity';
+import { BadstockTimbangan } from '../badstock-timbangan/badstock-timbangan.entity';
 
 @Entity()
 export class Machine implements IMachine{
@@ -25,4 +26,7 @@ export class Machine implements IMachine{
 
   @OneToMany(type => Downtime, downtime => downtime.machine)
   public downtime: Downtime;
+
+  @OneToMany(type => BadstockTimbangan, badstock_timbangan => badstock_timbangan.machine)
+  public badstock_timbangan: BadstockTimbangan;
 }
