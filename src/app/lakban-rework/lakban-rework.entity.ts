@@ -10,15 +10,15 @@ import { DowntimeCategory } from '../downtime-category/downtime-category.entity'
 import { DowntimeReason } from '../downtime-reason/downtime-reason.entity';
 import { type } from 'os';
 import { IBadstockCategory } from '../badstock-category/interface/badstock-category.interface';
-import { IBadstockTimbangan } from './interface/badstock-timbangan.interface';
 import { BadstockCategory } from '../badstock-category/badstock-category.entity';
+import { ILakbanRework } from './interface/lakban-rework.interface';
 
 @Entity()
-export class BadstockTimbangan implements IBadstockTimbangan{
-  constructor(data: IBadstockTimbangan) {
+export class LakbanRework implements ILakbanRework {
+  constructor(data: ILakbanRework) {
     if (!!data) {
       this.id = data.id;
-      this.weight = data.weight;
+      this.total = data.total;
 
       this.created_at = data.created_at;
       this.updated_at = data.updated_at;
@@ -26,17 +26,15 @@ export class BadstockTimbangan implements IBadstockTimbangan{
 
       this.rencana_produksi = data.rencana_produksi;
       this.machine = data.machine;
-      this.badstock_category = data.badstock_category;
 
       this.rencanaProduksiId = data.rencanaProduksiId;
       this.machineId = data.machineId;
-      this.badstockCategoryId = data.badstockCategoryId;
     }
   }
 
   @PrimaryGeneratedColumn() public id: number;
 
-  @Column() public weight: number;
+  @Column() public total: number;
   
   @Column({ type : "timestamp" }) public created_at: string;
   @Column({ type : "datetime", default : null  }) public updated_at: string;
@@ -49,15 +47,9 @@ export class BadstockTimbangan implements IBadstockTimbangan{
   @ManyToOne(type => Machine, machine => machine.badstock_timbangan)
   @JoinColumn({ name : "machineId" })
   public machine: Machine;
-  
-  @ManyToOne(type => BadstockCategory, badstock_category => badstock_category.badstock_timbangan)
-  @JoinColumn({ name : "badstockCategoryId" })
-  public badstock_category: BadstockCategory;
 
   @Column({  type: "int", nullable: true })
   rencanaProduksiId: number;
   @Column({  type: "int", nullable: true })
   machineId: number;
-  @Column({  type: "int", nullable: true })
-  badstockCategoryId: number;
 }
