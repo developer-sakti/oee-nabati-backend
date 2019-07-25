@@ -1,6 +1,8 @@
 import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { IInitialShift } from './interface/initial-shift.interface';
+import { type } from 'os';
+import { RencanaProduksi } from '@app/rencana-produksi/rencana-produksi.entity';
 
 @Entity()
 export class InitialShift implements IInitialShift{
@@ -20,4 +22,7 @@ export class InitialShift implements IInitialShift{
   @Column() public shift_operated?: number;
   @Column({ type: "time"}) public start_time?: string;
   @Column({ type: "time"}) public end_time?: string;
+
+  @OneToMany(type => RencanaProduksi, rencana_produksi => rencana_produksi.shift)
+  public rencana_produksi : RencanaProduksi;
 }

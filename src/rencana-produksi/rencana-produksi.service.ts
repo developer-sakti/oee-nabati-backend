@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RencanaProduksi } from './rencana-produksi.entity';
 import { Repository, DeepPartial } from 'typeorm';
 import { RencanaProduksiCmd } from './cmd/rencana-produksi.command';
+import { Utils } from '@app/shared/utils';
 
 @Injectable()
 export class RencanaProduksiService {
@@ -14,32 +15,25 @@ export class RencanaProduksiService {
         });
     }
 
-    public async findOne(params: RencanaProduksiCmd): Promise<RencanaProduksi> {
+    public async findOne(params: RencanaProduksiCmd): Promise<any> {
         let rencanaProduksi: RencanaProduksi;
+        
         try {
             rencanaProduksi = await this.rencanaProduksiRepository
                                 .createQueryBuilder("rencana_produksi")
                                 .select(['rencana_produksi', 'shift', 'line', 'sku', 'supervisor'])
-                                .where("rencana_produksi.date = :value", {value : params.date})
                                 .innerJoin("rencana_produksi.shift", "shift")
                                 .innerJoin("rencana_produksi.line", "line")
                                 .innerJoin("rencana_produksi.sku", "sku")
                                 .innerJoin("rencana_produksi.supervisor", "supervisor")
-                                .where("shift.start_time <= :value", {value : params.time})
-                                .where("shift.end_time > :value", {value : params.time})
+                                .andWhere("rencana_produksi.date = :value1", {value1 : params.date})
+                                .andWhere("shift.start_time < :value2", {value2 : params.time})
+                                .andWhere("shift.end_time >= :value3", {value3 : params.time})
+                                .andWhere("line.id = :value4", {value4 : params.line_id})
                                 .getOne();
-            // rencanaProduksi = await this.rencanaProduksiRepository.findOne(params, {
-            //     join : {
-            //         alias: "rencana",
-            //         innerJoinAndSelect : {
-            //             shift : "rencana.shift"
-            //         }
-            //     },
-            //     // relations : ['line', 'sku', 'supervisor']
-            // });
         } catch (error) {}
         if (!rencanaProduksi) {
-          throw new NotFoundException(`RencanaProduksi with ${JSON.stringify(params)} does not exist`);
+          return Utils.NULL_RETURN;
         }
         return rencanaProduksi;
     }

@@ -13,8 +13,12 @@ export class RencanaProduksi implements IRencanaProduksi{
       this.id = data.id;
       this.po_number = data.po_number;
       this.standart_ct = data.standart_ct;
+      this.bottleneck_ct = data.bottleneck_ct;
       this.target_produksi = data.target_produksi;
       this.date = data.date;
+      this.start_sku = data.start_sku;
+      this.end_sku = data.end_sku;
+
       this.created_at = data.created_at;
       this.updated_at = data.updated_at;
       this.deleted_at = data.deleted_at;
@@ -30,26 +34,25 @@ export class RencanaProduksi implements IRencanaProduksi{
   
   @Column() public po_number: string;
   @Column() public standart_ct: number;
+  @Column() public bottleneck_ct: number;
   @Column() public target_produksi: number;
   @Column({ type : "date" }) public date: string;
+  @Column({ type : "time"}) public start_sku: string;
+  @Column({ type : "time"}) public end_sku: string;
+
   @Column({ type : "timestamp" }) public created_at: string;
   @Column({ type : "datetime", default : null  }) public updated_at: string;
   @Column({ type : "datetime", default : null }) public deleted_at: string;
 
-  @OneToOne(type => InitialShift)
-  @JoinColumn() 
+  @ManyToOne(type => InitialShift, initial_shift => initial_shift.rencana_produksi)
   public shift: InitialShift;
-
   
-  @OneToOne(type => Line)
-  @JoinColumn() 
+  @ManyToOne(type => Line, line => line.rencana_produksi)
   public line: Line;
 
-  @OneToOne(type => InitialSku)
-  @JoinColumn() 
+  @ManyToOne(type => InitialSku, initial_sku => initial_sku.rencana_produksi)
   public sku: InitialSku;
 
-  @OneToOne(type => User)
-  @JoinColumn() 
+  @ManyToOne(type => User, user => user.rencana_produksi)
   public supervisor: User;
 }

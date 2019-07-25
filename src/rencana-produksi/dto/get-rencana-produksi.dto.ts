@@ -10,6 +10,7 @@ export class GetRencanaProduksiDto {
     this.id = data.id;
     this.po_number = data.po_number;
     this.standart_ct = data.standart_ct;
+    this.bottleneck_ct = data.bottleneck_ct;
     this.target_produksi = data.target_produksi;
     this.date = data.date;
     this.created_at = data.created_at;
@@ -22,6 +23,7 @@ export class GetRencanaProduksiDto {
   @ApiModelProperty() id: number;
   @ApiModelProperty() po_number: string;
   @ApiModelProperty() standart_ct: number;
+  @ApiModelProperty() bottleneck_ct: number;
   @ApiModelProperty() target_produksi: number;
   @ApiModelProperty() date: string;
   @ApiModelProperty() created_at: string;

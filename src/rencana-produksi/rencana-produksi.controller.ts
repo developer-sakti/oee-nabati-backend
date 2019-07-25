@@ -26,8 +26,7 @@ export class RencanaProduksiController {
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
     @ApiOperation({ title: 'Get RencanaProduksi profile', description: 'Get get RencanaProduksi profile from JWT payload.' })
-    async findActivePO(@Body() req: RencanaProduksiCmd): Promise<GetRencanaProduksiDto> {
-        const rencanaProduksi = await this.rencanaProduksiService.findOne(req);
-        return new GetRencanaProduksiDto(rencanaProduksi);
+    async findActivePO(@Body() req: RencanaProduksiCmd): Promise<any> {
+        return await this.rencanaProduksiService.findOne(req);
     }
 }

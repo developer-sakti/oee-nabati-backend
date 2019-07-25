@@ -19,5 +19,5 @@ export class DowntimeCategory implements IDowntimeCategory{
   @Column() public category: string;
 
   @OneToMany(type => DowntimeReasonMachine, downtime_reason_machine => downtime_reason_machine.downtime_category)
-  downtime_reason_machines: DowntimeReasonMachine[];
+  public downtime_reason_machines: DowntimeReasonMachine[];
 }

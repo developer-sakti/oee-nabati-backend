@@ -1,7 +1,8 @@
 import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 import { IUser } from './interface/user.interface';
+import { RencanaProduksi } from '@app/rencana-produksi/rencana-produksi.entity';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -39,4 +40,7 @@ export class User implements IUser {
   @Column() public role: UserRole;
 
   @Column() public status: UserStatus;
+
+  @OneToMany(type => RencanaProduksi, rencana_produksi => rencana_produksi.supervisor)
+  public rencana_produksi : RencanaProduksi;
 }
