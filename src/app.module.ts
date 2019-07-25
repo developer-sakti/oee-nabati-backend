@@ -15,9 +15,11 @@ import { DowntimeModule } from './app/downtime/downtime.module';
 import { DowntimeCategoryModule } from './app/downtime-category/downtime-category.module';
 import { DowntimeReasonModule } from './app/downtime-reason/downtime-reason.module';
 import { DowntimeReasonMachineModule } from './app/downtime-reason-machine/downtime-reason-machine.module';
+import { BadstockTimbanganModule } from './app/badstock-timbangan/badstock-timbangan.module';
+import { BadstockCategoryModule } from './app/badstock-category/badstock-category.module';
 
 @Module({
-  imports: [AuthModule, UserModule, ProfileModule, TypeOrmModule.forRoot(), HmiModule, LineModule, MachineModule, InitialShiftModule, InitialSkuModule, RencanaProduksiModule, DowntimeModule, DowntimeCategoryModule, DowntimeReasonModule, DowntimeReasonMachineModule],
+  imports: [AuthModule, UserModule, ProfileModule, TypeOrmModule.forRoot(), HmiModule, LineModule, MachineModule, InitialShiftModule, InitialSkuModule, RencanaProduksiModule, DowntimeModule, DowntimeCategoryModule, DowntimeReasonModule, DowntimeReasonMachineModule, BadstockTimbanganModule, BadstockCategoryModule],
   controllers: [AppController],
   providers: [AppService],
 })

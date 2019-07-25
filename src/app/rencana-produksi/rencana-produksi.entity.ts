@@ -6,6 +6,7 @@ import { Line } from '@app/app/line/line.entity';
 import { InitialSku } from '@app/app/initial-sku/initial-sku.entity';
 import { User } from '@app/app/user/user.entity';
 import { Downtime } from '../downtime/downtime.entity';
+import { BadstockTimbangan } from '../badstock-timbangan/badstock-timbangan.entity';
 
 @Entity()
 export class RencanaProduksi implements IRencanaProduksi{
@@ -59,4 +60,7 @@ export class RencanaProduksi implements IRencanaProduksi{
 
   @OneToMany(type => Downtime, downtime => downtime.rencana_produksi)
   public downtime: Downtime;
+
+  @OneToMany(type => BadstockTimbangan, badstock_timbangan => badstock_timbangan.rencana_produksi)
+  public badstock_timbangan: BadstockTimbangan;
 }
