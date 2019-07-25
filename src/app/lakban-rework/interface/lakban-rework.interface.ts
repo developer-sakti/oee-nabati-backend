@@ -4,9 +4,9 @@ import { DowntimeCategory } from "@app/app/downtime-category/downtime-category.e
 import { DowntimeReason } from "@app/app/downtime-reason/downtime-reason.entity";
 import { BadstockCategory } from "@app/app/badstock-category/badstock-category.entity";
 
-export interface IBadstockTimbangan {
+export interface ILakbanRework {
   readonly id?: number;
-  readonly weight?: number;
+  readonly total?: number;
 
   readonly created_at?: string;
   readonly updated_at?: string;
@@ -14,9 +14,7 @@ export interface IBadstockTimbangan {
 
   readonly rencana_produksi?: RencanaProduksi;
   readonly machine?: Machine;
-  readonly badstock_category?: BadstockCategory;
 
   readonly rencanaProduksiId: number;
   readonly machineId: number;
-  readonly badstockCategoryId: number;
 }

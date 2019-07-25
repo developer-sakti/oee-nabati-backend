@@ -7,23 +7,21 @@ import { Utils } from '@app/shared/utils';
 
 @ApiUseTags('badstock')
 @ApiBearerAuth()
-@Controller('api/v1/badstock-timbangan')
+@Controller('api/v1/badstock/timbangan')
 export class BadstockTimbanganController {
-    constructor(private readonly badstockTimbanganService: BadstockTimbanganService
-        ) {}
+    constructor(private readonly badstockTimbanganService: BadstockTimbanganService) {}
     
-      @Post()
-      @ApiOperation({ title: 'Post BadstockTimbangan', description: 'Save BadstockTimbangan.' })
-      @ApiResponse({ description: 'Success!', status: HttpStatus.OK})
-      @ApiResponse({ description: 'Bad request.', status: HttpStatus.BAD_REQUEST })
-      public async post(@Body() req: BadstockRequestCmd): Promise<any> {
-    
-        let process = await this.badstockTimbanganService.create(new BadstockTimbangan(req));
-    
-        if (!process) {
-            return Utils.sendResponseSaveFailed("Badstock")
-        }
-    
-        return process;
-      }
+    @Post()
+    @ApiOperation({ title: 'Post BadstockTimbangan', description: 'Save BadstockTimbangan.' })
+    @ApiResponse({ description: 'Success!', status: HttpStatus.OK})
+    @ApiResponse({ description: 'Bad request.', status: HttpStatus.BAD_REQUEST })
+    public async post(@Body() req: BadstockRequestCmd): Promise<any> {
+      let process = await this.badstockTimbanganService.create(new BadstockTimbangan(req));
+  
+      if (!process) {
+          return Utils.sendResponseSaveFailed("Badstock")
+      } 
+  
+      return process;
+    }
 }

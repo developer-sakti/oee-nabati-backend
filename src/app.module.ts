@@ -17,9 +17,11 @@ import { DowntimeReasonModule } from './app/downtime-reason/downtime-reason.modu
 import { DowntimeReasonMachineModule } from './app/downtime-reason-machine/downtime-reason-machine.module';
 import { BadstockTimbanganModule } from './app/badstock-timbangan/badstock-timbangan.module';
 import { BadstockCategoryModule } from './app/badstock-category/badstock-category.module';
+import { LakbanFinishgoodModule } from './app/lakban-finishgood/lakban-finishgood.module';
+import { LakbanReworkModule } from './app/lakban-rework/lakban-rework.module';
 
 @Module({
-  imports: [AuthModule, UserModule, ProfileModule, TypeOrmModule.forRoot(), HmiModule, LineModule, MachineModule, InitialShiftModule, InitialSkuModule, RencanaProduksiModule, DowntimeModule, DowntimeCategoryModule, DowntimeReasonModule, DowntimeReasonMachineModule, BadstockTimbanganModule, BadstockCategoryModule],
+  imports: [AuthModule, UserModule, ProfileModule, TypeOrmModule.forRoot(), HmiModule, LineModule, MachineModule, InitialShiftModule, InitialSkuModule, RencanaProduksiModule, DowntimeModule, DowntimeCategoryModule, DowntimeReasonModule, DowntimeReasonMachineModule, BadstockTimbanganModule, BadstockCategoryModule, LakbanFinishgoodModule, LakbanReworkModule],
   controllers: [AppController],
   providers: [AppService],
 })
