@@ -1,10 +1,11 @@
 import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, OneToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import { IRencanaProduksi } from './interface/rencana-produksi.interface';
 import { InitialShift } from '@app/app/initial-shift/initial-shift.entity';
 import { Line } from '@app/app/line/line.entity';
 import { InitialSku } from '@app/app/initial-sku/initial-sku.entity';
 import { User } from '@app/app/user/user.entity';
+import { Downtime } from '../downtime/downtime.entity';
 
 @Entity()
 export class RencanaProduksi implements IRencanaProduksi{
@@ -55,4 +56,7 @@ export class RencanaProduksi implements IRencanaProduksi{
 
   @ManyToOne(type => User, user => user.rencana_produksi)
   public supervisor: User;
+
+  @OneToMany(type => Downtime, downtime => downtime.rencana_produksi)
+  public downtime: Downtime;
 }

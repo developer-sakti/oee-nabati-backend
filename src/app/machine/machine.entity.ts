@@ -2,6 +2,7 @@ import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { IMachine } from './interface/machine.interface';
 import { DowntimeReasonMachine } from '@app/app/downtime-reason-machine/downtime-reason-machine.entity';
+import { Downtime } from '../downtime/downtime.entity';
 
 @Entity()
 export class Machine implements IMachine{
@@ -21,4 +22,7 @@ export class Machine implements IMachine{
 
   @OneToMany(type => DowntimeReasonMachine, downtime_reason_machine => downtime_reason_machine.machine)
   downtime_reason_machines: DowntimeReasonMachine[];
+
+  @OneToMany(type => Downtime, downtime => downtime.machine)
+  public downtime: Downtime;
 }

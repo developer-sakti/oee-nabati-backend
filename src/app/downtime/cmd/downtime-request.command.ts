@@ -4,11 +4,11 @@ import { Machine } from '@app/app/machine/machine.entity';
 import { DowntimeCategory } from '@app/app/downtime-category/downtime-category.entity';
 import { DowntimeReason } from '@app/app/downtime-reason/downtime-reason.entity';
 
-export class DowntimeCmd {
+export class DowntimeRequestCmd {
   @ApiModelProperty() duration: number;
 
-  @ApiModelProperty() rencana_produksi: RencanaProduksi;
-  @ApiModelProperty() machine: Machine;
-  @ApiModelProperty() downtime_category : DowntimeCategory;
-  @ApiModelProperty() downtime_reason : DowntimeReason;
+  @ApiModelProperty() rencanaProduksiId: number;
+  @ApiModelProperty() machineId: number;
+  @ApiModelProperty() downtimeCategoryId : number;
+  @ApiModelProperty() downtimeReasonId : number;
 }

@@ -10,10 +10,17 @@ export class RencanaProduksiService {
     constructor(@InjectRepository(RencanaProduksi) private readonly rencanaProduksiRepository: Repository<RencanaProduksi>) {}
 
     public async findAll(): Promise<RencanaProduksi[]> {
-        return await this.rencanaProduksiRepository.find({
-            relations : ['shift', 'line', 'sku', 'supervisor']
-        });
-    }
+      return await this.rencanaProduksiRepository.find({
+          relations : ['shift', 'line', 'sku', 'supervisor']
+      });
+  }
+  public async findById(id : number): Promise<any> {
+      return await this.rencanaProduksiRepository.findOne({
+          where : {
+            id : id
+          }
+      });
+  }
 
     public async findOne(params: RencanaProduksiCmd): Promise<any> {
         let rencanaProduksi: RencanaProduksi;
