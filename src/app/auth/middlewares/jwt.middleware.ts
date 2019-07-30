@@ -12,7 +12,6 @@ export class JwtMiddleware implements NestMiddleware {
       return await passport.authenticate('jwt', { session: false }, (err, user, info) => {
         if (err) {
           next(new UnauthorizedException(err));
-          // next(Utils.sendResponseUnauthorized());
         } else if (typeof info !== 'undefined') {
           let message;
           switch (info.message) {
@@ -25,7 +24,6 @@ export class JwtMiddleware implements NestMiddleware {
               message = 'Your session has expired. Please log in again';
               break;
           }
-          // next(new UnauthorizedException(message));
           next(Utils.sendResponseUnauthorized());
         } else {
           req.user = new User(user);
