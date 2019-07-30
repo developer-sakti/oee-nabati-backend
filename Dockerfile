@@ -14,7 +14,7 @@ COPY . /backend
 RUN rm package-lock.json
 
 RUN npm i
-RUN npm run prestart:prod
+# RUN npm run prestart:prod
 
 EXPOSE 8081
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "start"]
