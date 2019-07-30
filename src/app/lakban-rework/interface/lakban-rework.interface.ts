@@ -16,5 +16,4 @@ export interface ILakbanRework {
   readonly machine?: Machine;
 
   readonly rencanaProduksiId: number;
-  readonly machineId: number;
 }

@@ -8,5 +8,5 @@ export class LakbanReworkCmd {
   @ApiModelProperty() total: number;
 
   @ApiModelProperty() rencanaProduksiId: number;
-  @ApiModelProperty() machineId: number;
+  
 }
