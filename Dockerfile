@@ -17,4 +17,4 @@ RUN npm i
 # RUN npm run prestart:prod
 
 EXPOSE 8081
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start"]
