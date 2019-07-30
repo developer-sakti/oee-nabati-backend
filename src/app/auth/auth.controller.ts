@@ -1,5 +1,5 @@
 import { ApiBearerAuth, ApiImplicitBody, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
-import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Param, Patch, Post, Req } from '@nestjs/common';
+import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 
 import { AuthLoginCmd } from './cmd/auth-login.command';
 import { AuthService } from './auth.service';
@@ -9,6 +9,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateUserDto } from '@app/app/user/dto/create-user.dto';
 import { TokenDto } from './dto/token.dto';
 import { User } from '@app/app/user/user.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('auth')
 @ApiBearerAuth()
@@ -24,13 +25,15 @@ export class AuthController {
     return await this.authService.signUp(new User(user));
   }
 
+  @UseGuards(AuthGuard('local'))
   @Post('login')
   @ApiImplicitBody({ name: 'AuthLoginCmd', type: AuthLoginCmd })
   @ApiOperation({ title: 'Login', description: 'Login user. Generate a new valid JWT.' })
   @ApiResponse({ description: 'JWT successfully created.', status: HttpStatus.CREATED, type: TokenDto })
   @ApiResponse({ description: 'Bad request.', status: HttpStatus.BAD_REQUEST })
-  public async login(@Req() req): Promise<TokenDto> {
-    return await this.authService.createToken(new User(req.user));
+  public async login(@Body() req): Promise<TokenDto> {
+    // return await this.authService.createToken(new User(req.user));
+    return await this.authService.validateUser(req);
   }
 
   @Patch('password')

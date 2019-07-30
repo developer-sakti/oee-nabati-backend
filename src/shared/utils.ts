@@ -6,6 +6,13 @@ export class Utils {
         return notfound + "does not exist !";
     }
 
+    static sendResponseUnauthorized() {
+        return {
+            success : false,
+            message : "Sorry, Unauthorized user !"
+        }
+    }
+
     static sendResponseSaveFailed(message : string) {
         return {
             success : false,
@@ -18,6 +25,13 @@ export class Utils {
             success : false,
             message : "Failed to save " + message + " !",
             data    : data
+        }
+    }
+
+    static sendResponseWrongPassword(data : any) {
+        return {
+            success : false,
+            message : "Your password is incorrect ! Try again."
         }
     }
 }

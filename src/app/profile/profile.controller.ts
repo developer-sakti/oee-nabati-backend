@@ -1,10 +1,11 @@
 import * as jwt from 'jsonwebtoken';
 
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
-import { Body, Controller, Get, HttpException, HttpStatus, NotFoundException, Req } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, NotFoundException, Req, UseGuards } from '@nestjs/common';
 
 import { GetProfileDto } from './dto/get-profile.dto';
 import { UserService } from '@app/app/user/user.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('profile')
 @ApiBearerAuth()
@@ -13,6 +14,7 @@ export class ProfileController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
+  @UseGuards(AuthGuard('jwt'))
   @ApiResponse({ status: HttpStatus.OK, type: GetProfileDto, description: 'Success!' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found.' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })

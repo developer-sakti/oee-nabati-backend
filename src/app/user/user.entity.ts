@@ -4,6 +4,8 @@ import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { IUser } from './interface/user.interface';
 import { RencanaProduksi } from '@app/app/rencana-produksi/rencana-produksi.entity';
 
+import * as bcrypt from "bcrypt";
+
 export enum UserRole {
   ADMIN = 'admin',
   USER = 'user',
@@ -43,4 +45,9 @@ export class User implements IUser {
 
   @OneToMany(type => RencanaProduksi, rencana_produksi => rencana_produksi.supervisor)
   public rencana_produksi : RencanaProduksi;
+
+
+  async checkPasswordIsValid(plain_password : string) : Promise<boolean> {
+    return bcrypt.compare(plain_password, this.password);
+  }
 }

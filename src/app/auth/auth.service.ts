@@ -2,13 +2,8 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 
 import {
-  BadRequestException,
-  Inject,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
-  Req,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { User, UserRole, UserStatus } from '@app/app/user/user.entity';
 
@@ -18,6 +13,8 @@ import { TokenDto } from './dto/token.dto';
 import { TokenUserPayload } from './dto/token-user-payload.dto';
 import { UserService } from '@app/app/user/user.service';
 import { environment } from '@env/environment.dev';
+import { AuthLoginCmd } from './cmd/auth-login.command';
+import { Utils } from '@app/shared/utils';
 
 @Injectable()
 export class AuthService {
@@ -43,15 +40,30 @@ export class AuthService {
       cmd.newPassword,
     );
   }
+
   public async createToken(signedUser: User) {
+    const signUser = new User(signedUser);
+
     const expiresIn = environment.JWT_EXPIRATION;
     const secretOrKey = environment.SECRET_KEY;
     const user = new TokenUserPayload(signedUser);
     const userPOJO = JSON.parse(JSON.stringify(user));
     const accessToken = jwt.sign(userPOJO, secretOrKey, { expiresIn });
     return new TokenDto({
-      expiresIn,
-      accessToken,
+      expiresIn : expiresIn,
+      accessToken : accessToken,
+      user : signUser,
     });
+  }
+
+  public async validateUser(params : AuthLoginCmd) : Promise<any> {
+    let user = await this.userService.findOne({username : params.username});
+    let status = await user.checkPasswordIsValid(params.password);
+
+    if (!status) {
+      return Utils.sendResponseWrongPassword(user);
+    }
+
+    return this.createToken(user);
   }
 }
