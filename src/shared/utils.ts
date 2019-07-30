@@ -1,5 +1,6 @@
 export class Utils {
     static readonly NULL_RETURN = null;
+    static readonly EMPTY_ARRAY_RETURN = [];
 
     static sendResponseNotFound(notfound : string) {
         return notfound + "does not exist !";

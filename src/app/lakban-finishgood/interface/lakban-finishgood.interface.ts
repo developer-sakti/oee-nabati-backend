@@ -13,8 +13,6 @@ export interface ILakbanFinishgood {
   readonly deleted_at?: string;
 
   readonly rencana_produksi?: RencanaProduksi;
-  readonly machine?: Machine;
 
   readonly rencanaProduksiId: number;
-  readonly machineId: number;
 }
