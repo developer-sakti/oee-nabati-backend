@@ -11,6 +11,8 @@ RUN apt update \
     && npm i -g npm
 
 COPY . /backend
+RUN rm package-lock.json
+
 RUN npm i
 RUN npm run prestart:prod
 
