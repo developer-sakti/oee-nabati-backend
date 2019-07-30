@@ -1,11 +1,20 @@
-FROM node:8.15.0
+FROM node:lts-slim
 
-VOLUME [ "/usr/src/app" ]
+RUN mkdir -p /backend
+WORKDIR /backend
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+RUN apt update \
+    && apt upgrade -y \
+    && apt install build-essential -y \
+    && apt autoremove -y \
+    && apt clean \
+    && npm i -g npm
 
-COPY . .
-RUN npm install && npm update && npm audit && npm audit fix
+COPY . /backend
+RUN rm package-lock.json
 
-CMD ["npm", "run" "start:prod"]
+RUN npm i
+# RUN npm run prestart:prod
+
+EXPOSE 8081
+CMD ["npm", "run", "start:dev"]
