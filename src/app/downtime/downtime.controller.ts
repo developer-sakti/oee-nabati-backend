@@ -19,9 +19,9 @@ export class DowntimeController {
   @ApiOperation({ title: 'Post Downtime', description: 'Save downtime.' })
   @ApiResponse({ description: 'Success!', status: HttpStatus.OK, type: GetDowntimeDto })
   @ApiResponse({ description: 'Bad request.', status: HttpStatus.BAD_REQUEST })
-  public async post(@Body() req: DowntimeRequestCmd): Promise<any> {
+  public async store(@Body() body: DowntimeRequestCmd): Promise<any> {
 
-    let process = await this.downtimeService.create(new Downtime(req));
+    let process = await this.downtimeService.create(new Downtime(body));
 
     if (!process) {
         return Utils.sendResponseSaveFailed("Downtime")

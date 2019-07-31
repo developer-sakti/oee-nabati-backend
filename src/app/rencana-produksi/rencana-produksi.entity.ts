@@ -25,10 +25,10 @@ export class RencanaProduksi implements IRencanaProduksi{
       this.updated_at = data.updated_at;
       this.deleted_at = data.deleted_at;
 
-      this.shift = data.shift;
-      this.line = data.line;
-      this.sku = data.sku;
-      this.supervisor = data.supervisor;
+      this.shiftId = data.shiftId;
+      this.lineId = data.lineId;
+      this.skuId = data.skuId;
+      this.supervisorId = data.supervisorId;
     }
   }
 
@@ -63,4 +63,14 @@ export class RencanaProduksi implements IRencanaProduksi{
 
   @OneToMany(type => BadstockTimbangan, badstock_timbangan => badstock_timbangan.rencana_produksi)
   public badstock_timbangan: BadstockTimbangan;
+
+  @Column({  type: "int", nullable: true })
+  shiftId: number;
+  @Column({  type: "int", nullable: true })
+  lineId: number;
+  @Column({  type: "int", nullable: true })
+  skuId: number;
+  @Column({  type: "int", nullable: true })
+  supervisorId: number;
+
 }

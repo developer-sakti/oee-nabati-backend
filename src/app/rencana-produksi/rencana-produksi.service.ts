@@ -5,6 +5,7 @@ import { Repository, DeepPartial } from 'typeorm';
 import { RencanaProduksiCmd } from './cmd/rencana-produksi.command';
 import { Utils } from '@app/shared/utils';
 import { RencanaProduksiFindCmd } from './cmd/rencana-produksi-find.command';
+import { RencanaProduksiCreateCmd } from './cmd/rencana-produksi-create.command';
 
 @Injectable()
 export class RencanaProduksiService {
@@ -79,7 +80,7 @@ export class RencanaProduksiService {
     return rencanaProduksi;
 }
     
-  public async create(rencanaProduksi: RencanaProduksi): Promise<RencanaProduksi> {
+  public async create(rencanaProduksi: RencanaProduksiCreateCmd): Promise<RencanaProduksi> {
     try {
       return await this.rencanaProduksiRepository.save(rencanaProduksi);
     } catch (error) {

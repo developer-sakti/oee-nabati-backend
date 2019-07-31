@@ -21,4 +21,9 @@ export interface IRencanaProduksi {
   readonly line?: Line;
   readonly sku?: InitialSku;
   readonly supervisor?: User;
+
+  readonly shiftId?: number;
+  readonly lineId?: number;
+  readonly skuId?: number;
+  readonly supervisorId?: number;
 }
