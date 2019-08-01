@@ -19,9 +19,10 @@ import { BadstockTimbanganModule } from './app/badstock-timbangan/badstock-timba
 import { BadstockCategoryModule } from './app/badstock-category/badstock-category.module';
 import { LakbanFinishgoodModule } from './app/lakban-finishgood/lakban-finishgood.module';
 import { LakbanReworkModule } from './app/lakban-rework/lakban-rework.module';
+import { RulesModule } from './app/rules/rules.module';
 
 @Module({
-  imports: [AuthModule, UserModule, ProfileModule, TypeOrmModule.forRoot(), HmiModule, LineModule, MachineModule, InitialShiftModule, InitialSkuModule, RencanaProduksiModule, DowntimeModule, DowntimeCategoryModule, DowntimeReasonModule, DowntimeReasonMachineModule, BadstockTimbanganModule, BadstockCategoryModule, LakbanFinishgoodModule, LakbanReworkModule],
+  imports: [AuthModule, UserModule, ProfileModule, TypeOrmModule.forRoot(), HmiModule, LineModule, MachineModule, InitialShiftModule, InitialSkuModule, RencanaProduksiModule, DowntimeModule, DowntimeCategoryModule, DowntimeReasonModule, DowntimeReasonMachineModule, BadstockTimbanganModule, BadstockCategoryModule, LakbanFinishgoodModule, LakbanReworkModule, RulesModule],
   controllers: [AppController],
   providers: [AppService],
 })
