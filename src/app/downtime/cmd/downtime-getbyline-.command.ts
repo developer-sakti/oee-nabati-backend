@@ -4,8 +4,6 @@ import { Machine } from '@app/app/machine/machine.entity';
 import { DowntimeCategory } from '@app/app/downtime-category/downtime-category.entity';
 import { DowntimeReason } from '@app/app/downtime-reason/downtime-reason.entity';
 
-export class LakbanFinishgoodCmd {
-  @ApiModelProperty() total: number;
-
-  @ApiModelProperty() rencanaProduksiId: number;
+export class DowntimeGetbylineCmd {
+  @ApiModelProperty() line_id: number;
 }

@@ -25,10 +25,8 @@ export class LakbanFinishgood implements ILakbanFinishgood{
       this.deleted_at = data.deleted_at;
 
       this.rencana_produksi = data.rencana_produksi;
-      this.machine = data.machine;
 
       this.rencanaProduksiId = data.rencanaProduksiId;
-      this.machineId = data.machineId;
     }
   }
 
@@ -43,13 +41,7 @@ export class LakbanFinishgood implements ILakbanFinishgood{
   @ManyToOne(type => RencanaProduksi, rencana_produksi => rencana_produksi.badstock_timbangan)
   @JoinColumn({ name : "rencanaProduksiId" })
   public rencana_produksi: RencanaProduksi;
-  
-  @ManyToOne(type => Machine, machine => machine.badstock_timbangan)
-  @JoinColumn({ name : "machineId" })
-  public machine: Machine;
 
   @Column({  type: "int", nullable: true })
   rencanaProduksiId: number;
-  @Column({  type: "int", nullable: true })
-  machineId: number;
 }

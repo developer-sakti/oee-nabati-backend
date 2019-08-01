@@ -1,9 +1,12 @@
-import { Controller, Get, Req, HttpStatus, Post, Body } from '@nestjs/common';
+import { Controller, Get, Req, HttpStatus, Post, Body, Query } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth, ApiResponse, ApiOperation } from '@nestjs/swagger';
 import { RencanaProduksiService } from './rencana-produksi.service';
 import { GetRencanaProduksiDto } from './dto/get-rencana-produksi.dto';
 import { Raw } from 'typeorm';
 import { RencanaProduksiCmd } from './cmd/rencana-produksi.command';
+import { RencanaProduksiFindCmd } from './cmd/rencana-produksi-find.command';
+import { RencanaProduksi } from './rencana-produksi.entity';
+import { RencanaProduksiCreateCmd } from './cmd/rencana-produksi-create.command';
 
 @ApiUseTags('rencanaProduksi')
 @ApiBearerAuth()
@@ -21,12 +24,30 @@ export class RencanaProduksiController {
         return Promise.resolve(rencanaProduksiList);
     }
 
-    @Post('active')
+    @Get('active')
     @ApiResponse({ status: HttpStatus.OK, type: GetRencanaProduksiDto, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
-    @ApiOperation({ title: 'Get RencanaProduksi profile', description: 'Get get RencanaProduksi profile from JWT payload.' })
-    async findActivePO(@Body() req: RencanaProduksiCmd): Promise<any> {
+    @ApiOperation({ title: 'Get RencanaProduksi ', description: 'Get RencanaProduksi  from JWT payload.' })
+    async findActivePO(@Query() req: RencanaProduksiCmd): Promise<any> {
         return await this.rencanaProduksiService.findOne(req);
+    }
+
+    @Get('find')
+    @ApiResponse({ status: HttpStatus.OK, type: GetRencanaProduksiDto, description: 'Success!' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })
+    @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
+    @ApiOperation({ title: 'Get RencanaProduksi List', description: 'Get RencanaProduksi List from JWT payload.' })
+    async findListPO(@Query() req: RencanaProduksiFindCmd): Promise<any> {
+        return await this.rencanaProduksiService.findByLineDate(req);
+    }
+
+    @Post()
+    @ApiResponse({ status: HttpStatus.OK, type: RencanaProduksi, description: 'Success!' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })
+    @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
+    @ApiOperation({ title: 'Create RencanaProduksi ', description: 'Create RencanaProduksi from JWT payload.' })
+    async store(@Body() body: RencanaProduksiCreateCmd): Promise<any> {
+        return await this.rencanaProduksiService.create(body);
     }
 }

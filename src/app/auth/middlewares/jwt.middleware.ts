@@ -3,6 +3,7 @@ import * as passport from 'passport';
 import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
 
 import { User } from '@app/app/user/user.entity';
+import { Utils } from '@app/shared/utils';
 
 @Injectable()
 export class JwtMiddleware implements NestMiddleware {
@@ -23,7 +24,7 @@ export class JwtMiddleware implements NestMiddleware {
               message = 'Your session has expired. Please log in again';
               break;
           }
-          next(new UnauthorizedException(message));
+          next(Utils.sendResponseUnauthorized());
         } else {
           req.user = new User(user);
           next();
