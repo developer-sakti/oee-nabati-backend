@@ -13,18 +13,18 @@ export class Utils {
         }
     }
 
+    static sendResponseSaveSuccess(data : any) {
+        return {
+            success : true,
+            message : "Success saving data !",
+            data    : data
+        }
+    }
+
     static sendResponseSaveFailed(message : string) {
         return {
             success : false,
             message : "Failed to save " + message + " !"
-        }
-    }
-
-    static sendResponseSaveSuccess(data : any, message : string) {
-        return {
-            success : false,
-            message : "Failed to save " + message + " !",
-            data    : data
         }
     }
 

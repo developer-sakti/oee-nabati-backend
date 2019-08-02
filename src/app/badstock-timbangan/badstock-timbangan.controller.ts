@@ -21,7 +21,6 @@ export class BadstockTimbanganController {
       if (!process) {
           return Utils.sendResponseSaveFailed("Badstock")
       } 
-  
-      return process;
+      return Utils.sendResponseSaveSuccess(process);
     }
 }
