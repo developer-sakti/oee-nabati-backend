@@ -26,8 +26,7 @@ export class DowntimeController {
     if (!process) {
         return Utils.sendResponseSaveFailed("Downtime")
     }
-
-    return process;
+    return Utils.sendResponseSaveSuccess(process);
   }
 
   @Get('history')

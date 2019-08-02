@@ -7,6 +7,7 @@ import { RencanaProduksiCmd } from './cmd/rencana-produksi.command';
 import { RencanaProduksiFindCmd } from './cmd/rencana-produksi-find.command';
 import { RencanaProduksi } from './rencana-produksi.entity';
 import { RencanaProduksiCreateCmd } from './cmd/rencana-produksi-create.command';
+import { Utils } from '@app/shared/utils';
 
 @ApiUseTags('rencanaProduksi')
 @ApiBearerAuth()
@@ -48,6 +49,11 @@ export class RencanaProduksiController {
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
     @ApiOperation({ title: 'Create RencanaProduksi ', description: 'Create RencanaProduksi from JWT payload.' })
     async store(@Body() body: RencanaProduksiCreateCmd): Promise<any> {
-        return await this.rencanaProduksiService.create(body);
+        let process = await this.rencanaProduksiService.create(body);
+
+        if (!process) {
+            return Utils.sendResponseSaveFailed("Rencana produksi")
+        }
+        return Utils.sendResponseSaveSuccess(process);
     }
 }
