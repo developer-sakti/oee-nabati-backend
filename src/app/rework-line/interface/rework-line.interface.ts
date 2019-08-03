@@ -4,7 +4,7 @@ import { DowntimeCategory } from "@app/app/downtime-category/downtime-category.e
 import { DowntimeReason } from "@app/app/downtime-reason/downtime-reason.entity";
 import { BadstockCategory } from "@app/app/badstock-category/badstock-category.entity";
 
-export interface ILakbanRework {
+export interface IReworkLine {
   readonly id?: number;
   readonly total?: number;
 

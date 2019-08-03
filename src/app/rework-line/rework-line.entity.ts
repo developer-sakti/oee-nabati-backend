@@ -11,11 +11,11 @@ import { DowntimeReason } from '../downtime-reason/downtime-reason.entity';
 import { type } from 'os';
 import { IBadstockCategory } from '../badstock-category/interface/badstock-category.interface';
 import { BadstockCategory } from '../badstock-category/badstock-category.entity';
-import { ILakbanRework } from './interface/lakban-rework.interface';
+import { IReworkLine } from './interface/rework-line.interface';
 
 @Entity()
-export class LakbanRework implements ILakbanRework {
-  constructor(data: ILakbanRework) {
+export class ReworkLine implements IReworkLine {
+  constructor(data: IReworkLine) {
     if (!!data) {
       this.id = data.id;
       this.total = data.total;
