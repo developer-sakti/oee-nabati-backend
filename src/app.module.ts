@@ -21,9 +21,10 @@ import { LakbanFinishgoodModule } from './app/lakban-finishgood/lakban-finishgoo
 import { LakbanReworkModule } from './app/lakban-rework/lakban-rework.module';
 import { RulesModule } from './app/rules/rules.module';
 import { ReworkLineModule } from './app/rework-line/rework-line.module';
+import { OeeLineModule } from './app/oee-line/oee-line.module';
 
 @Module({
-  imports: [AuthModule, UserModule, ProfileModule, TypeOrmModule.forRoot(), HmiModule, LineModule, MachineModule, InitialShiftModule, InitialSkuModule, RencanaProduksiModule, DowntimeModule, DowntimeCategoryModule, DowntimeReasonModule, DowntimeReasonMachineModule, BadstockTimbanganModule, BadstockCategoryModule, LakbanFinishgoodModule, LakbanReworkModule, RulesModule, ReworkLineModule],
+  imports: [AuthModule, UserModule, ProfileModule, TypeOrmModule.forRoot(), HmiModule, LineModule, MachineModule, InitialShiftModule, InitialSkuModule, RencanaProduksiModule, DowntimeModule, DowntimeCategoryModule, DowntimeReasonModule, DowntimeReasonMachineModule, BadstockTimbanganModule, BadstockCategoryModule, LakbanFinishgoodModule, LakbanReworkModule, RulesModule, ReworkLineModule, OeeLineModule],
   controllers: [AppController],
   providers: [AppService],
 })

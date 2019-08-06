@@ -12,7 +12,26 @@ export interface IRencanaProduksi {
   readonly date?: string;
   readonly start_sku?: string; 
   readonly end_sku?: string; 
-  readonly lakban_finishgood_karton?: number;
+
+  readonly b_finishgood_qty_karton?: number;
+  readonly c_total_qty_karton?: number;
+  readonly d_defect_qty_karton?: number;
+  readonly e_rework_qty_karton?: number;
+
+  readonly k_total_planned_dt_losses?: number;
+  readonly l_loading_hours?: number;
+  readonly m_total_unplanned_dt?: number;
+  readonly n_operating_hours?: number;
+  readonly o_total_performance_losses?: number;
+
+  readonly p_running_time?: number;
+  readonly q_total_defect_losses?: number;
+
+  readonly r_value_added_hours?: number;
+
+  readonly availablity?: number;
+  readonly performance_rate?: number;
+  readonly quality_product_rate?: number;
 
   readonly created_at?: string;
   readonly updated_at?: string;
