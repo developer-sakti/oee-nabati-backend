@@ -30,6 +30,8 @@ export class DowntimeService {
                                 .innerJoin("downtime.downtime_reason", "downtime_reason")
                                 .innerJoin("rencana_produksi.line", "line")
                                 .andWhere("line.id = :value1", {value1 : params.line_id})
+                                .orderBy("downtime.created_at", "DESC")
+                                .limit(20)
                                 .getMany();
         } catch (error) {}
 

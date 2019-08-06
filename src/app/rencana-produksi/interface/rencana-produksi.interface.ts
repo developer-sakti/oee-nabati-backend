@@ -12,6 +12,7 @@ export interface IRencanaProduksi {
   readonly date?: string;
   readonly start_sku?: string; 
   readonly end_sku?: string; 
+  readonly lakban_finishgood_karton?: number;
 
   readonly created_at?: string;
   readonly updated_at?: string;

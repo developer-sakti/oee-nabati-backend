@@ -28,6 +28,21 @@ export class Utils {
         }
     }
 
+    static sendResponseUpdateSuccess(data : any) {
+        return {
+            success : true,
+            message : "Success updating data !",
+            data    : data
+        }
+    }
+
+    static sendResponseUpdateFailed(message : string) {
+        return {
+            success : false,
+            message : "Failed to update " + message + " !"
+        }
+    }
+
     static sendResponseWrongPassword(data : any) {
         return {
             success : false,
