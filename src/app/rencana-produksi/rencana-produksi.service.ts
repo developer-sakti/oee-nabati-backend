@@ -78,13 +78,23 @@ export class RencanaProduksiService {
       return Utils.EMPTY_ARRAY_RETURN;
     }
     return rencanaProduksi;
-}
+  }
     
   public async create(rencanaProduksi: RencanaProduksiCreateCmd): Promise<RencanaProduksi> {
     try {
       return await this.rencanaProduksiRepository.save(rencanaProduksi);
     } catch (error) {
-      throw new BadRequestException(error);
+      return Utils.NULL_RETURN;
+    }
+  }
+    
+  public async update(params: DeepPartial<RencanaProduksi>): Promise<RencanaProduksi> {
+    try {
+      console.log(params)
+      return Utils.NULL_RETURN;
+      // return await this.rencanaProduksiRepository.save(params);
+    } catch (error) {
+      return Utils.NULL_RETURN;
     }
   }
 
