@@ -13,6 +13,14 @@ export class Utils {
         }
     }
 
+    static sendResponseSaveSuccess(data : any) {
+        return {
+            success : true,
+            message : "Success saving data !",
+            data    : data
+        }
+    }
+
     static sendResponseSaveFailed(message : string) {
         return {
             success : false,
@@ -20,11 +28,18 @@ export class Utils {
         }
     }
 
-    static sendResponseSaveSuccess(data : any, message : string) {
+    static sendResponseUpdateSuccess(data : any) {
+        return {
+            success : true,
+            message : "Success updating data !",
+            data    : data
+        }
+    }
+
+    static sendResponseUpdateFailed(message : string) {
         return {
             success : false,
-            message : "Failed to save " + message + " !",
-            data    : data
+            message : "Failed to update " + message + " !"
         }
     }
 

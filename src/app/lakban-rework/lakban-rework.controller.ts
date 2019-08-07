@@ -21,7 +21,6 @@ export class LakbanReworkController {
         if (!process) {
             return Utils.sendResponseSaveFailed("Lakban Finishgood")
         }
-
-        return process;
+        return Utils.sendResponseSaveSuccess(process);
     }
 }
