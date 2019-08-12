@@ -4,10 +4,13 @@ import { DowntimeReasonMachine } from './downtime-reason-machine.entity';
 import { Repository, createQueryBuilder } from 'typeorm';
 import { DowntimeReasonMachineCmd } from './cmd/downtime-reason-machine.command';
 import { Machine } from '@app/app/machine/machine.entity';
+import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 
 @Injectable()
-export class DowntimeReasonMachineService {
-    constructor(@InjectRepository(DowntimeReasonMachine) private readonly downtimeReasonMachineRepository: Repository<DowntimeReasonMachine>) {}
+export class DowntimeReasonMachineService extends TypeOrmCrudService<DowntimeReasonMachine>{
+    constructor(@InjectRepository(DowntimeReasonMachine) repo, @InjectRepository(DowntimeReasonMachine) private readonly downtimeReasonMachineRepository: Repository<DowntimeReasonMachine>) {
+      super(repo)
+    }
 
     public async findAll(): Promise<DowntimeReasonMachine[]> {
         return await this.downtimeReasonMachineRepository.find({
