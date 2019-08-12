@@ -22,6 +22,16 @@ export class DowntimeReasonMachine implements IDowntimeReasonMachine {
 
   @PrimaryGeneratedColumn() public id: number;
   
+  @ApiModelProperty()
+  @Column({  type: "int", nullable: true })
+  machineId: number;
+  @ApiModelProperty()
+  @Column({  type: "int", nullable: true })
+  downtimeCategoryId: number;
+  @ApiModelProperty()
+  @Column({  type: "int", nullable: true })
+  downtimeReasonId: number;
+
   @ManyToOne(type => Machine, machine => machine.downtime_reason_machines)
   public machine: Machine;
 
