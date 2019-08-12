@@ -3,12 +3,21 @@ import { InitialShiftService } from '@app/app/initial-shift/initial-shift.servic
 import { ApiResponse, ApiOperation, ApiBearerAuth, ApiUseTags } from '@nestjs/swagger';
 import { GetInitialSkuDto } from './dto/get-initial-sku.dto';
 import { InitialSkuService } from './initial-sku.service';
+import { Crud, CrudController } from '@nestjsx/crud';
+import { InitialSku } from './initial-sku.entity';
+
+@Crud({
+    model: {
+        type: InitialSku,
+    },
+})
 
 @ApiUseTags('initialSku')
 @ApiBearerAuth()
 @Controller('api/v1/initial-sku')
-export class InitialSkuController {
-    constructor(private readonly initialSkuService: InitialSkuService) {}
+export class InitialSkuController implements CrudController<InitialSku>{
+    constructor(public service: InitialSkuService) {
+    }
 
     @Get()
     @ApiResponse({ status: HttpStatus.OK, type: GetInitialSkuDto, description: 'Success!' })
@@ -16,7 +25,7 @@ export class InitialSkuController {
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
     @ApiOperation({ title: 'Get InitialSku', description: 'Get InitialSku from JWT payload.' })
     async findAll(@Req() req): Promise<GetInitialSkuDto[]> {
-        const initialSkuList = (await this.initialSkuService.findAll()).map(initialSku => new GetInitialSkuDto(initialSku));
+        const initialSkuList = (await this.service.findAll()).map(initialSku => new GetInitialSkuDto(initialSku));
         return Promise.resolve(initialSkuList);
     }
 }
