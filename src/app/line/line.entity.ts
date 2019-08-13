@@ -4,6 +4,7 @@ import { ILine } from './interface/line.interface';
 import { Machine } from '@app/app/machine/machine.entity';
 import { type } from 'os';
 import { RencanaProduksi } from '@app/app/rencana-produksi/rencana-produksi.entity';
+import { Downtime } from '../downtime/downtime.entity';
 
 @Entity()
 export class Line implements ILine{
@@ -21,5 +22,8 @@ export class Line implements ILine{
 
   @OneToMany(type => RencanaProduksi, rencana_produksi => rencana_produksi.line)
   public rencana_produksi : RencanaProduksi;
+
+  @OneToMany(type => Downtime, downtime => downtime.line)
+  public downtime : Downtime;
 
 }

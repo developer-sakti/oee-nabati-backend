@@ -1,4 +1,4 @@
-import { Controller, Post, HttpStatus, Body, Get } from '@nestjs/common';
+import { Controller, Post, HttpStatus, Body, Get, Query } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth, ApiResponse, ApiOperation } from '@nestjs/swagger';
 import { DowntimeReasonMachineService } from './downtime-reason-machine.service';
 import { GetDowntimeReasonMachineDto } from './dto/get-downtime-reason-machine.dto';
@@ -24,13 +24,22 @@ import { Utils } from '@app/shared/utils';
 export class DowntimeReasonMachineController implements CrudController<DowntimeReasonMachine> {
     constructor(public service: DowntimeReasonMachineService, public downtimeReasonService: DowntimeReasonService) {}
     
-    @Post('find')
+    @Get('find')
     @ApiResponse({ status: HttpStatus.OK, type: GetDowntimeReasonMachineDto, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'DowntimeReasonMachine not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
     @ApiOperation({ title: 'Get DowntimeReasonMachine profile', description: 'Get DowntimeReasonMachine profile from JWT payload.' })
-    async find(@Body() req: DowntimeReasonMachineCmd): Promise<GetDowntimeReasonMachineDto[]> {
+    async find(@Query() req: DowntimeReasonMachineCmd): Promise<GetDowntimeReasonMachineDto[]> {
         return await this.service.findSomeDowntimeReason(req);
+    }
+
+    @Get('planned')
+    @ApiResponse({ status: HttpStatus.OK, type: GetDowntimeReasonMachineDto, description: 'Success!' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'DowntimeReasonMachine not found.' })
+    @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
+    @ApiOperation({ title: 'Get DowntimeReasonMachine ', description: 'Get DowntimeReasonMachine from JWT payload.' })
+    async findPlannedDowntime(@Query() req: DowntimeReasonMachineCmd): Promise<GetDowntimeReasonMachineDto[]> {
+        return await this.service.findPlannedDowntimeReason(req);
     }
     
     @Get('all')

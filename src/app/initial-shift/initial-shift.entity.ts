@@ -3,6 +3,7 @@ import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTabl
 import { IInitialShift } from './interface/initial-shift.interface';
 import { type } from 'os';
 import { RencanaProduksi } from '@app/app/rencana-produksi/rencana-produksi.entity';
+import { Downtime } from '../downtime/downtime.entity';
 
 @Entity()
 export class InitialShift implements IInitialShift{
@@ -25,4 +26,7 @@ export class InitialShift implements IInitialShift{
 
   @OneToMany(type => RencanaProduksi, rencana_produksi => rencana_produksi.shift)
   public rencana_produksi : RencanaProduksi;
+
+  @OneToMany(type => Downtime, downtime => downtime.shift)
+  public downtime : Downtime;
 }

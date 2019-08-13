@@ -12,8 +12,7 @@ import { DowntimeGetbylineCmd } from './cmd/downtime-getbyline-.command';
 @ApiBearerAuth()
 @Controller('api/v1/downtime')
 export class DowntimeController {
-  constructor(private readonly downtimeService: DowntimeService
-    ) {}
+  constructor(private readonly downtimeService: DowntimeService) {}
 
   @Post()
   @ApiOperation({ title: 'Post Downtime', description: 'Save downtime.' })
