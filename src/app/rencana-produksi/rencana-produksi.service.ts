@@ -60,6 +60,7 @@ export class RencanaProduksiService {
                               .innerJoin("rencana_produksi.sku", "sku")
                               .innerJoin("rencana_produksi.supervisor", "supervisor")
                               .andWhere("rencana_produksi.id > :value1", {value1 : params.poActiveId})
+                              .andWhere("line.id = :value2", {value2 : params.lineId})
                               .getMany();
       } catch (error) {}
       if (!rencanaProduksi) {
