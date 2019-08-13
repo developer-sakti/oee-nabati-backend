@@ -17,6 +17,10 @@ export class DowntimeReasonMachine implements IDowntimeReasonMachine {
       this.machine = data.machine;
       this.downtime_category = data.downtime_category;
       this.downtime_reason = data.downtime_reason;
+
+      this.machineId = data.machineId;
+      this.downtimeCategoryId = data.downtimeCategoryId;
+      this.downtimeReasonId = data.downtimeReasonId;
     }
   }
 
