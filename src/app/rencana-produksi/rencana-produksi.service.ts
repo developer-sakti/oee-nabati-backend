@@ -6,6 +6,7 @@ import { RencanaProduksiCmd } from './cmd/rencana-produksi.command';
 import { Utils } from '@app/shared/utils';
 import { RencanaProduksiFindCmd } from './cmd/rencana-produksi-find.command';
 import { RencanaProduksiCreateCmd } from './cmd/rencana-produksi-create.command';
+import { RencanaProduksiWaitingListCmd } from './cmd/rencana-produksi-waiting-list.command';
 
 @Injectable()
 export class RencanaProduksiService {
@@ -40,6 +41,26 @@ export class RencanaProduksiService {
                               .andWhere("shift.end_time >= :value3", {value3 : params.time})
                               .andWhere("line.id = :value4", {value4 : params.line_id})
                               .getOne();
+      } catch (error) {}
+      if (!rencanaProduksi) {
+        return Utils.NULL_RETURN;
+      }
+      return rencanaProduksi;
+  }
+
+  public async findWaitingList(params: RencanaProduksiWaitingListCmd): Promise<any> {
+      let rencanaProduksi: RencanaProduksi[];
+      
+      try {
+          rencanaProduksi = await this.rencanaProduksiRepository
+                              .createQueryBuilder("rencana_produksi")
+                              .select(['rencana_produksi', 'shift', 'line', 'sku', 'supervisor'])
+                              .innerJoin("rencana_produksi.shift", "shift")
+                              .innerJoin("rencana_produksi.line", "line")
+                              .innerJoin("rencana_produksi.sku", "sku")
+                              .innerJoin("rencana_produksi.supervisor", "supervisor")
+                              .andWhere("rencana_produksi.id > :value1", {value1 : params.poActiveId})
+                              .getMany();
       } catch (error) {}
       if (!rencanaProduksi) {
         return Utils.NULL_RETURN;
