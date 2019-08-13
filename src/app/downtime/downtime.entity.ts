@@ -17,16 +17,21 @@ export class Downtime implements IDowntime{
     if (!!data) {
       this.id = data.id;
       this.duration = data.duration;
+      this.date = data.date;
 
       this.created_at = data.created_at;
       this.updated_at = data.updated_at;
       this.deleted_at = data.deleted_at;
 
+      this.shift = data.shift;
+      this.line = data.line;
       this.rencana_produksi = data.rencana_produksi;
       this.machine = data.machine;
       this.downtime_category = data.downtime_category;
       this.downtime_reason = data.downtime_reason;
 
+      this.shiftId = data.shiftId;
+      this.lineId = data.lineId;
       this.rencanaProduksiId = data.rencanaProduksiId;
       this.machineId = data.machineId;
       this.downtimeCategoryId = data.downtimeCategoryId;
@@ -37,11 +42,20 @@ export class Downtime implements IDowntime{
   @PrimaryGeneratedColumn() public id: number;
 
   @Column({ type : "float" }) public duration: number;
+  @Column({ type : "date", default : null  }) public date: string;
   
   @Column({ type : "timestamp" }) public created_at: string;
   @Column({ type : "datetime", default : null  }) public updated_at: string;
   @Column({ type : "datetime", default : null }) public deleted_at: string;
-
+  
+  @ManyToOne(type => InitialShift, initial_shift => initial_shift.downtime)
+  @JoinColumn({ name : "shiftId" })
+  public shift: InitialShift;
+  
+  @ManyToOne(type => Line, line => line.downtime)
+  @JoinColumn({ name : "lineId" })
+  public line: Line;
+  
   @ManyToOne(type => RencanaProduksi, rencana_produksi => rencana_produksi.downtime)
   @JoinColumn({ name : "rencanaProduksiId" })
   public rencana_produksi: RencanaProduksi;
@@ -58,6 +72,10 @@ export class Downtime implements IDowntime{
   @JoinColumn({ name : "downtimeReasonId" })
   public downtime_reason: DowntimeReason;
 
+  @Column({  type: "int", nullable: true })
+  shiftId: number;
+  @Column({  type: "int", nullable: true })
+  lineId: number;
   @Column({  type: "int", nullable: true })
   rencanaProduksiId: number;
   @Column({  type: "int", nullable: true })
