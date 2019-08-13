@@ -9,13 +9,13 @@ export class UpdateUserCmd {
     this.firstname = data.firstname;
     this.lastname = data.lastname;
     this.password = data.password;
-    this.role = data.role;
+    this.roleId = data.roleId;
     this.status = data.status;
   }
   @ApiModelProperty() username: string;
   @ApiModelProperty() firstname: string;
   @ApiModelProperty() lastname: string;
   @ApiModelProperty() password: string;
-  @ApiModelProperty() role: UserRole;
+  @ApiModelProperty() roleId: number;
   @ApiModelProperty() status: UserStatus;
 }

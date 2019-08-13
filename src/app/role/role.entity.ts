@@ -1,24 +1,23 @@
 import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
-import { IRules } from './interface/rules.interface';
 import { User } from '../user/user.entity';
+import { IRole } from './interface/role.interface';
 
 @Entity()
-export class Rules implements IRules {
-  constructor(data: IRules) {
+export class Role implements IRole {
+  constructor(data: IRole) {
     if (!!data) {
       this.id = data.id;
-      this.rule = data.rule;
+      this.role = data.role;
       this.users = data.users;
     }
   }
 
   @PrimaryGeneratedColumn() public id: number;
 
-  @Column() public rule: string;
+  @Column() public role: string;
 
-  @ManyToMany(type => User)
-  @JoinTable()
+  @OneToMany(type => User, user => user.role)
   users : User[];
 
 }

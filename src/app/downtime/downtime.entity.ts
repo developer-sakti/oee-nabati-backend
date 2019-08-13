@@ -36,7 +36,7 @@ export class Downtime implements IDowntime{
 
   @PrimaryGeneratedColumn() public id: number;
 
-  @Column() public duration: number;
+  @Column({ type : "float" }) public duration: number;
   
   @Column({ type : "timestamp" }) public created_at: string;
   @Column({ type : "datetime", default : null  }) public updated_at: string;
