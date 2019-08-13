@@ -1,14 +1,14 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { User } from '@app/app/user/user.entity';
-import { IRules } from '../interface/rules.interface';
+import { IRole } from '../interface/role.interface';
 
-export class GetRulesDto {
-  constructor(data: IRules) {
+export class GetRoleDto {
+  constructor(data: IRole) {
     this.id = data.id;
-    this.rule = data.rule;
+    this.role = data.role;
   }
 
   @ApiModelProperty() id: number;
-  @ApiModelProperty() rule: string;
+  @ApiModelProperty() role: string;
   @ApiModelProperty() users: User[];
 }
