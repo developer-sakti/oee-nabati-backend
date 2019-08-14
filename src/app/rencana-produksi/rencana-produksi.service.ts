@@ -9,6 +9,7 @@ import { RencanaProduksiCreateCmd } from './cmd/rencana-produksi-create.command'
 import { RencanaProduksiWaitingListCmd } from './cmd/rencana-produksi-waiting-list.command';
 import { RencanaProduksiFindShiftCmd } from './cmd/rencana-produksi-find-shift.command';
 import { ReworkLineCmd } from '../rework-line/cmd/rework-line-request.command';
+import { LakbanFinishgoodCmd } from '../lakban-finishgood/cmd/lakban-finishgood-request.command';
 
 @Injectable()
 export class RencanaProduksiService {
@@ -153,6 +154,28 @@ export class RencanaProduksiService {
       po.e_rework_qty_karton    = po.e_rework_qty_karton + params.total;
       po.q_rework_losses        = po.e_rework_qty_karton * po.standart_ct;
       po.q_total_quality_losses = po.q_rework_losses + po.q_defect_losses;
+      
+      return await this.rencanaProduksiRepository.save(po);
+    } catch (error) {
+      return Utils.NULL_RETURN;
+    }
+  }
+    
+  public async updateFinishgood(params: DeepPartial<LakbanFinishgoodCmd>): Promise<RencanaProduksi> {
+    try {
+      let po = await this.rencanaProduksiRepository.findOne(params.rencanaProduksiId);
+      po.b_finishgood_qty_karton    = params.total;
+      
+      return await this.rencanaProduksiRepository.save(po);
+    } catch (error) {
+      return Utils.NULL_RETURN;
+    }
+  }
+    
+  public async minFinishgood(params: DeepPartial<LakbanFinishgoodCmd>): Promise<RencanaProduksi> {
+    try {
+      let po = await this.rencanaProduksiRepository.findOne(params.rencanaProduksiId);
+      po.b_finishgood_qty_karton    = po.b_finishgood_qty_karton - params.total;
       
       return await this.rencanaProduksiRepository.save(po);
     } catch (error) {
