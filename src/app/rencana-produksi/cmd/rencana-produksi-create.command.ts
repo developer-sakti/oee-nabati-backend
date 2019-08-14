@@ -6,8 +6,8 @@ export class RencanaProduksiCreateCmd {
   @ApiModelProperty() bottleneck_ct: number;
   @ApiModelProperty() target_produksi: number;
   @ApiModelProperty() date: string;
-  @ApiModelProperty() start_sku: string; 
-  @ApiModelProperty() end_sku: string; 
+  @ApiModelProperty() start_po: string; 
+  @ApiModelProperty() end_po: string; 
 
   @ApiModelProperty() shiftId: number;
   @ApiModelProperty() lineId: number;
