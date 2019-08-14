@@ -33,13 +33,13 @@ export class DowntimeReasonMachineController implements CrudController<DowntimeR
         return await this.service.findSomeDowntimeReason(req);
     }
 
-    @Get('planned')
+    @Get('category')
     @ApiResponse({ status: HttpStatus.OK, type: GetDowntimeReasonMachineDto, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'DowntimeReasonMachine not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
     @ApiOperation({ title: 'Get DowntimeReasonMachine ', description: 'Get DowntimeReasonMachine from JWT payload.' })
     async findPlannedDowntime(@Query() req: DowntimeReasonMachineCmd): Promise<GetDowntimeReasonMachineDto[]> {
-        return await this.service.findPlannedDowntimeReason(req);
+        return await this.service.findDowntimeReasonByCategory(req);
     }
     
     @Get('all')
