@@ -20,8 +20,8 @@ import { BadstockCategoryModule } from './app/badstock-category/badstock-categor
 import { LakbanFinishgoodModule } from './app/lakban-finishgood/lakban-finishgood.module';
 import { LakbanReworkModule } from './app/lakban-rework/lakban-rework.module';
 import { ReworkLineModule } from './app/rework-line/rework-line.module';
-import { OeeLineModule } from './app/oee-line/oee-line.module';
 import { RoleModule } from './app/role/role.module';
+import { OeeShiftModule } from './app/oee-shift/oee-shift.module';
 
 @Module({
   imports: [
@@ -45,7 +45,7 @@ import { RoleModule } from './app/role/role.module';
     LakbanReworkModule, 
     RoleModule, 
     ReworkLineModule, 
-    OeeLineModule
+    OeeShiftModule
   ],
   controllers: [AppController],
   providers: [AppService],
