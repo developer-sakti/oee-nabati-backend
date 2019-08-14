@@ -37,11 +37,11 @@ export class DowntimeReasonMachineService extends TypeOrmCrudService<DowntimeRea
         return downtimeReasonMachine;
     }
 
-    public async findPlannedDowntimeReason(params: DowntimeReasonMachineCmd): Promise<DowntimeReasonMachine[]> {
+    public async findDowntimeReasonByCategory(params: DowntimeReasonMachineCmd): Promise<DowntimeReasonMachine[]> {
         let downtimeReasonMachine: DowntimeReasonMachine[];
         try {
             downtimeReasonMachine = await this.downtimeReasonMachineRepository
-                                .query('select * from downtime_reason_machine a, machine b, downtime_category c, downtime_reason d where a.machineId = b.id and a.downtimeCategoryId = c.id and a.downtimeReasonId = d.id and c.id = 1 and b.id = ?', [params.machine_id]);
+                                .query('select * from downtime_reason_machine a, machine b, downtime_category c, downtime_reason d where a.machineId = b.id and a.downtimeCategoryId = c.id and a.downtimeReasonId = d.id and c.id = ? and b.id = ?', [params.categori_id, params.machine_id]);
         } catch (error) {}
         if (!downtimeReasonMachine) {
           throw new NotFoundException(`downtimeReasonMachine with ${JSON.stringify(params)} does not exist`);

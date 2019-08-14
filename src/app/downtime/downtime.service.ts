@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Downtime } from './downtime.entity';
 import { Repository } from 'typeorm';
 import { Utils } from '@app/shared/utils';
-import { DowntimeGetbylineCmd } from './cmd/downtime-getbyline-.command';
+import { DowntimeGetbylineCmd } from './cmd/downtime-getbyline.command';
 
 @Injectable()
 export class DowntimeService {

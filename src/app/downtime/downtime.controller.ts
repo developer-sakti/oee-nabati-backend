@@ -6,7 +6,7 @@ import { Downtime } from './downtime.entity';
 import { Utils } from '@app/shared/utils';
 import { DowntimeCmd } from './cmd/downtime.command';
 import { DowntimeRequestCmd } from './cmd/downtime-request.command';
-import { DowntimeGetbylineCmd } from './cmd/downtime-getbyline-.command';
+import { DowntimeGetbylineCmd } from './cmd/downtime-getbyline.command';
 
 @ApiUseTags('downtime')
 @ApiBearerAuth()
