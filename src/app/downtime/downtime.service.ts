@@ -23,12 +23,12 @@ export class DowntimeService {
         try {
             downtime = await this.downtimeRepository
                                 .createQueryBuilder("downtime")
-                                .select(['downtime', 'rencana_produksi', 'machine', 'downtime_category', 'downtime_reason', 'line'])
-                                .innerJoin("downtime.rencana_produksi", "rencana_produksi")
+                                .select(['downtime', 'machine', 'downtime_category', 'downtime_reason', 'line', 'shift'])
                                 .innerJoin("downtime.machine", "machine")
                                 .innerJoin("downtime.downtime_category", "downtime_category")
                                 .innerJoin("downtime.downtime_reason", "downtime_reason")
-                                .innerJoin("rencana_produksi.line", "line")
+                                .innerJoin("downtime.line", "line")
+                                .innerJoin("downtime.shift", "shift")
                                 .andWhere("line.id = :value1", {value1 : params.line_id})
                                 .orderBy("downtime.created_at", "DESC")
                                 .limit(20)
