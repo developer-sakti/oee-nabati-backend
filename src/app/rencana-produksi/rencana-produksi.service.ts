@@ -151,7 +151,7 @@ export class RencanaProduksiService {
   public async updateRework(params: DeepPartial<ReworkLineCmd>): Promise<RencanaProduksi> {
     try {
       let po = await this.rencanaProduksiRepository.findOne(params.rencanaProduksiId);
-      po.e_rework_qty_karton    = po.e_rework_qty_karton + params.total;
+      po.e_rework_qty_karton    += params.total;
       po.q_rework_losses        = po.e_rework_qty_karton * po.standart_ct;
       po.q_total_quality_losses = po.q_rework_losses + po.q_defect_losses;
       
