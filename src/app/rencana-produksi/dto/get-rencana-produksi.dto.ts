@@ -36,7 +36,7 @@ export class GetRencanaProduksiDto {
     this.q_defect_losses = data.q_defect_losses;
     this.q_rework_losses = data.q_rework_losses;
   
-    this.q_total_losses = data.q_total_losses;
+    this.q_total_quality_losses = data.q_total_quality_losses;
 
     this.created_at = data.created_at;
   }
@@ -69,7 +69,7 @@ export class GetRencanaProduksiDto {
   @ApiModelProperty() q_defect_losses?: number;
   @ApiModelProperty() q_rework_losses?: number;
 
-  @ApiModelProperty() q_total_losses?: number;
+  @ApiModelProperty() q_total_quality_losses?: number;
 
   @ApiModelProperty() created_at: string;
 }

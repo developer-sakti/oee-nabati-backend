@@ -50,8 +50,8 @@ export class RencanaProduksi implements IRencanaProduksi{
   supervisorId: number;
 
   @Column() public po_number: string;
-  @Column() public standart_ct: number;
-  @Column() public bottleneck_ct: number;
+  @Column({  type: "float", default : 0 }) public standart_ct: number;
+  @Column({  type: "float", default : 0 }) public bottleneck_ct: number;
   @Column() public target_produksi: number;
   @Column({ type : "date" }) public date: string;
   @Column({ type : "time"}) public start_po: string;
@@ -66,7 +66,7 @@ export class RencanaProduksi implements IRencanaProduksi{
   @Column({  type: "float", default : 0 }) q_defect_losses?: number;
   @Column({  type: "float", default : 0 }) q_rework_losses?: number;
 
-  @Column({  type: "float", default : 0 }) q_total_losses?: number;
+  @Column({  type: "float", default : 0 }) q_total_quality_losses?: number;
 
   @Column({ type : "timestamp" }) public created_at: string;
   @Column({ type : "datetime", default : null  }) public updated_at: string;

@@ -33,7 +33,7 @@ export interface IRencanaProduksi {
   readonly q_defect_losses?: number;
   readonly q_rework_losses?: number;
 
-  readonly q_total_losses?: number;
+  readonly q_total_quality_losses?: number;
   
   readonly created_at?: string;
   readonly updated_at?: string;
