@@ -29,7 +29,7 @@ export interface IOeeShift {
   readonly q_total_defect_losses?: number;
   readonly q_total_rework_losses?: number;
 
-  readonly q_total_losses?: number;
+  readonly q_total_quality_losses?: number;
 
   readonly r_value_added_hours?: number;
 

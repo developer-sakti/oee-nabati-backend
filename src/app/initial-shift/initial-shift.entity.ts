@@ -4,6 +4,7 @@ import { IInitialShift } from './interface/initial-shift.interface';
 import { type } from 'os';
 import { RencanaProduksi } from '@app/app/rencana-produksi/rencana-produksi.entity';
 import { Downtime } from '../downtime/downtime.entity';
+import { OeeShift } from '../oee-shift/oee-shift.entity';
 
 @Entity()
 export class InitialShift implements IInitialShift{
@@ -29,4 +30,7 @@ export class InitialShift implements IInitialShift{
 
   @OneToMany(type => Downtime, downtime => downtime.shift)
   public downtime : Downtime;
+
+  @OneToMany(type => OeeShift, oee_shift => oee_shift.shift)
+  public oee_shift : OeeShift;
 }
