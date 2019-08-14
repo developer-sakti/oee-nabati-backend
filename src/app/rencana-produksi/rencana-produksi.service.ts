@@ -10,6 +10,7 @@ import { RencanaProduksiWaitingListCmd } from './cmd/rencana-produksi-waiting-li
 import { RencanaProduksiFindShiftCmd } from './cmd/rencana-produksi-find-shift.command';
 import { ReworkLineCmd } from '../rework-line/cmd/rework-line-request.command';
 import { LakbanFinishgoodCmd } from '../lakban-finishgood/cmd/lakban-finishgood-request.command';
+import { BadstockRequestCmd } from '../badstock-timbangan/cmd/badstock-request.command';
 
 @Injectable()
 export class RencanaProduksiService {
@@ -143,6 +144,19 @@ export class RencanaProduksiService {
   public async create(rencanaProduksi: RencanaProduksiCreateCmd): Promise<RencanaProduksi> {
     try {
       return await this.rencanaProduksiRepository.save(rencanaProduksi);
+    } catch (error) {
+      return Utils.NULL_RETURN;
+    }
+  }
+    
+  public async updateDefectBadstock(params: DeepPartial<BadstockRequestCmd>): Promise<RencanaProduksi> {
+    try {
+      let po = await this.rencanaProduksiRepository.findOne(params.rencanaProduksiId);
+      po.d_defect_qty_karton    += params.weight;
+      po.q_defect_losses        = po.d_defect_qty_karton * po.standart_ct;
+      po.q_total_quality_losses = po.q_rework_losses + po.q_defect_losses;
+      
+      return await this.rencanaProduksiRepository.save(po);
     } catch (error) {
       return Utils.NULL_RETURN;
     }
