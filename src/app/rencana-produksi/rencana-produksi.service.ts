@@ -8,6 +8,7 @@ import { RencanaProduksiFindCmd } from './cmd/rencana-produksi-find.command';
 import { RencanaProduksiCreateCmd } from './cmd/rencana-produksi-create.command';
 import { RencanaProduksiWaitingListCmd } from './cmd/rencana-produksi-waiting-list.command';
 import { RencanaProduksiFindShiftCmd } from './cmd/rencana-produksi-find-shift.command';
+import { ReworkLineCmd } from '../rework-line/cmd/rework-line-request.command';
 
 @Injectable()
 export class RencanaProduksiService {
@@ -146,11 +147,14 @@ export class RencanaProduksiService {
     }
   }
     
-  public async update(params: DeepPartial<RencanaProduksi>): Promise<RencanaProduksi> {
+  public async updateRework(params: DeepPartial<ReworkLineCmd>): Promise<RencanaProduksi> {
     try {
-      console.log(params)
-      return Utils.NULL_RETURN;
-      // return await this.rencanaProduksiRepository.save(params);
+      let po = await this.rencanaProduksiRepository.findOne(params.rencanaProduksiId);
+      po.e_rework_qty_karton    = po.e_rework_qty_karton + params.total;
+      po.q_rework_losses        = po.e_rework_qty_karton * po.standart_ct;
+      po.q_total_quality_losses = po.q_rework_losses + po.q_defect_losses;
+      
+      return await this.rencanaProduksiRepository.save(po);
     } catch (error) {
       return Utils.NULL_RETURN;
     }
