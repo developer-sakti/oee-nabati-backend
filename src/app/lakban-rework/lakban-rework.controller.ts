@@ -1,4 +1,4 @@
-import { Controller, Post, HttpStatus, Body } from '@nestjs/common';
+import { Controller, Post, HttpStatus, Body, Patch } from '@nestjs/common';
 import { LakbanReworkService } from './lakban-rework.service';
 import { ApiOperation, ApiResponse, ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { LakbanReworkCmd } from './cmd/lakban-rework-request.command';
@@ -12,7 +12,7 @@ import { RencanaProduksiService } from '../rencana-produksi/rencana-produksi.ser
 export class LakbanReworkController {
     constructor(private readonly lakbanReworkService: LakbanReworkService, private readonly rencanaProduksiService: RencanaProduksiService) {}
     
-    @Post()
+    @Patch()
     @ApiOperation({ title: 'Post LakbanRework', description: 'Save LakbanRework.' })
     @ApiResponse({ description: 'Success!', status: HttpStatus.OK})
     @ApiResponse({ description: 'Bad request.', status: HttpStatus.BAD_REQUEST })
