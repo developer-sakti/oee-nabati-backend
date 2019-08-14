@@ -9,6 +9,7 @@ import { RencanaProduksi } from './rencana-produksi.entity';
 import { RencanaProduksiCreateCmd } from './cmd/rencana-produksi-create.command';
 import { Utils } from '@app/shared/utils';
 import { RencanaProduksiWaitingListCmd } from './cmd/rencana-produksi-waiting-list.command';
+import { RencanaProduksiFindShiftCmd } from './cmd/rencana-produksi-find-shift.command';
 
 @ApiUseTags('rencanaProduksi')
 @ApiBearerAuth()
@@ -42,6 +43,15 @@ export class RencanaProduksiController {
     @ApiOperation({ title: 'Get RencanaProduksi List', description: 'Get RencanaProduksi List from JWT payload.' })
     async findListPO(@Query() req: RencanaProduksiFindCmd): Promise<any> {
         return await this.rencanaProduksiService.findByLineDate(req);
+    }
+
+    @Get('find/shift')
+    @ApiResponse({ status: HttpStatus.OK, type: GetRencanaProduksiDto, description: 'Success!' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })
+    @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
+    @ApiOperation({ title: 'Get RencanaProduksi Find Shift List', description: 'Get RencanaProduksi List from JWT payload.' })
+    async findPOByShift(@Query() req: RencanaProduksiFindShiftCmd): Promise<any> {
+        return await this.rencanaProduksiService.findByLineDateShift(req);
     }
 
     @Get('waiting-list')

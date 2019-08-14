@@ -7,6 +7,7 @@ import { Utils } from '@app/shared/utils';
 import { RencanaProduksiFindCmd } from './cmd/rencana-produksi-find.command';
 import { RencanaProduksiCreateCmd } from './cmd/rencana-produksi-create.command';
 import { RencanaProduksiWaitingListCmd } from './cmd/rencana-produksi-waiting-list.command';
+import { RencanaProduksiFindShiftCmd } from './cmd/rencana-produksi-find-shift.command';
 
 @Injectable()
 export class RencanaProduksiService {
@@ -93,6 +94,41 @@ export class RencanaProduksiService {
                             .innerJoin("rencana_produksi.supervisor", "supervisor")
                             .andWhere("rencana_produksi.date = :value1", {value1 : params.date})
                             .andWhere("line.id = :value4", {value4 : params.line_id})
+                            .getMany();
+      }
+    } catch (error) {}
+    if (!rencanaProduksi) {
+      return Utils.EMPTY_ARRAY_RETURN;
+    }
+    return rencanaProduksi;
+  }
+
+  public async findByLineDateShift(params: RencanaProduksiFindShiftCmd): Promise<any> {
+    let rencanaProduksi: RencanaProduksi[];
+    
+    try {
+      if (params.line_id === null || params.line_id === undefined) {
+        rencanaProduksi = await this.rencanaProduksiRepository
+                            .createQueryBuilder("rencana_produksi")
+                            .select(['rencana_produksi', 'shift', 'line', 'sku', 'supervisor'])
+                            .innerJoin("rencana_produksi.shift", "shift")
+                            .innerJoin("rencana_produksi.line", "line")
+                            .innerJoin("rencana_produksi.sku", "sku")
+                            .innerJoin("rencana_produksi.supervisor", "supervisor")
+                            .andWhere("rencana_produksi.date = :value1", {value1 : params.date})
+                            .andWhere("shift.id = :value2", {value2 : params.shift_id})
+                            .getMany();
+      } else {
+        rencanaProduksi = await this.rencanaProduksiRepository
+                            .createQueryBuilder("rencana_produksi")
+                            .select(['rencana_produksi', 'shift', 'line', 'sku', 'supervisor'])
+                            .innerJoin("rencana_produksi.shift", "shift")
+                            .innerJoin("rencana_produksi.line", "line")
+                            .innerJoin("rencana_produksi.sku", "sku")
+                            .innerJoin("rencana_produksi.supervisor", "supervisor")
+                            .andWhere("rencana_produksi.date = :value1", {value1 : params.date})
+                            .andWhere("line.id = :value4", {value4 : params.line_id})
+                            .andWhere("shift.id = :value2", {value2 : params.shift_id})
                             .getMany();
       }
     } catch (error) {}
