@@ -1,7 +1,8 @@
 import { IOeeShift } from "./interface/oee-shift.interface";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, AfterUpdate } from "typeorm";
 import { Line } from "../line/line.entity";
 import { InitialShift } from "../initial-shift/initial-shift.entity";
+import { async } from "rxjs/internal/scheduler/async";
 
 @Entity()
 export class OeeShift implements IOeeShift{

@@ -92,14 +92,16 @@ export class RencanaProduksiController {
 
         if (dataOee.length === 0 || dataOee === null) {
             oeeShiftCmd.total_target_produksi = body.target_produksi;
+
             storeOeeShift   = await this.oeeShiftService.create(oeeShiftCmd);
+            if (storeOeeShift) return Utils.sendResponseSaveFailed("Oee Shift")
         } else {
             oeeShiftCmd.total_target_produksi = dataOee.total_target_produksi + body.target_produksi;
-            storeOeeShift   = await this.oeeShiftService.update(dataOee.id, oeeShiftCmd);
+
+            storeOeeShift   = await this.oeeShiftService.updateTotalProduksi(dataOee.id, oeeShiftCmd);
+            if (!storeOeeShift) return Utils.sendResponseUpdateFailed("Oee Shift")
         }
 
-        console.log(storeOeeShift);
-
-        return Utils.sendResponseSaveSuccess(dataOee);
+        return Utils.sendResponseSaveSuccess(process);
     }
 }
