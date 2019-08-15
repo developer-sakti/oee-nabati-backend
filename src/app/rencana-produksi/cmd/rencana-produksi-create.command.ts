@@ -8,6 +8,7 @@ export class RencanaProduksiCreateCmd {
   @ApiModelProperty() date: string;
   @ApiModelProperty() start_po: string; 
   @ApiModelProperty() end_po: string; 
+  @ApiModelProperty() date_startpo: string; 
 
   @ApiModelProperty() shiftId: number;
   @ApiModelProperty() lineId: number;

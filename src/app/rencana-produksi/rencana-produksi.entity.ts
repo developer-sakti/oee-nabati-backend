@@ -57,7 +57,7 @@ export class RencanaProduksi implements IRencanaProduksi{
   @Column({ type : "time"}) public start_po: string;
   @Column({ type : "time"}) public end_po: string;
 
-  @Column({ asExpression: "concat(`date`,' ',`start_po`)",  nullable: true }) public date_startpo: string;
+  @Column({ type : "datetime",  nullable: true}) public date_startpo: string;
 
   @Column({  type: "float", default : 0 }) public b_finishgood_qty_karton?: number;
   @Column({  type: "float", default : 0 }) public c_total_qty_karton?: number;

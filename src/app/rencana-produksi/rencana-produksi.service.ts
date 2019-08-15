@@ -144,6 +144,8 @@ export class RencanaProduksiService {
     
   public async create(rencanaProduksi: RencanaProduksiCreateCmd): Promise<RencanaProduksi> {
     try {
+      let date_startpo = rencanaProduksi.date.concat(" ").concat(rencanaProduksi.start_po);
+      rencanaProduksi.date_startpo = date_startpo;
       return await this.rencanaProduksiRepository.save(rencanaProduksi);
     } catch (error) {
       return Utils.NULL_RETURN;
