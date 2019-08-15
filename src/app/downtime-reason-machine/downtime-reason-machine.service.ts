@@ -5,6 +5,8 @@ import { Repository, createQueryBuilder } from 'typeorm';
 import { DowntimeReasonMachineCmd } from './cmd/downtime-reason-machine.command';
 import { Machine } from '@app/app/machine/machine.entity';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
+import { Utils } from '@app/shared/utils';
+import { DowntimeReasonMachineCreateCmd } from './cmd/downtime-reason-machine-create.command';
 
 @Injectable()
 export class DowntimeReasonMachineService extends TypeOrmCrudService<DowntimeReasonMachine>{
@@ -24,15 +26,11 @@ export class DowntimeReasonMachineService extends TypeOrmCrudService<DowntimeRea
     public async findSomeDowntimeReason(params: DowntimeReasonMachineCmd): Promise<DowntimeReasonMachine[]> {
         let downtimeReasonMachine: DowntimeReasonMachine[];
         try {
-            // const downtimeReasonMachine = await createQueryBuilder("downtime_reason_machine")
-            //                     .innerJoin("downtime_reason_machine.machine", "machine")
-            //                     // .where("machineId = 1")
-            //                     .getMany();
             downtimeReasonMachine = await this.downtimeReasonMachineRepository
                                 .query('select * from downtime_reason_machine a, machine b, downtime_category c, downtime_reason d where a.machineId = b.id and a.downtimeCategoryId = c.id and a.downtimeReasonId = d.id and b.id = ?', [params.machine_id]);
         } catch (error) {}
         if (!downtimeReasonMachine) {
-          throw new NotFoundException(`downtimeReasonMachine with ${JSON.stringify(params)} does not exist`);
+          return Utils.NULL_RETURN;
         }
         return downtimeReasonMachine;
     }
@@ -44,7 +42,7 @@ export class DowntimeReasonMachineService extends TypeOrmCrudService<DowntimeRea
                                 .query('select * from downtime_reason_machine a, machine b, downtime_category c, downtime_reason d where a.machineId = b.id and a.downtimeCategoryId = c.id and a.downtimeReasonId = d.id and c.id = ? and b.id = ?', [params.categori_id, params.machine_id]);
         } catch (error) {}
         if (!downtimeReasonMachine) {
-          throw new NotFoundException(`downtimeReasonMachine with ${JSON.stringify(params)} does not exist`);
+          return Utils.NULL_RETURN;
         }
         return downtimeReasonMachine;
     }
@@ -56,7 +54,7 @@ export class DowntimeReasonMachineService extends TypeOrmCrudService<DowntimeRea
                                 .query('select * from downtime_reason_machine a, machine b, downtime_category c, downtime_reason d where a.machineId = b.id and a.downtimeCategoryId = c.id and a.downtimeReasonId = d.id');
         } catch (error) {}
         if (!downtimeReasonMachine) {
-          throw new NotFoundException(`downtimeReasonMachine does not exist`);
+          return Utils.NULL_RETURN;
         }
         return downtimeReasonMachine;
     }
@@ -65,7 +63,20 @@ export class DowntimeReasonMachineService extends TypeOrmCrudService<DowntimeRea
       try {
         return await this.downtimeReasonMachineRepository.save(downtimeReasonMachine);
       } catch (error) {
-        throw new BadRequestException(error);
+        return Utils.NULL_RETURN;
+      }
+    }
+    
+    public async update(id : number, downtimeReasonMachineCmd: DowntimeReasonMachineCreateCmd): Promise<any> {
+      try {
+        return await this.downtimeReasonMachineRepository.update({
+          id : id
+        }, {
+          downtimeCategoryId : downtimeReasonMachineCmd.downtimeCategoryId,
+          machineId : downtimeReasonMachineCmd.machineId
+        });
+      } catch (error) {
+        return Utils.NULL_RETURN;
       }
     }
 }

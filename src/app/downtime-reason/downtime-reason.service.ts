@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { Utils } from '@app/shared/utils';
 import { DowntimeReasonCmd } from './cmd/downtime-reason-create.command';
+import { Override } from '@nestjsx/crud';
 
 @Injectable()
 export class DowntimeReasonService extends TypeOrmCrudService<DowntimeReason> {
@@ -19,6 +20,18 @@ export class DowntimeReasonService extends TypeOrmCrudService<DowntimeReason> {
     public async create(reason: DowntimeReasonCmd): Promise<DowntimeReason> {
         try {
             return await this.downtimeReasonRepository.save(reason);
+        } catch (error) {
+            return Utils.NULL_RETURN;
+        }
+    }
+
+    public async updateCustom(id : number, downtimeReasonCmd: DowntimeReasonCmd): Promise<any> {
+        try {
+            return await this.downtimeReasonRepository.update({
+                id : id
+            }, {
+                reason : downtimeReasonCmd.reason
+            });
         } catch (error) {
             return Utils.NULL_RETURN;
         }
