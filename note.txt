@@ -50,3 +50,5 @@ BEGIN
     NEW.w3_number_of_breakdown = NEW.m_total_unplanned_dt + NEW.o_total_performance_losses,
     NEW.w4_up_time = NEW.l_total_production_time - NEW.w2_total_downtime;
 END
+
+cd oee-nabati-production/ &&docker-compose stop && git submodule foreach git pull origin master && docker-compose build && docker-compose up -d
