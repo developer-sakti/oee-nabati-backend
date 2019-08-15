@@ -27,7 +27,7 @@ export class DowntimeReasonMachineService extends TypeOrmCrudService<DowntimeRea
         let downtimeReasonMachine: DowntimeReasonMachine[];
         try {
             downtimeReasonMachine = await this.downtimeReasonMachineRepository
-                                .query('select * from downtime_reason_machine a, machine b, downtime_category c, downtime_reason d where a.machineId = b.id and a.downtimeCategoryId = c.id and a.downtimeReasonId = d.id and b.id = ?', [params.machine_id]);
+                                .query('select a.*, b.name, c.category, d.reason from downtime_reason_machine a, machine b, downtime_category c, downtime_reason d where a.machineId = b.id and a.downtimeCategoryId = c.id and a.downtimeReasonId = d.id and b.id = ?', [params.machine_id]);
         } catch (error) {}
         if (!downtimeReasonMachine) {
           return Utils.NULL_RETURN;
@@ -39,7 +39,7 @@ export class DowntimeReasonMachineService extends TypeOrmCrudService<DowntimeRea
         let downtimeReasonMachine: DowntimeReasonMachine[];
         try {
             downtimeReasonMachine = await this.downtimeReasonMachineRepository
-                                .query('select * from downtime_reason_machine a, machine b, downtime_category c, downtime_reason d where a.machineId = b.id and a.downtimeCategoryId = c.id and a.downtimeReasonId = d.id and c.id = ? and b.id = ?', [params.categori_id, params.machine_id]);
+                                .query('select a.*, b.name, c.category, d.reason from downtime_reason_machine a, machine b, downtime_category c, downtime_reason d where a.machineId = b.id and a.downtimeCategoryId = c.id and a.downtimeReasonId = d.id and c.id = ? and b.id = ?', [params.categori_id, params.machine_id]);
         } catch (error) {}
         if (!downtimeReasonMachine) {
           return Utils.NULL_RETURN;
@@ -51,7 +51,7 @@ export class DowntimeReasonMachineService extends TypeOrmCrudService<DowntimeRea
         let downtimeReasonMachine: DowntimeReasonMachine[];
         try {
             downtimeReasonMachine = await this.downtimeReasonMachineRepository
-                                .query('select * from downtime_reason_machine a, machine b, downtime_category c, downtime_reason d where a.machineId = b.id and a.downtimeCategoryId = c.id and a.downtimeReasonId = d.id');
+                                .query('select a.*, b.name, c.category, d.reason from downtime_reason_machine a, machine b, downtime_category c, downtime_reason d where a.machineId = b.id and a.downtimeCategoryId = c.id and a.downtimeReasonId = d.id');
         } catch (error) {}
         if (!downtimeReasonMachine) {
           return Utils.NULL_RETURN;
