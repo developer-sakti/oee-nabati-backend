@@ -16,4 +16,32 @@ export class OeeShiftService {
             return Utils.NULL_RETURN;
         }
     }
+
+    public async update(id : number, body: OeeShiftCreateCmd): Promise<any> {
+        try {
+            return await this.repo.update({
+                id : id
+            }, {
+                total_target_produksi : body.total_target_produksi
+            });
+        } catch (error) {
+            return Utils.NULL_RETURN;
+        }
+    }
+
+    public async findByLineDateShift(params: OeeShiftCreateCmd): Promise<any> {
+        let data : OeeShift;
+        try {
+            data = await this.repo.findOne({
+                where : {
+                    lineId : params.lineId,
+                    shiftId : params.shiftId,
+                    date : params.date
+                }
+            })
+            return data;
+        } catch (error) {
+            return Utils.EMPTY_ARRAY_RETURN;
+        }        
+    }
 }

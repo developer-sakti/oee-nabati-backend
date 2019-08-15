@@ -13,6 +13,7 @@ import { RencanaProduksiFindShiftCmd } from './cmd/rencana-produksi-find-shift.c
 import { OeeShiftService } from '../oee-shift/oee-shift.service';
 import { OeeShiftCreateCmd } from '../oee-shift/cmd/oee-shift-create.command';
 import { concat } from 'rxjs';
+import { OeeShift } from '../oee-shift/oee-shift.entity';
 
 @ApiUseTags('rencanaProduksi')
 @ApiBearerAuth()
@@ -78,13 +79,27 @@ export class RencanaProduksiController {
         let process = await this.rencanaProduksiService.create(body);
         if (!process) return Utils.sendResponseSaveFailed("Rencana produksi")
 
-        let oeeShiftCmd     = new OeeShiftCreateCmd()
+        let oeeShiftCmd     = new OeeShiftCreateCmd();
         oeeShiftCmd.lineId  = body.lineId;
         oeeShiftCmd.shiftId = body.shiftId;
         oeeShiftCmd.date    = body.date;
-        oeeShiftCmd
 
-        // let storeOeeShift   = await this.oeeShiftService.create();
-        return Utils.sendResponseSaveSuccess(process);
+        console.log(oeeShiftCmd);
+        
+        let dataOee = await this.oeeShiftService.findByLineDateShift(oeeShiftCmd);
+        let storeOeeShift;
+        console.log("data oee : " + dataOee);
+
+        if (dataOee.length === 0 || dataOee === null) {
+            oeeShiftCmd.total_target_produksi = body.target_produksi;
+            storeOeeShift   = await this.oeeShiftService.create(oeeShiftCmd);
+        } else {
+            oeeShiftCmd.total_target_produksi = dataOee.total_target_produksi + body.target_produksi;
+            storeOeeShift   = await this.oeeShiftService.update(dataOee.id, oeeShiftCmd);
+        }
+
+        console.log(storeOeeShift);
+
+        return Utils.sendResponseSaveSuccess(dataOee);
     }
 }
