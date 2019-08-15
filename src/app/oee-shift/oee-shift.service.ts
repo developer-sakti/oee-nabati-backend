@@ -4,6 +4,7 @@ import { OeeShift } from './oee-shift.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Utils } from '@app/shared/utils';
+import { OeeShiftDateShiftCmd } from './cmd/oee-shift-date-shift.command';
 
 @Injectable()
 export class OeeShiftService {
@@ -14,11 +15,44 @@ export class OeeShiftService {
         try {
             data = await this.repo.findOne({
                 where : {
+                    date : params.date,
                     lineId : params.lineId,
-                    shiftId : params.shiftId,
-                    date : params.date
+                    shiftId : params.shiftId
                 },
                 relations : ["shift", "line"]
+            })
+            return data;
+        } catch (error) {
+            return Utils.NULL_RETURN;
+        }        
+    }
+
+    public async findByDateShift(params: OeeShiftDateShiftCmd): Promise<any> {
+        let data : OeeShift[];
+        try {
+            data = await this.repo.find({
+                where : {
+                    date : params.date,
+                    shiftId : params.shiftId
+                },
+                relations : ["shift", "line"]
+            })
+            return data;
+        } catch (error) {
+            return Utils.EMPTY_ARRAY_RETURN;
+        }        
+    }
+
+    public async findByDateShiftDetails(line_id : number, params: OeeShiftDateShiftCmd): Promise<any> {
+        let data : OeeShift;
+        try {
+            data = await this.repo.findOne({
+                relations : ["shift", "line"],
+                where : {
+                    date : params.date,
+                    shiftId : params.shiftId,
+                    lineId : line_id
+                },
             })
             return data;
         } catch (error) {

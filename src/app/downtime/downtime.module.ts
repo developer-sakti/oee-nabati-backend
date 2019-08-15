@@ -5,20 +5,22 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Downtime } from './downtime.entity';
 import { OeeShift } from '../oee-shift/oee-shift.entity';
 import { OeeShiftService } from '../oee-shift/oee-shift.service';
+import { BadstockTimbanganService } from '../badstock-timbangan/badstock-timbangan.service';
+import { BadstockTimbangan } from '../badstock-timbangan/badstock-timbangan.entity';
 
 @Module({
   providers: [
     DowntimeService,
-    OeeShiftService
+    OeeShiftService,
   ],
   controllers: [DowntimeController],
   imports: [TypeOrmModule.forFeature([
     Downtime,
-    OeeShift
+    OeeShift,
   ])],
   exports: [
     DowntimeService,
-    OeeShiftService
+    OeeShiftService,
   ],
 })
 export class DowntimeModule {}
