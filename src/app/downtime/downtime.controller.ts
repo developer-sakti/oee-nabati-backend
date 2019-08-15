@@ -1,4 +1,4 @@
-import { Controller, Post, HttpStatus, Body, Get, Query } from '@nestjs/common';
+import { Controller, Post, HttpStatus, Body, Get, Query, Param } from '@nestjs/common';
 import { DowntimeService } from './downtime.service';
 import { ApiBearerAuth, ApiUseTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { GetDowntimeDto } from './dto/downtime.dto';
@@ -34,6 +34,18 @@ export class DowntimeController {
   @ApiResponse({ description: 'Bad request.', status: HttpStatus.BAD_REQUEST })
   public async getByLine(@Query() req: DowntimeGetbylineCmd): Promise<any> {
     let process = await this.downtimeService.findByLine(req);
+    if (!process) {
+      return Utils.NULL_RETURN;
+    }
+    return process;
+  }
+
+  @Get('category/:category_id')
+  @ApiOperation({ title: 'Get Downtime', description: 'Get downtime.' })
+  @ApiResponse({ description: 'Success!', status: HttpStatus.OK })
+  @ApiResponse({ description: 'Bad request.', status: HttpStatus.BAD_REQUEST })
+  public async getByCategory(@Param("category_id") category_id: number, @Query() req : DowntimeGetbylineCmd): Promise<any> {
+    let process = await this.downtimeService.findByCategory(category_id, req);
     if (!process) {
       return Utils.NULL_RETURN;
     }
