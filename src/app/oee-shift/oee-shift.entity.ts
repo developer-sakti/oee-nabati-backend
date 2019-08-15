@@ -18,8 +18,8 @@ export class OeeShift implements IOeeShift{
     @Column({  type: "int", nullable: true })
     lineId: number;
 
-    @Column({ type: "float", default : 0 }) public total_target_produksi: number;
     @Column({ type : "date" }) public date: string;
+    @Column({ type: "float", default : 0 }) public total_target_produksi: number;
 
     @Column({  type: "float", default : 0 }) public b_finishgood_shift: number;
     @Column({  type: "float", default : 0 }) public c_total_qty_shift: number;

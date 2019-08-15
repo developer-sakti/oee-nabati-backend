@@ -10,12 +10,17 @@ import { RencanaProduksiCreateCmd } from './cmd/rencana-produksi-create.command'
 import { Utils } from '@app/shared/utils';
 import { RencanaProduksiWaitingListCmd } from './cmd/rencana-produksi-waiting-list.command';
 import { RencanaProduksiFindShiftCmd } from './cmd/rencana-produksi-find-shift.command';
+import { OeeShiftService } from '../oee-shift/oee-shift.service';
+import { OeeShiftCreateCmd } from '../oee-shift/cmd/oee-shift-create.command';
 
 @ApiUseTags('rencanaProduksi')
 @ApiBearerAuth()
 @Controller('api/v1/rencana-produksi')
 export class RencanaProduksiController {
-    constructor(private readonly rencanaProduksiService: RencanaProduksiService) {}
+    constructor(
+        private readonly rencanaProduksiService: RencanaProduksiService,
+        private readonly oeeShiftService: OeeShiftService
+    ) {}
 
     @Get()
     @ApiResponse({ status: HttpStatus.OK, type: GetRencanaProduksiDto, description: 'Success!' })
@@ -70,10 +75,15 @@ export class RencanaProduksiController {
     @ApiOperation({ title: 'Create RencanaProduksi ', description: 'Create RencanaProduksi from JWT payload.' })
     async store(@Body() body: RencanaProduksiCreateCmd): Promise<any> {
         let process = await this.rencanaProduksiService.create(body);
+        if (!process) return Utils.sendResponseSaveFailed("Rencana produksi")
 
-        if (!process) {
-            return Utils.sendResponseSaveFailed("Rencana produksi")
-        }
+        let oeeShiftCmd     = new OeeShiftCreateCmd()
+        oeeShiftCmd.lineId  = body.lineId;
+        oeeShiftCmd.shiftId = body.shiftId;
+        oeeShiftCmd.date    = body.date;
+        oeeShiftCmd
+
+        // let storeOeeShift   = await this.oeeShiftService.create();
         return Utils.sendResponseSaveSuccess(process);
     }
 }
