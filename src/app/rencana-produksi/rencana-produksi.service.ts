@@ -11,6 +11,7 @@ import { RencanaProduksiFindShiftCmd } from './cmd/rencana-produksi-find-shift.c
 import { ReworkLineCmd } from '../rework-line/cmd/rework-line-request.command';
 import { LakbanFinishgoodCmd } from '../lakban-finishgood/cmd/lakban-finishgood-request.command';
 import { BadstockRequestCmd } from '../badstock-timbangan/cmd/badstock-request.command';
+import { concat } from 'rxjs';
 
 @Injectable()
 export class RencanaProduksiService {
@@ -63,7 +64,7 @@ export class RencanaProduksiService {
                               .innerJoin("rencana_produksi.line", "line")
                               .innerJoin("rencana_produksi.sku", "sku")
                               .innerJoin("rencana_produksi.supervisor", "supervisor")
-                              .andWhere("rencana_produksi.id > :value1", {value1 : params.poActiveId})
+                              .andWhere("rencana_produksi.date_startpo >= :value1", {value1 : params.datetime})
                               .andWhere("line.id = :value2", {value2 : params.lineId})
                               .getMany();
       } catch (error) {}
