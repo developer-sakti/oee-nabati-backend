@@ -3,11 +3,22 @@ import { RencanaProduksiService } from './rencana-produksi.service';
 import { RencanaProduksiController } from './rencana-produksi.controller';
 import { RencanaProduksi } from './rencana-produksi.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { OeeShiftService } from '../oee-shift/oee-shift.service';
+import { OeeShift } from '../oee-shift/oee-shift.entity';
 
 @Module({
-  providers: [RencanaProduksiService],
+  providers: [
+    RencanaProduksiService,
+    OeeShiftService
+  ],
   controllers: [RencanaProduksiController],
-  imports: [TypeOrmModule.forFeature([RencanaProduksi])],
-  exports: [RencanaProduksiService],
+  imports: [TypeOrmModule.forFeature([
+    RencanaProduksi,
+    OeeShift
+  ])],
+  exports: [
+    RencanaProduksiService,
+    OeeShiftService
+  ],
 })
 export class RencanaProduksiModule {}
