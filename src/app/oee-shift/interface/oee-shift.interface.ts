@@ -12,8 +12,8 @@ export interface IOeeShift {
   readonly shiftId?: number;
   readonly lineId?: number;
 
-  readonly total_target_produksi?: number;
   readonly date?: string;
+  readonly total_target_produksi?: number;
 
   readonly b_finishgood_shift?: number;
   readonly c_total_qty_shift?: number;
