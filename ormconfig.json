@@ -2,9 +2,9 @@
   "type": "mysql",
   "host": "database",
   "port": 3306,
-  "username": "mygetzu",
-  "password": "P@ssw0rd|mysql",
-  "database": "ooe_nabati",
+  "username": "DB_USER",
+  "password": "DB_PASSWORD",
+  "database": "DB_NAME",
   "entities": [
     "src/**/**.entity{.ts,.js}"
   ],
