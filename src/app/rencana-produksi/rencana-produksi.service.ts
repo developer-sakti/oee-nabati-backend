@@ -12,6 +12,7 @@ import { ReworkLineCmd } from '../rework-line/cmd/rework-line-request.command';
 import { LakbanFinishgoodCmd } from '../lakban-finishgood/cmd/lakban-finishgood-request.command';
 import { BadstockRequestCmd } from '../badstock-timbangan/cmd/badstock-request.command';
 import { concat } from 'rxjs';
+import { RencanaProduksiFindShiftDateCmd } from './cmd/rencana-produksi-find-shiftdate.command';
 
 @Injectable()
 export class RencanaProduksiService {
@@ -135,6 +136,27 @@ export class RencanaProduksiService {
                             .andWhere("shift.id = :value2", {value2 : params.shift_id})
                             .getMany();
       }
+    } catch (error) {}
+    if (!rencanaProduksi) {
+      return Utils.EMPTY_ARRAY_RETURN;
+    }
+    return rencanaProduksi;
+  }
+
+  public async findByDateShift(params: RencanaProduksiFindShiftDateCmd): Promise<RencanaProduksi[]> {
+    let rencanaProduksi: RencanaProduksi[];
+    
+    try {
+        rencanaProduksi = await this.rencanaProduksiRepository
+                            .createQueryBuilder("rencana_produksi")
+                            .select(['rencana_produksi', 'shift', 'line', 'sku', 'supervisor'])
+                            .innerJoin("rencana_produksi.shift", "shift")
+                            .innerJoin("rencana_produksi.line", "line")
+                            .innerJoin("rencana_produksi.sku", "sku")
+                            .innerJoin("rencana_produksi.supervisor", "supervisor")
+                            .andWhere("rencana_produksi.date = :value1", {value1 : params.date})
+                            .andWhere("shift.id = :value2", {value2 : params.shiftId})
+                            .getMany();
     } catch (error) {}
     if (!rencanaProduksi) {
       return Utils.EMPTY_ARRAY_RETURN;
