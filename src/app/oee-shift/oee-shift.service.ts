@@ -23,17 +23,30 @@ export class OeeShiftService {
             })
 
             let sector_oee = 1;
+            let sector_a = 0;
+            let sector_p = 0;
+            let sector_q = 0;
+
             if (data.length > 0) {
                 data.forEach(element => {
                     sector_oee *= (element.line_oee / 100);
+                    sector_a += element.availablity;
+                    sector_p += element.performance_rate;
+                    sector_q += element.quality_product_rate;
                 });
 
                 sector_oee *= 100;
+                sector_a /= 4;
+                sector_p /= 4;
+                sector_q /= 4;
 
                 return {
                     date        : params.date,
                     shift       : data[0].shift.shift_name,
-                    sector_oee  : sector_oee
+                    sector_oee  : sector_oee,
+                    sector_availablity  : sector_a,
+                    sector_performance_rate  : sector_p,
+                    sector_quality  : sector_q,
                 }
             }
         } catch (error) {
