@@ -176,7 +176,8 @@ export class RencanaProduksiService {
         " WHERE rencana_produksi.date >= ?" +
         " AND rencana_produksi.date <= ?" + 
         " AND rencana_produksi.lineId = ?" + 
-        " GROUP BY DATE(rencana_produksi.date)"
+        " GROUP BY DATE(rencana_produksi.date)" +
+        " LIMIT 6"
     } else if (params.time_periodic === Variable.TIME_PERIODIC[1]) {
         rawQuery = "SELECT WEEK(rencana_produksi.date) as week," + 
         " SUM(rencana_produksi.target_produksi) AS target_produksi," + 
@@ -185,7 +186,8 @@ export class RencanaProduksiService {
         " WHERE rencana_produksi.date >= ?" +
         " AND rencana_produksi.date <= ?" + 
         " AND rencana_produksi.lineId = ?" + 
-        " GROUP BY WEEK(rencana_produksi.date)"
+        " GROUP BY WEEK(rencana_produksi.date)" +
+        " LIMIT 6"
     } else if (params.time_periodic === Variable.TIME_PERIODIC[2]) {
         rawQuery = "SELECT MONTH(rencana_produksi.date) as month," + 
         " SUM(rencana_produksi.target_produksi) AS target_produksi," + 
@@ -194,7 +196,8 @@ export class RencanaProduksiService {
         " WHERE rencana_produksi.date >= ?" +
         " AND rencana_produksi.date <= ?" + 
         " AND rencana_produksi.lineId = ?" + 
-        " GROUP BY MONTH(rencana_produksi.date)"
+        " GROUP BY MONTH(rencana_produksi.date)" +
+        " LIMIT 6"
     } else {
         rawQuery = "SELECT YEAR(rencana_produksi.date) as year," + 
         " SUM(rencana_produksi.target_produksi) AS target_produksi," + 
@@ -203,7 +206,8 @@ export class RencanaProduksiService {
         " WHERE rencana_produksi.date >= ?" +
         " AND rencana_produksi.date <= ?" + 
         " AND rencana_produksi.lineId = ?" + 
-        " GROUP BY YEAR(rencana_produksi.date)"
+        " GROUP BY YEAR(rencana_produksi.date)" +
+        " LIMIT 6"
     }
     
     try {

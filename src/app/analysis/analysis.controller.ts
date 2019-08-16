@@ -23,12 +23,35 @@ export class AnalysisController {
     @Get('production')
     @ApiOperation({ title: 'Get Production', description: 'Get Analysis Production from JWT payload.' })
     async getAnalysisProduction(@Query() query : AnalysisTimePeriodicCmd): Promise<any> {
-        let production  = await this.rencanaProduksiService.findByTimePeriodic(query);
-        let oee         = await this.oeeShiftService.findByTimePeriodic(query);
-        
+        let production      = await this.rencanaProduksiService.findByTimePeriodic(query);
+
+        let oee       = await this.oeeShiftService.findByTimePeriodic(query);
+        let oee_stats = await this.oeeShiftService.getStatisticTimePeriodic(query);
+
+        let availability_loss   = await this.downtimeService.findParetoDowntimeLoss(2, query);
+        let availability_stats  = await this.downtimeService.getStatisticTimePeriodic(2, query);
+
+        let performance_loss   = await this.downtimeService.findParetoDowntimeLoss(3, query);
+        let performance_stats  = await this.downtimeService.getStatisticTimePeriodic(3, query);
+
         return {
             production  : production,
-            oee         : oee
+            oee         : {
+                data        : oee,
+                statistic   : oee_stats
+            },
+            availability_loss : {
+                data        : availability_loss,
+                statistic   : availability_stats
+            },
+            performance_loss : {
+                data        : performance_loss,
+                statistic   : performance_stats
+            },
+            quality_loss : {
+                data        : performance_loss,
+                statistic   : performance_stats
+            }
         }
     }
 }
