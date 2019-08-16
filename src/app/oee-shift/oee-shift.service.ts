@@ -137,7 +137,8 @@ export class OeeShiftService {
                 " WHERE oee_shift.date >= ?" +
                 " AND oee_shift.date <= ?" +
                 " AND oee_shift.lineId = ?" +
-                " GROUP BY DATE(oee_shift.date)"
+                " GROUP BY DATE(oee_shift.date)" +
+                " LIMIT 6"
         } else if (params.time_periodic === Variable.TIME_PERIODIC[1]) {
             rawQuery = "SELECT WEEK(oee_shift.date) as week," +
                 " (SUM(oee_shift.line_oee) / COUNT(oee_shift.line_oee)) AS line_oee," +
@@ -148,7 +149,8 @@ export class OeeShiftService {
                 " WHERE oee_shift.date >= ?" +
                 " AND oee_shift.date <= ?" +
                 " AND oee_shift.lineId = ?" +
-                " GROUP BY WEEK(oee_shift.date)"
+                " GROUP BY WEEK(oee_shift.date)" +
+                " LIMIT 6"
         } else if (params.time_periodic === Variable.TIME_PERIODIC[2]) {
             rawQuery = "SELECT MONTH(oee_shift.date) as month," +
                 " (SUM(oee_shift.line_oee) / COUNT(oee_shift.line_oee)) AS line_oee," +
@@ -159,7 +161,8 @@ export class OeeShiftService {
                 " WHERE oee_shift.date >= ?" +
                 " AND oee_shift.date <= ?" +
                 " AND oee_shift.lineId = ?" +
-                " GROUP BY MONTH(oee_shift.date)"
+                " GROUP BY MONTH(oee_shift.date)" +
+                " LIMIT 6"
         } else {
             rawQuery = "SELECT YEAR(oee_shift.date) as year," +
                 " (SUM(oee_shift.line_oee) / COUNT(oee_shift.line_oee)) AS line_oee," +
@@ -170,7 +173,67 @@ export class OeeShiftService {
                 " WHERE oee_shift.date >= ?" +
                 " AND oee_shift.date <= ?" +
                 " AND oee_shift.lineId = ?" +
-                " GROUP BY YEAR(oee_shift.date)"
+                " GROUP BY YEAR(oee_shift.date)" +
+                " LIMIT 6"
+        }
+        
+        try {
+            data = await this.repo.query(rawQuery, 
+                [params.from_date, params.to_date, params.line_id]);
+        } catch (error) {}
+
+        if (!data) {
+            console.log("Query error")
+            return Utils.EMPTY_ARRAY_RETURN;
+        }
+        
+        return data;      
+    }
+
+    public async getStatisticTimePeriodic(params: AnalysisTimePeriodicCmd): Promise<any> {
+        let data: any;
+        let rawQuery : string;
+
+        if (params.time_periodic === Variable.TIME_PERIODIC[0]) {
+            rawQuery = "SELECT AVG(oee_shift.line_oee) AS oee_avg," +
+                " MAX(oee_shift.line_oee) AS oee_highest," +
+                " MIN(oee_shift.line_oee) AS oee_lowest," +
+                " SUM(oee_shift.l_total_production_time) AS total_production_time," +
+                " SUM(oee_shift.w2_total_downtime) AS total_loss_in_time" +
+                " FROM oee_shift" +
+                " WHERE oee_shift.date >= ?" +
+                " AND oee_shift.date <= ?" +
+                " AND oee_shift.lineId = ?"
+        } else if (params.time_periodic === Variable.TIME_PERIODIC[1]) {
+            rawQuery = "SELECT AVG(oee_shift.line_oee) AS oee_avg," +
+                " MAX(oee_shift.line_oee) AS oee_highest," +
+                " MIN(oee_shift.line_oee) AS oee_lowest," +
+                " SUM(oee_shift.l_total_production_time) AS total_production_time," +
+                " SUM(oee_shift.w2_total_downtime) AS total_loss_in_time" +
+                " FROM oee_shift" +
+                " WHERE oee_shift.date >= ?" +
+                " AND oee_shift.date <= ?" +
+                " AND oee_shift.lineId = ?"
+        } else if (params.time_periodic === Variable.TIME_PERIODIC[2]) {
+            rawQuery = "SELECT AVG(oee_shift.line_oee) AS oee_avg," +
+                " MAX(oee_shift.line_oee) AS oee_highest," +
+                " MIN(oee_shift.line_oee) AS oee_lowest," +
+                " SUM(oee_shift.l_total_production_time) AS total_production_time," +
+                " SUM(oee_shift.w2_total_downtime) AS total_loss_in_time" +
+                " FROM oee_shift" +
+                " WHERE oee_shift.date >= ?" +
+                " AND oee_shift.date <= ?" +
+                " AND oee_shift.lineId = ?"
+        } else {
+            rawQuery = "SELECT AVG(oee_shift.line_oee) AS oee_avg," +
+                " MAX(oee_shift.line_oee) AS oee_highest," +
+                " MIN(oee_shift.line_oee) AS oee_lowest," +
+                " SUM(oee_shift.l_total_production_time) AS total_production_time," +
+                " SUM(oee_shift.w2_total_downtime) AS total_loss_in_time" +
+                " FROM oee_shift" +
+                " WHERE oee_shift.date >= ?" +
+                " AND oee_shift.date <= ?" +
+                " AND oee_shift.lineId = ?"
         }
         
         try {

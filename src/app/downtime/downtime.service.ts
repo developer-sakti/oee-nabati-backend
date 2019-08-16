@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { Utils } from '@app/shared/utils';
 import { DowntimeGetbylineCmd } from './cmd/downtime-getbyline.command';
 import { OeeShiftDateShiftCmd } from '../oee-shift/cmd/oee-shift-date-shift.command';
+import { Variable } from '@app/shared/variable';
+import { AnalysisTimePeriodicCmd } from '../analysis/cmd/analysis-time-periodic.command';
 
 @Injectable()
 export class DowntimeService {
@@ -93,5 +95,55 @@ export class DowntimeService {
             return Utils.NULL_RETURN;
         }
         return downtime;
+    }
+    
+    public async findParetoDowntimeLoss(categoryId : number, params: AnalysisTimePeriodicCmd): Promise<any> {
+        let data: any;
+        let rawQuery = "SELECT b.reason as reason," +
+            " SUM(a.duration) AS duration" +
+            " FROM downtime a, downtime_reason b" +
+            " WHERE a.downtimeReasonId = b.id" +
+            " AND a.date >= ?" +
+            " AND a.date <= ?" +
+            " AND a.lineId = ?" +
+            " AND a.downtimeCategoryId = ?" +
+            " GROUP BY a.downtimeReasonId" +
+            " ORDER BY a.duration ASC" +
+            " LIMIT 6" 
+        
+        try {
+            data = await this.downtimeRepository.query(rawQuery, 
+                [params.from_date, params.to_date, params.line_id, categoryId]);
+        } catch (error) {}
+
+        if (!data) {
+            console.log("Query error")
+            return Utils.EMPTY_ARRAY_RETURN;
+        }
+        
+        return data;      
+    }
+
+    public async getStatisticTimePeriodic(categoryId : number, params: AnalysisTimePeriodicCmd): Promise<any> {
+        let data: any;
+        let rawQuery = "SELECT COUNT(a.duration) AS total_accumulation," +
+            " SUM(a.duration) AS total_time_accumulation" +
+            " FROM downtime a" +
+            " WHERE a.date >= ?" +
+            " AND a.date <= ?" +
+            " AND a.lineId = ?" +
+            " AND a.downtimeCategoryId = ?"
+        
+        try {
+            data = await this.downtimeRepository.query(rawQuery, 
+                [params.from_date, params.to_date, params.line_id, categoryId]);
+        } catch (error) {}
+
+        if (!data) {
+            console.log("Query error")
+            return Utils.EMPTY_ARRAY_RETURN;
+        }
+        
+        return data;      
     }
 }
