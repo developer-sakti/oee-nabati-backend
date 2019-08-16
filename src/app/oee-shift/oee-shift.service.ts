@@ -6,6 +6,8 @@ import { Repository } from 'typeorm';
 import { Utils } from '@app/shared/utils';
 import { OeeShiftDateShiftCmd } from './cmd/oee-shift-date-shift.command';
 import { OeeShiftDateLineCmd } from './cmd/oee-shift-date-line.command';
+import { AnalysisTimePeriodicCmd } from '../analysis/cmd/analysis-time-periodic.command';
+import { Variable } from '@app/shared/variable';
 
 @Injectable()
 export class OeeShiftService {
@@ -119,6 +121,69 @@ export class OeeShiftService {
         } catch (error) {
             return Utils.NULL_RETURN;
         }        
+    }
+
+    public async findByTimePeriodic(params: AnalysisTimePeriodicCmd): Promise<any> {
+        let data: any;
+        let rawQuery : string;
+
+        if (params.time_periodic === Variable.TIME_PERIODIC[0]) {
+            rawQuery = "SELECT DATE_FORMAT(oee_shift.date, '%Y-%m-%d') as date," +
+                " (SUM(oee_shift.line_oee) / COUNT(oee_shift.line_oee)) AS line_oee," +
+                " (SUM(oee_shift.availablity) / COUNT(oee_shift.line_oee)) AS availablity," +
+                " (SUM(oee_shift.performance_rate) / COUNT(oee_shift.line_oee)) AS performance_rate," +
+                " (SUM(oee_shift.quality_product_rate) / COUNT(oee_shift.line_oee)) AS quality_product_rate" +
+                " FROM oee_shift" +
+                " WHERE oee_shift.date >= ?" +
+                " AND oee_shift.date <= ?" +
+                " AND oee_shift.lineId = ?" +
+                " GROUP BY DATE(oee_shift.date)"
+        } else if (params.time_periodic === Variable.TIME_PERIODIC[1]) {
+            rawQuery = "SELECT WEEK(oee_shift.date) as week," +
+                " (SUM(oee_shift.line_oee) / COUNT(oee_shift.line_oee)) AS line_oee," +
+                " (SUM(oee_shift.availablity) / COUNT(oee_shift.line_oee)) AS availablity," +
+                " (SUM(oee_shift.performance_rate) / COUNT(oee_shift.line_oee)) AS performance_rate," +
+                " (SUM(oee_shift.quality_product_rate) / COUNT(oee_shift.line_oee)) AS quality_product_rate" +
+                " FROM oee_shift" +
+                " WHERE oee_shift.date >= ?" +
+                " AND oee_shift.date <= ?" +
+                " AND oee_shift.lineId = ?" +
+                " GROUP BY WEEK(oee_shift.date)"
+        } else if (params.time_periodic === Variable.TIME_PERIODIC[2]) {
+            rawQuery = "SELECT MONTH(oee_shift.date) as month," +
+                " (SUM(oee_shift.line_oee) / COUNT(oee_shift.line_oee)) AS line_oee," +
+                " (SUM(oee_shift.availablity) / COUNT(oee_shift.line_oee)) AS availablity," +
+                " (SUM(oee_shift.performance_rate) / COUNT(oee_shift.line_oee)) AS performance_rate," +
+                " (SUM(oee_shift.quality_product_rate) / COUNT(oee_shift.line_oee)) AS quality_product_rate" +
+                " FROM oee_shift" +
+                " WHERE oee_shift.date >= ?" +
+                " AND oee_shift.date <= ?" +
+                " AND oee_shift.lineId = ?" +
+                " GROUP BY MONTH(oee_shift.date)"
+        } else {
+            rawQuery = "SELECT YEAR(oee_shift.date) as year," +
+                " (SUM(oee_shift.line_oee) / COUNT(oee_shift.line_oee)) AS line_oee," +
+                " (SUM(oee_shift.availablity) / COUNT(oee_shift.line_oee)) AS availablity," +
+                " (SUM(oee_shift.performance_rate) / COUNT(oee_shift.line_oee)) AS performance_rate," +
+                " (SUM(oee_shift.quality_product_rate) / COUNT(oee_shift.line_oee)) AS quality_product_rate" +
+                " FROM oee_shift" +
+                " WHERE oee_shift.date >= ?" +
+                " AND oee_shift.date <= ?" +
+                " AND oee_shift.lineId = ?" +
+                " GROUP BY YEAR(oee_shift.date)"
+        }
+        
+        try {
+            data = await this.repo.query(rawQuery, 
+                [params.from_date, params.to_date, params.line_id]);
+        } catch (error) {}
+
+        if (!data) {
+            console.log("Query error")
+            return Utils.EMPTY_ARRAY_RETURN;
+        }
+        
+        return data;      
     }
 
     public async create(body: OeeShiftCreateCmd): Promise<any> {

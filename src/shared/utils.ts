@@ -13,6 +13,13 @@ export class Utils {
         }
     }
 
+    static sendResponseDataNotFound() {
+        return {
+            success : false,
+            message : "Sorry, Unauthorized user !"
+        }
+    }
+
     static sendResponseSaveSuccess(data : any) {
         return {
             success : true,

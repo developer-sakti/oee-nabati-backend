@@ -5,7 +5,8 @@ import { OeeShiftService } from '../oee-shift/oee-shift.service';
 import { BadstockTimbanganService } from '../badstock-timbangan/badstock-timbangan.service';
 import { DowntimeService } from '../downtime/downtime.service';
 import { ApiUseTags, ApiBearerAuth, ApiResponse, ApiOperation } from '@nestjs/swagger';
-import { RencanaProduksiTimePeriodicCmd } from '../rencana-produksi/cmd/rencana-produksi-time-periodic.command';
+import { AnalysisTimePeriodicCmd } from './cmd/analysis-time-periodic.command';
+import { Utils } from '@app/shared/utils';
 
 @ApiUseTags('Analysis')
 @ApiBearerAuth()
@@ -21,15 +22,13 @@ export class AnalysisController {
 
     @Get('production')
     @ApiOperation({ title: 'Get Production', description: 'Get Analysis Production from JWT payload.' })
-    async getAnalysisProduction(@Query() query : RencanaProduksiTimePeriodicCmd): Promise<any> {
-        let po = await this.rencanaProduksiService.findByTimePeriodic(query);
-        return po;
-
-        // if (oeeshift == null && downtime.length == 0) return Utils.NULL_RETURN;
-
-        // return {
-        //     oee_shift   : oeeshift,
-        //     downtime    : downtime
-        // }
+    async getAnalysisProduction(@Query() query : AnalysisTimePeriodicCmd): Promise<any> {
+        let production  = await this.rencanaProduksiService.findByTimePeriodic(query);
+        let oee         = await this.oeeShiftService.findByTimePeriodic(query);
+        
+        return {
+            production  : production,
+            oee         : oee
+        }
     }
 }
