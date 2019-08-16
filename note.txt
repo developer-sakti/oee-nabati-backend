@@ -63,3 +63,33 @@ SELECT WEEK(rencana_produksi.date) as week,
          AND rencana_produksi.date <= "2019-08-21" 
          AND rencana_produksi.lineId = 1
          GROUP BY WEEK(rencana_produksi.date)
+
+SELECT DATE_FORMAT(oee_shift.date, '%Y-%m-%d') as date,
+         (SUM(oee_shift.line_oee) / COUNT(oee_shift.line_oee)) AS line_oee
+         FROM oee_shift
+         WHERE oee_shift.date >= "2019-08-15"
+         AND oee_shift.date <= "2019-08-21" 
+         AND oee_shift.lineId = 1
+         GROUP BY DATE(oee_shift.date)
+
+SELECT DATE_FORMAT(oee_shift.date, '%Y-%m-%d') as date,
+         (SUM(oee_shift.line_oee) / COUNT(oee_shift.line_oee)) AS line_oee,
+         (SUM(oee_shift.availablity) / COUNT(oee_shift.line_oee)) AS availablity,
+         (SUM(oee_shift.performance_rate) / COUNT(oee_shift.line_oee)) AS performance_rate,
+         (SUM(oee_shift.quality_product_rate) / COUNT(oee_shift.line_oee)) AS quality_product_rate
+         FROM oee_shift
+         WHERE oee_shift.date >= "2019-08-15"
+         AND oee_shift.date <= "2019-08-21" 
+         AND oee_shift.lineId = 1
+         GROUP BY DATE(oee_shift.date)
+
+SELECT MONTH(oee_shift.date) as periodic,
+         (SUM(oee_shift.line_oee) / COUNT(oee_shift.line_oee)) AS line_oee,
+         (SUM(oee_shift.availablity) / COUNT(oee_shift.line_oee)) AS availablity,
+         (SUM(oee_shift.performance_rate) / COUNT(oee_shift.line_oee)) AS performance_rate,
+         (SUM(oee_shift.quality_product_rate) / COUNT(oee_shift.line_oee)) AS quality_product_rate
+         FROM oee_shift
+         WHERE oee_shift.date >= "2019-08-15"
+         AND oee_shift.date <= "2019-08-21" 
+         AND oee_shift.lineId = 1
+         GROUP BY MONTH(oee_shift.date)

@@ -9,7 +9,6 @@ import { BadstockTimbangan } from '../badstock-timbangan/badstock-timbangan.enti
 import { BadstockTimbanganService } from '../badstock-timbangan/badstock-timbangan.service';
 import { Utils } from '@app/shared/utils';
 import { OeeShiftDateTimeCmd } from './cmd/oee-shift-date-time.command';
-import { RencanaProduksiTimePeriodicCmd } from '../rencana-produksi/cmd/rencana-produksi-time-periodic.command';
 
 @ApiUseTags('OEE')
 @ApiBearerAuth()

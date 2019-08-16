@@ -13,7 +13,7 @@ import { LakbanFinishgoodCmd } from '../lakban-finishgood/cmd/lakban-finishgood-
 import { BadstockRequestCmd } from '../badstock-timbangan/cmd/badstock-request.command';
 import { concat } from 'rxjs';
 import { RencanaProduksiFindShiftDateCmd } from './cmd/rencana-produksi-find-shiftdate.command';
-import { RencanaProduksiTimePeriodicCmd } from './cmd/rencana-produksi-time-periodic.command';
+import { AnalysisTimePeriodicCmd } from '../analysis/cmd/analysis-time-periodic.command';
 import { raw } from 'mysql';
 import { Variable } from '@app/shared/variable';
 
@@ -164,8 +164,8 @@ export class RencanaProduksiService {
     return rencanaProduksi;
   }
 
-  public async findByTimePeriodic(params: RencanaProduksiTimePeriodicCmd): Promise<any> {
-    let rencanaProduksi: any;
+  public async findByTimePeriodic(params: AnalysisTimePeriodicCmd): Promise<any> {
+    let data: any;
     let rawQuery : string;
 
     if (params.time_periodic === Variable.TIME_PERIODIC[0]) {
@@ -207,16 +207,16 @@ export class RencanaProduksiService {
     }
     
     try {
-        rencanaProduksi = await this.rencanaProduksiRepository.query(rawQuery, 
+        data = await this.rencanaProduksiRepository.query(rawQuery, 
             [params.from_date, params.to_date, params.line_id]);
     } catch (error) {}
 
-    if (!rencanaProduksi) {
+    if (!data) {
         console.log("Query error")
         return Utils.EMPTY_ARRAY_RETURN;
     }
     
-    return rencanaProduksi;
+    return data;
   }
     
   public async create(rencanaProduksi: RencanaProduksiCreateCmd): Promise<RencanaProduksi> {

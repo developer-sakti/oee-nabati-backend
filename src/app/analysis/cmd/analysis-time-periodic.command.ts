@@ -1,6 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 
-export class RencanaProduksiTimePeriodicCmd {
+export class AnalysisTimePeriodicCmd {
   @ApiModelProperty() line_id: number;
   @ApiModelProperty() from_date: string;
   @ApiModelProperty() to_date: string;
