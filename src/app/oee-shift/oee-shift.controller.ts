@@ -8,6 +8,7 @@ import { DowntimeService } from '../downtime/downtime.service';
 import { BadstockTimbangan } from '../badstock-timbangan/badstock-timbangan.entity';
 import { BadstockTimbanganService } from '../badstock-timbangan/badstock-timbangan.service';
 import { Utils } from '@app/shared/utils';
+import { OeeShiftDateTimeCmd } from './cmd/oee-shift-date-time.command';
 
 @ApiUseTags('OEE')
 @ApiBearerAuth()
@@ -25,8 +26,18 @@ export class OeeShiftController {
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Oee Shift not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
     @ApiOperation({ title: 'Get Oee Shift List', description: 'Get Oee Shift List from JWT payload.' })
-    async getOeeSector(@Query() req: OeeShiftDateShiftCmd): Promise<any> {
-        return await this.oeeShiftService.findOeeSector(req);
+    async getOeeSector(@Query() req: OeeShiftDateTimeCmd): Promise<any> {
+        let shiftId;
+        
+        if (req.time < "14:00:00") shiftId = 1; 
+        else if (req.time < "22:00:00") shiftId = 2; 
+        else shiftId = 3; 
+
+        let cmdOee = new OeeShiftDateShiftCmd();
+        cmdOee.date = req.date;
+        cmdOee.shiftId = shiftId;
+
+        return await this.oeeShiftService.findOeeSector(cmdOee);
     }
 
     @Get('shift/bydate')
