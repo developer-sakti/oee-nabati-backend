@@ -118,7 +118,9 @@ export class OeeShiftService {
             return await this.repo.update({
                 id : id
             }, {
-                total_target_produksi : body.total_target_produksi
+                total_target_produksi : body.total_target_produksi,
+                total_standart_ct : body.total_standart_ct,
+                total_bottleneck_ct : body.total_bottleneck_ct
             });
         } catch (error) {
             return Utils.NULL_RETURN;

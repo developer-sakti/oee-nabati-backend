@@ -17,6 +17,10 @@ export class GetOeeShiftDto {
 
     this.total_target_produksi = data.total_target_produksi;
     this.date = data.date;
+    this.total_standart_ct = data.total_standart_ct;
+    this.total_bottleneck_ct = data.total_bottleneck_ct;
+    
+    this.total_pieces_to_target = data.total_pieces_to_target;
     
     this.b_finishgood_shift = data.b_finishgood_shift;
     this.c_total_qty_shift = data.c_total_qty_shift;
@@ -63,6 +67,10 @@ export class GetOeeShiftDto {
   
   @ApiModelProperty() total_target_produksi: number;
   @ApiModelProperty() date: string;
+  @ApiModelProperty() total_standart_ct: number;
+  @ApiModelProperty() total_bottleneck_ct: number;
+
+  @ApiModelProperty() total_pieces_to_target: number;
 
   @ApiModelProperty() b_finishgood_shift : number;
   @ApiModelProperty() c_total_qty_shift : number;
