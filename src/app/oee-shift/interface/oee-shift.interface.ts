@@ -14,9 +14,16 @@ export interface IOeeShift {
 
   readonly date?: string;
   readonly total_target_produksi?: number;
+  readonly total_standart_ct?: number;
+  readonly total_bottleneck_ct?: number;
+
+  readonly total_pieces_to_target?: number;
 
   readonly b_finishgood_shift?: number;
   readonly c_total_qty_shift?: number;
+
+  readonly d_total_defect_qty_karton : number;
+  readonly e_total_rework_qty_karton : number;
 
   readonly k_total_planned_dt_losses?: number;
   readonly l_loading_hours?: number;

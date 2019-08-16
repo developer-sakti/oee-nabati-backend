@@ -90,13 +90,17 @@ export class RencanaProduksiController {
         let storeOeeShift;
         console.log("data oee : " + dataOee);
 
-        if (dataOee.length === 0 || dataOee === null) {
+        if (dataOee === undefined || dataOee === null) {
             oeeShiftCmd.total_target_produksi = body.target_produksi;
+            oeeShiftCmd.total_standart_ct = body.standart_ct;
+            oeeShiftCmd.total_bottleneck_ct = body.bottleneck_ct;
 
             storeOeeShift   = await this.oeeShiftService.create(oeeShiftCmd);
-            if (storeOeeShift) return Utils.sendResponseSaveFailed("Oee Shift")
+            if (!storeOeeShift) return Utils.sendResponseSaveFailed("Oee Shift")
         } else {
             oeeShiftCmd.total_target_produksi = dataOee.total_target_produksi + body.target_produksi;
+            oeeShiftCmd.total_standart_ct = dataOee.total_standart_ct + body.standart_ct;
+            oeeShiftCmd.total_bottleneck_ct = dataOee.total_bottleneck_ct + body.bottleneck_ct;
 
             storeOeeShift   = await this.oeeShiftService.updateTotalProduksi(dataOee.id, oeeShiftCmd);
             if (!storeOeeShift) return Utils.sendResponseUpdateFailed("Oee Shift")

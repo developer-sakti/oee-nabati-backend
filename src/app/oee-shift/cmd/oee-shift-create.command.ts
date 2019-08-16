@@ -6,7 +6,10 @@ export class OeeShiftCreateCmd {
   @ApiModelProperty() date: string;
 
   @ApiModelProperty() total_target_produksi: number;
+  @ApiModelProperty() total_standart_ct: number;
+  @ApiModelProperty() total_bottleneck_ct: number;
 
+  @ApiModelProperty() total_pieces_to_target: number;
 
   @ApiModelProperty() b_finishgood_shift : number;
   @ApiModelProperty() c_total_qty_shift : number;

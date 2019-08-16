@@ -18,9 +18,16 @@ export class OeeShift implements IOeeShift{
 
             this.total_target_produksi = data.total_target_produksi;
             this.date = data.date;
+            this.total_standart_ct = data.total_standart_ct;
+            this.total_bottleneck_ct = data.total_bottleneck_ct;
+            
+            this.total_pieces_to_target = data.total_pieces_to_target;
 
             this.b_finishgood_shift = data.b_finishgood_shift;
             this.c_total_qty_shift = data.c_total_qty_shift;
+    
+            this.d_total_defect_qty_karton = data.d_total_defect_qty_karton;
+            this.e_total_rework_qty_karton = data.e_total_rework_qty_karton;
 
             this.k_total_planned_dt_losses = data.k_total_planned_dt_losses;
             this.l_loading_hours = data.l_loading_hours;
@@ -67,9 +74,16 @@ export class OeeShift implements IOeeShift{
 
     @Column({ type : "date" }) public date: string;
     @Column({ type: "float", default : 0 }) public total_target_produksi: number;
+    @Column({ type: "float", default : 0 }) public total_standart_ct: number;
+    @Column({ type: "float", default : 0 }) public total_bottleneck_ct: number;
+  
+    @Column({ type: "float", default : 0 }) public total_pieces_to_target: number;
 
     @Column({  type: "float", default : 0 }) public b_finishgood_shift: number;
     @Column({  type: "float", default : 0 }) public c_total_qty_shift: number;
+
+    @Column({  type: "float", default : 0 }) public d_total_defect_qty_karton: number;
+    @Column({  type: "float", default : 0 }) public e_total_rework_qty_karton: number;
 
     @Column({  type: "float", default : 0 }) public k_total_planned_dt_losses: number;
     @Column({  type: "float", default : 0 }) public l_loading_hours: number;
