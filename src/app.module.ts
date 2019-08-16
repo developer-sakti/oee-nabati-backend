@@ -19,12 +19,34 @@ import { BadstockTimbanganModule } from './app/badstock-timbangan/badstock-timba
 import { BadstockCategoryModule } from './app/badstock-category/badstock-category.module';
 import { LakbanFinishgoodModule } from './app/lakban-finishgood/lakban-finishgood.module';
 import { LakbanReworkModule } from './app/lakban-rework/lakban-rework.module';
-import { RulesModule } from './app/rules/rules.module';
 import { ReworkLineModule } from './app/rework-line/rework-line.module';
-import { OeeLineModule } from './app/oee-line/oee-line.module';
+import { RoleModule } from './app/role/role.module';
+import { OeeShiftModule } from './app/oee-shift/oee-shift.module';
 
 @Module({
-  imports: [AuthModule, UserModule, ProfileModule, TypeOrmModule.forRoot(), HmiModule, LineModule, MachineModule, InitialShiftModule, InitialSkuModule, RencanaProduksiModule, DowntimeModule, DowntimeCategoryModule, DowntimeReasonModule, DowntimeReasonMachineModule, BadstockTimbanganModule, BadstockCategoryModule, LakbanFinishgoodModule, LakbanReworkModule, RulesModule, ReworkLineModule, OeeLineModule],
+  imports: [
+    AuthModule, 
+    UserModule, 
+    ProfileModule, 
+    TypeOrmModule.forRoot(), 
+    HmiModule, 
+    LineModule, 
+    MachineModule, 
+    InitialShiftModule, 
+    InitialSkuModule, 
+    RencanaProduksiModule, 
+    DowntimeModule, 
+    DowntimeCategoryModule, 
+    DowntimeReasonModule, 
+    DowntimeReasonMachineModule, 
+    BadstockTimbanganModule, 
+    BadstockCategoryModule, 
+    LakbanFinishgoodModule, 
+    LakbanReworkModule, 
+    RoleModule, 
+    ReworkLineModule, 
+    OeeShiftModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -18,20 +18,7 @@ export class LakbanFinishgoodController {
     @ApiResponse({ description: 'Success!', status: HttpStatus.OK})
     @ApiResponse({ description: 'Bad request.', status: HttpStatus.BAD_REQUEST })
     public async post(@Body() req: LakbanFinishgoodCmd): Promise<any> {
-        let process = await this.lakbanFinishgoodService.create(new LakbanFinishgood(req));
-    
-        if (!process) {
-            return Utils.sendResponseSaveFailed("Lakban Finishgood")
-        }
-        return Utils.sendResponseSaveSuccess(process);
-    }
-
-    @Patch()
-    @ApiOperation({ title: 'Post LakbanFinishgood', description: 'Update LakbanFinishgood.' })
-    @ApiResponse({ description: 'Success!', status: HttpStatus.OK})
-    @ApiResponse({ description: 'Bad request.', status: HttpStatus.BAD_REQUEST })
-    public async updateFinishgood(@Body() req: any): Promise<any> {
-        let process = await this.rencanaProduksiService.update(req);
+        let process = await await this.rencanaProduksiService.updateFinishgood(req);
     
         if (!process) {
             return Utils.sendResponseSaveFailed("Lakban Finishgood")

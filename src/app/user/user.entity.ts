@@ -1,14 +1,15 @@
 import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
 
 import { IUser } from './interface/user.interface';
 import { RencanaProduksi } from '@app/app/rencana-produksi/rencana-produksi.entity';
 
 import * as bcrypt from "bcrypt";
+import { Role } from '../role/role.entity';
 
 export enum UserRole {
-  ADMIN = 'admin',
-  USER = 'user',
+  ADMIN = 1,
+  USER = 2,
 }
 
 export enum UserStatus {
@@ -25,7 +26,7 @@ export class User implements IUser {
       this.lastname = data.lastname;
       this.username = data.username;
       this.password = data.password;
-      this.role = data.role;
+      this.roleId = data.roleId;
     }
   }
 
@@ -39,12 +40,16 @@ export class User implements IUser {
 
   @Column() public password: string;
 
-  @Column() public role: UserRole;
-
   @Column() public status: UserStatus;
+
+  @Column({  type: "int", nullable: true }) 
+  public roleId: number;
 
   @OneToMany(type => RencanaProduksi, rencana_produksi => rencana_produksi.supervisor)
   public rencana_produksi : RencanaProduksi;
+
+  @ManyToOne(type => Role, role => role.users)
+  public role: Role;
 
 
   async checkPasswordIsValid(plain_password : string) : Promise<boolean> {

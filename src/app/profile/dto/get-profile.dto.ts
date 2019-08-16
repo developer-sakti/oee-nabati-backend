@@ -9,13 +9,13 @@ export class GetProfileDto implements IUser {
     this.firstname = data.firstname;
     this.lastname = data.lastname;
     this.username = data.username;
-    this.role = data.role;
+    this.roleId = data.roleId;
     this.status = data.status;
   }
   @ApiModelProperty() id: number;
   @ApiModelProperty() firstname: string;
   @ApiModelProperty() lastname: string;
   @ApiModelProperty() username: string;
-  @ApiModelProperty() role: UserRole;
+  @ApiModelProperty() roleId: number;
   @ApiModelProperty() status: UserStatus;
 }

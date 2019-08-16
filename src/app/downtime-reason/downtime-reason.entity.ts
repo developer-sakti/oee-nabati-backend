@@ -19,6 +19,7 @@ export class DowntimeReason implements IDowntimeReason {
 
   @PrimaryGeneratedColumn() public id: number;
 
+  @ApiModelProperty()
   @Column() public reason: string;
 
   @OneToMany(type => DowntimeReasonMachine, downtime_reason_machine => downtime_reason_machine.downtime_category)

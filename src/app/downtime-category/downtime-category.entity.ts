@@ -17,6 +17,7 @@ export class DowntimeCategory implements IDowntimeCategory{
 
   @PrimaryGeneratedColumn() public id: number;
 
+  @ApiModelProperty()
   @Column() public category: string;
 
   @OneToMany(type => DowntimeReasonMachine, downtime_reason_machine => downtime_reason_machine.downtime_category)

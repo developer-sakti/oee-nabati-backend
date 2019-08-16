@@ -21,8 +21,8 @@ export class AuthService {
   constructor(private readonly userService: UserService) {}
   rs;
   public async signUp(user: User) {
-    user.role = UserRole.USER;
-    user.status = UserStatus.PENDING;
+    user.roleId = UserRole.ADMIN;
+    user.status = UserStatus.CONFIRM;
     user = await this.userService.create(user);
     return this.createToken(user);
   }
@@ -62,6 +62,10 @@ export class AuthService {
 
     if (!status) {
       return Utils.sendResponseWrongPassword(user);
+    }
+
+    if (user.roleId !== params.roleId) {
+      return Utils.sendResponseWrongRole();
     }
 
     return this.createToken(user);

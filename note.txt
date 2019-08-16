@@ -1,0 +1,54 @@
+total_target_produksi : body.total_target_produksi,
+
+b_finishgood_shift : body.b_finishgood_shift,
+c_total_qty_shift : body.c_total_qty_shift,
+
+k_total_planned_dt_losses : body.k_total_planned_dt_losses,
+l_loading_hours : body.l_loading_hours,
+m_total_unplanned_dt : body.m_total_unplanned_dt,
+n_operating_hours : body.n_operating_hours,
+o_total_performance_losses : body.o_total_performance_losses,
+
+p_running_time : body.p_running_time,
+
+q_total_defect_losses : body.q_total_defect_losses,
+q_total_rework_losses : body.q_total_rework_losses,
+
+q_total_quality_losses : body.q_total_quality_losses,
+
+r_value_added_hours : body.r_value_added_hours,
+
+availablity : body.availablity,
+performance_rate : body.performance_rate,
+quality_product_rate : body.quality_product_rate,
+
+line_oee : body.line_oee,
+
+l_total_production_time : body.l_total_production_time,
+w2_total_downtime : body.w2_total_downtime,
+w3_number_of_breakdown : body.w3_number_of_breakdown,
+w4_up_time : body.w4_up_time,
+
+mtbf_x1 : body.mtbf_x1,
+mttr_y1 : body.mttr_y1,
+mttf_z1 : body.mttf_z1,
+
+
+
+BEGIN
+	SET NEW.l_loading_hours = 480 - NEW.k_total_planned_dt_losses,
+    NEW.n_operating_hours = NEW.l_loading_hours - NEW.m_total_unplanned_dt,
+    NEW.p_running_time = NEW.n_operating_hours - NEW.o_total_performance_losses,
+    NEW.q_total_quality_losses = NEW.q_total_defect_losses + NEW.q_total_rework_losses,
+    NEW.r_value_added_hours = NEW.p_running_time - NEW.q_total_quality_losses,
+    NEW.availablity = NEW.n_operating_hours / NEW.l_loading_hours * 100,
+    NEW.performance_rate = NEW.p_running_time / NEW.n_operating_hours * 100,
+    NEW.quality_product_rate = NEW.r_value_added_hours / NEW.p_running_time * 100,
+    NEW.line_oee = (NEW.availablity / 100) * (NEW.performance_rate / 100) * (NEW.quality_product_rate / 100) * 100,
+    NEW.l_total_production_time = NEW.l_loading_hours,
+    NEW.w2_total_downtime = NEW.m_total_unplanned_dt + NEW.o_total_performance_losses,
+    NEW.w3_number_of_breakdown = NEW.m_total_unplanned_dt + NEW.o_total_performance_losses,
+    NEW.w4_up_time = NEW.l_total_production_time - NEW.w2_total_downtime;
+END
+
+cd oee-nabati-production/ &&docker-compose stop && git submodule foreach git pull origin master && docker-compose build && docker-compose up -d

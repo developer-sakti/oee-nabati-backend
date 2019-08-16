@@ -15,7 +15,9 @@ export class InitialSku implements IInitialSku{
 
   @PrimaryGeneratedColumn() public id: number;
   
+  @ApiModelProperty()
   @Column() public code?: string;
+  @ApiModelProperty()
   @Column() public name?: string;
 
   @OneToMany(type => RencanaProduksi, rencana_produksi => rencana_produksi.sku)

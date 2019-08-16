@@ -49,4 +49,11 @@ export class Utils {
             message : "Your password is incorrect ! Try again."
         }
     }
+
+    static sendResponseWrongRole() {
+        return {
+            success : false,
+            message : "You are not allowed to access this !"
+        }
+    }
 }

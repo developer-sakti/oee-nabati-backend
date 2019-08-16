@@ -8,12 +8,21 @@ import { RencanaProduksiFindCmd } from './cmd/rencana-produksi-find.command';
 import { RencanaProduksi } from './rencana-produksi.entity';
 import { RencanaProduksiCreateCmd } from './cmd/rencana-produksi-create.command';
 import { Utils } from '@app/shared/utils';
+import { RencanaProduksiWaitingListCmd } from './cmd/rencana-produksi-waiting-list.command';
+import { RencanaProduksiFindShiftCmd } from './cmd/rencana-produksi-find-shift.command';
+import { OeeShiftService } from '../oee-shift/oee-shift.service';
+import { OeeShiftCreateCmd } from '../oee-shift/cmd/oee-shift-create.command';
+import { concat } from 'rxjs';
+import { OeeShift } from '../oee-shift/oee-shift.entity';
 
 @ApiUseTags('rencanaProduksi')
 @ApiBearerAuth()
 @Controller('api/v1/rencana-produksi')
 export class RencanaProduksiController {
-    constructor(private readonly rencanaProduksiService: RencanaProduksiService) {}
+    constructor(
+        private readonly rencanaProduksiService: RencanaProduksiService,
+        private readonly oeeShiftService: OeeShiftService
+    ) {}
 
     @Get()
     @ApiResponse({ status: HttpStatus.OK, type: GetRencanaProduksiDto, description: 'Success!' })
@@ -43,6 +52,24 @@ export class RencanaProduksiController {
         return await this.rencanaProduksiService.findByLineDate(req);
     }
 
+    @Get('find/shift')
+    @ApiResponse({ status: HttpStatus.OK, type: GetRencanaProduksiDto, description: 'Success!' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })
+    @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
+    @ApiOperation({ title: 'Get RencanaProduksi Find Shift List', description: 'Get RencanaProduksi List from JWT payload.' })
+    async findPOByShift(@Query() req: RencanaProduksiFindShiftCmd): Promise<any> {
+        return await this.rencanaProduksiService.findByLineDateShift(req);
+    }
+
+    @Get('waiting-list')
+    @ApiResponse({ status: HttpStatus.OK, type: GetRencanaProduksiDto, description: 'Success!' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })
+    @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
+    @ApiOperation({ title: 'Get RencanaProduksi Waiting List', description: 'Get RencanaProduksi List from JWT payload.' })
+    async finWaitingList(@Query() req: RencanaProduksiWaitingListCmd): Promise<any> {
+        return await this.rencanaProduksiService.findWaitingList(req);
+    }
+
     @Post()
     @ApiResponse({ status: HttpStatus.OK, type: RencanaProduksi, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })
@@ -50,10 +77,31 @@ export class RencanaProduksiController {
     @ApiOperation({ title: 'Create RencanaProduksi ', description: 'Create RencanaProduksi from JWT payload.' })
     async store(@Body() body: RencanaProduksiCreateCmd): Promise<any> {
         let process = await this.rencanaProduksiService.create(body);
+        if (!process) return Utils.sendResponseSaveFailed("Rencana produksi")
 
-        if (!process) {
-            return Utils.sendResponseSaveFailed("Rencana produksi")
+        let oeeShiftCmd     = new OeeShiftCreateCmd();
+        oeeShiftCmd.lineId  = body.lineId;
+        oeeShiftCmd.shiftId = body.shiftId;
+        oeeShiftCmd.date    = body.date;
+
+        console.log(oeeShiftCmd);
+        
+        let dataOee = await this.oeeShiftService.findByLineDateShift(oeeShiftCmd);
+        let storeOeeShift;
+        console.log("data oee : " + dataOee);
+
+        if (dataOee.length === 0 || dataOee === null) {
+            oeeShiftCmd.total_target_produksi = body.target_produksi;
+
+            storeOeeShift   = await this.oeeShiftService.create(oeeShiftCmd);
+            if (storeOeeShift) return Utils.sendResponseSaveFailed("Oee Shift")
+        } else {
+            oeeShiftCmd.total_target_produksi = dataOee.total_target_produksi + body.target_produksi;
+
+            storeOeeShift   = await this.oeeShiftService.updateTotalProduksi(dataOee.id, oeeShiftCmd);
+            if (!storeOeeShift) return Utils.sendResponseUpdateFailed("Oee Shift")
         }
+
         return Utils.sendResponseSaveSuccess(process);
     }
 }

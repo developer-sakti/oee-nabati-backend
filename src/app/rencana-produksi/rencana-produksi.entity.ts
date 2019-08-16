@@ -13,34 +13,62 @@ export class RencanaProduksi implements IRencanaProduksi{
   constructor(data: IRencanaProduksi) {
     if (!!data) {
       this.id = data.id;
-      this.po_number = data.po_number;
-      this.standart_ct = data.standart_ct;
-      this.bottleneck_ct = data.bottleneck_ct;
-      this.target_produksi = data.target_produksi;
-      this.date = data.date;
-      this.start_sku = data.start_sku;
-      this.end_sku = data.end_sku;
 
-      this.created_at = data.created_at;
-      this.updated_at = data.updated_at;
-      this.deleted_at = data.deleted_at;
+      this.shift = data.shift;
+      this.line = data.line;
+      this.sku = data.sku;
+      this.supervisor =data.supervisor;
 
       this.shiftId = data.shiftId;
       this.lineId = data.lineId;
       this.skuId = data.skuId;
       this.supervisorId = data.supervisorId;
+
+      this.po_number = data.po_number;
+      this.standart_ct = data.standart_ct;
+      this.bottleneck_ct = data.bottleneck_ct;
+      this.target_produksi = data.target_produksi;
+      this.date = data.date;
+      this.start_po = data.start_po;
+      this.end_po = data.end_po;
+
+      this.created_at = data.created_at;
+      this.updated_at = data.updated_at;
+      this.deleted_at = data.deleted_at;
     }
   }
 
   @PrimaryGeneratedColumn() public id: number;
-  
+
+  @Column({  type: "int", nullable: true })
+  shiftId: number;
+  @Column({  type: "int", nullable: true })
+  lineId: number;
+  @Column({  type: "int", nullable: true })
+  skuId: number;
+  @Column({  type: "int", nullable: true })
+  supervisorId: number;
+
   @Column() public po_number: string;
-  @Column() public standart_ct: number;
-  @Column() public bottleneck_ct: number;
+  @Column({  type: "float", default : 0 }) public standart_ct: number;
+  @Column({  type: "float", default : 0 }) public bottleneck_ct: number;
   @Column() public target_produksi: number;
   @Column({ type : "date" }) public date: string;
-  @Column({ type : "time"}) public start_sku: string;
-  @Column({ type : "time"}) public end_sku: string;
+  @Column({ type : "time"}) public start_po: string;
+  @Column({ type : "time"}) public end_po: string;
+
+  @Column({ type : "datetime",  nullable: true}) public date_startpo: string;
+
+  @Column({  type: "float", default : 0 }) public b_finishgood_qty_karton?: number;
+  @Column({  type: "float", default : 0 }) public c_total_qty_karton?: number;
+
+  @Column({  type: "float", default : 0 }) d_defect_qty_karton?: number;
+  @Column({  type: "float", default : 0 }) e_rework_qty_karton?: number;
+
+  @Column({  type: "float", default : 0 }) q_defect_losses?: number;
+  @Column({  type: "float", default : 0 }) q_rework_losses?: number;
+
+  @Column({  type: "float", default : 0 }) q_total_quality_losses?: number;
 
   @Column({ type : "timestamp" }) public created_at: string;
   @Column({ type : "datetime", default : null  }) public updated_at: string;
@@ -63,14 +91,5 @@ export class RencanaProduksi implements IRencanaProduksi{
 
   @OneToMany(type => BadstockTimbangan, badstock_timbangan => badstock_timbangan.rencana_produksi)
   public badstock_timbangan: BadstockTimbangan;
-
-  @Column({  type: "int", nullable: true })
-  shiftId: number;
-  @Column({  type: "int", nullable: true })
-  lineId: number;
-  @Column({  type: "int", nullable: true })
-  skuId: number;
-  @Column({  type: "int", nullable: true })
-  supervisorId: number;
 
 }

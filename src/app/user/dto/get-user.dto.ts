@@ -9,13 +9,13 @@ export class GetUserDto {
     this.username = data.username;
     this.firstname = data.firstname;
     this.lastname = data.lastname;
-    this.role = data.role;
+    this.roleId = data.roleId;
     this.status = data.status;
   }
   @ApiModelProperty() id: number;
   @ApiModelProperty() username: string;
   @ApiModelProperty() firstname: string;
   @ApiModelProperty() lastname: string;
-  @ApiModelProperty() role: UserRole;
+  @ApiModelProperty() roleId: number;
   @ApiModelProperty() status: UserStatus;
 }

@@ -12,4 +12,8 @@ export interface IDowntimeReasonMachine {
   readonly machine?: Machine;
   readonly downtime_category?: DowntimeCategory;
   readonly downtime_reason?: DowntimeReason;
+
+  readonly machineId?: number;
+  readonly downtimeCategoryId?: number;
+  readonly downtimeReasonId?: number;
 }

@@ -9,9 +9,11 @@ export class AuthSignUpCmd implements IUser {
     this.firstname = data.firstname;
     this.lastname = data.lastname;
     this.password = data.password;
+    this.roleId = data.roleId;
   }
   @ApiModelProperty() username: string;
   @ApiModelProperty() firstname: string;
   @ApiModelProperty() lastname: string;
   @ApiModelProperty() password: string;
+  @ApiModelProperty() roleId: number;
 }
