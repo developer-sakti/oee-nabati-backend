@@ -9,6 +9,7 @@ import { BadstockTimbangan } from '../badstock-timbangan/badstock-timbangan.enti
 import { BadstockTimbanganService } from '../badstock-timbangan/badstock-timbangan.service';
 import { Utils } from '@app/shared/utils';
 import { OeeShiftDateTimeCmd } from './cmd/oee-shift-date-time.command';
+import { RencanaProduksiTimePeriodicCmd } from '../rencana-produksi/cmd/rencana-produksi-time-periodic.command';
 
 @ApiUseTags('OEE')
 @ApiBearerAuth()
@@ -28,7 +29,7 @@ export class OeeShiftController {
     @ApiOperation({ title: 'Get Oee Shift List', description: 'Get Oee Shift List from JWT payload.' })
     async getOeeSector(@Query() req: OeeShiftDateTimeCmd): Promise<any> {
         let shiftId;
-        
+
         if (req.time < "14:00:00") shiftId = 1; 
         else if (req.time < "22:00:00") shiftId = 2; 
         else shiftId = 3; 

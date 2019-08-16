@@ -13,6 +13,9 @@ import { LakbanFinishgoodCmd } from '../lakban-finishgood/cmd/lakban-finishgood-
 import { BadstockRequestCmd } from '../badstock-timbangan/cmd/badstock-request.command';
 import { concat } from 'rxjs';
 import { RencanaProduksiFindShiftDateCmd } from './cmd/rencana-produksi-find-shiftdate.command';
+import { RencanaProduksiTimePeriodicCmd } from './cmd/rencana-produksi-time-periodic.command';
+import { raw } from 'mysql';
+import { Variable } from '@app/shared/variable';
 
 @Injectable()
 export class RencanaProduksiService {
@@ -113,8 +116,7 @@ export class RencanaProduksiService {
     
     try {
       if (params.line_id === null || params.line_id === undefined) {
-        rencanaProduksi = await this.rencanaProduksiRepository
-                            .createQueryBuilder("rencana_produksi")
+        rencanaProduksi = await this.rencanaProduksiRepository.createQueryBuilder("rencana_produksi")
                             .select(['rencana_produksi', 'shift', 'line', 'sku', 'supervisor'])
                             .innerJoin("rencana_produksi.shift", "shift")
                             .innerJoin("rencana_produksi.line", "line")
@@ -124,8 +126,7 @@ export class RencanaProduksiService {
                             .andWhere("shift.id = :value2", {value2 : params.shift_id})
                             .getMany();
       } else {
-        rencanaProduksi = await this.rencanaProduksiRepository
-                            .createQueryBuilder("rencana_produksi")
+        rencanaProduksi = await this.rencanaProduksiRepository.createQueryBuilder("rencana_produksi")
                             .select(['rencana_produksi', 'shift', 'line', 'sku', 'supervisor'])
                             .innerJoin("rencana_produksi.shift", "shift")
                             .innerJoin("rencana_produksi.line", "line")
@@ -147,8 +148,7 @@ export class RencanaProduksiService {
     let rencanaProduksi: RencanaProduksi[];
     
     try {
-        rencanaProduksi = await this.rencanaProduksiRepository
-                            .createQueryBuilder("rencana_produksi")
+        rencanaProduksi = await this.rencanaProduksiRepository.createQueryBuilder("rencana_produksi")
                             .select(['rencana_produksi', 'shift', 'line', 'sku', 'supervisor'])
                             .innerJoin("rencana_produksi.shift", "shift")
                             .innerJoin("rencana_produksi.line", "line")
@@ -161,6 +161,61 @@ export class RencanaProduksiService {
     if (!rencanaProduksi) {
       return Utils.EMPTY_ARRAY_RETURN;
     }
+    return rencanaProduksi;
+  }
+
+  public async findByTimePeriodic(params: RencanaProduksiTimePeriodicCmd): Promise<any> {
+    let rencanaProduksi: any;
+    let rawQuery : string;
+
+    if (params.time_periodic === Variable.TIME_PERIODIC[0]) {
+        rawQuery = "SELECT DATE_FORMAT(rencana_produksi.date, '%Y-%m-%d') as date," + 
+        " SUM(rencana_produksi.target_produksi) AS target_produksi," + 
+        " SUM(rencana_produksi.b_finishgood_qty_karton) AS finish_good" +
+        " FROM rencana_produksi" +
+        " WHERE rencana_produksi.date >= ?" +
+        " AND rencana_produksi.date <= ?" + 
+        " AND rencana_produksi.lineId = ?" + 
+        " GROUP BY DATE(rencana_produksi.date)"
+    } else if (params.time_periodic === Variable.TIME_PERIODIC[1]) {
+        rawQuery = "SELECT WEEK(rencana_produksi.date) as week," + 
+        " SUM(rencana_produksi.target_produksi) AS target_produksi," + 
+        " SUM(rencana_produksi.b_finishgood_qty_karton) AS finish_good" +
+        " FROM rencana_produksi" +
+        " WHERE rencana_produksi.date >= ?" +
+        " AND rencana_produksi.date <= ?" + 
+        " AND rencana_produksi.lineId = ?" + 
+        " GROUP BY WEEK(rencana_produksi.date)"
+    } else if (params.time_periodic === Variable.TIME_PERIODIC[2]) {
+        rawQuery = "SELECT MONTH(rencana_produksi.date) as month," + 
+        " SUM(rencana_produksi.target_produksi) AS target_produksi," + 
+        " SUM(rencana_produksi.b_finishgood_qty_karton) AS finish_good" +
+        " FROM rencana_produksi" +
+        " WHERE rencana_produksi.date >= ?" +
+        " AND rencana_produksi.date <= ?" + 
+        " AND rencana_produksi.lineId = ?" + 
+        " GROUP BY MONTH(rencana_produksi.date)"
+    } else {
+        rawQuery = "SELECT YEAR(rencana_produksi.date) as year," + 
+        " SUM(rencana_produksi.target_produksi) AS target_produksi," + 
+        " SUM(rencana_produksi.b_finishgood_qty_karton) AS finish_good" +
+        " FROM rencana_produksi" +
+        " WHERE rencana_produksi.date >= ?" +
+        " AND rencana_produksi.date <= ?" + 
+        " AND rencana_produksi.lineId = ?" + 
+        " GROUP BY YEAR(rencana_produksi.date)"
+    }
+    
+    try {
+        rencanaProduksi = await this.rencanaProduksiRepository.query(rawQuery, 
+            [params.from_date, params.to_date, params.line_id]);
+    } catch (error) {}
+
+    if (!rencanaProduksi) {
+        console.log("Query error")
+        return Utils.EMPTY_ARRAY_RETURN;
+    }
+    
     return rencanaProduksi;
   }
     
