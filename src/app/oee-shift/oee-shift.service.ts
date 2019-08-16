@@ -5,15 +5,33 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Utils } from '@app/shared/utils';
 import { OeeShiftDateShiftCmd } from './cmd/oee-shift-date-shift.command';
+import { OeeShiftDateLineCmd } from './cmd/oee-shift-date-line.command';
 
 @Injectable()
 export class OeeShiftService {
     constructor(@InjectRepository(OeeShift) private repo: Repository<OeeShift>) {}
 
-    public async findByLineDateShift(params: OeeShiftCreateCmd): Promise<any> {
+    public async findByLineDateShift(params: OeeShiftDateLineCmd): Promise<any> {
         let data : OeeShift;
         try {
             data = await this.repo.findOne({
+                where : {
+                    date : params.date,
+                    lineId : params.lineId,
+                    shiftId : params.shiftId
+                },
+                relations : ["shift", "line"]
+            })
+            return data;
+        } catch (error) {
+            return Utils.NULL_RETURN;
+        }        
+    }
+
+    public async findByLineDateShiftMany(params: OeeShiftCreateCmd): Promise<any> {
+        let data : OeeShift[];
+        try {
+            data = await this.repo.find({
                 where : {
                     date : params.date,
                     lineId : params.lineId,
@@ -121,6 +139,46 @@ export class OeeShiftService {
                 total_target_produksi : body.total_target_produksi,
                 total_standart_ct : body.total_standart_ct,
                 total_bottleneck_ct : body.total_bottleneck_ct
+            });
+        } catch (error) {
+            return Utils.NULL_RETURN;
+        }
+    }
+
+    public async updateReworkKarton(id : number, body: OeeShiftCreateCmd): Promise<any> {
+        try {
+            return await this.repo.update({
+                id : id
+            }, {
+                e_total_rework_qty_karton : body.e_total_rework_qty_karton
+            });
+        } catch (error) {
+            return Utils.NULL_RETURN;
+        }
+    }
+
+    public async updateFinishgood(id : number, body: OeeShiftCreateCmd): Promise<any> {
+        try {
+            console.log("id " + id);
+            console.log(body.b_finishgood_shift);
+            return await this.repo.update({
+                id : id
+            }, {
+                b_finishgood_shift : body.b_finishgood_shift
+            });
+        } catch (error) {
+            return Utils.NULL_RETURN;
+        }
+    }
+
+    public async updateDefect(id : number, body: OeeShiftCreateCmd): Promise<any> {
+        try {
+            console.log("id " + id);
+            console.log(body.d_total_defect_qty_karton);
+            return await this.repo.update({
+                id : id
+            }, {
+                d_total_defect_qty_karton : body.d_total_defect_qty_karton
             });
         } catch (error) {
             return Utils.NULL_RETURN;

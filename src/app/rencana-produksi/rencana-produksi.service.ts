@@ -107,7 +107,7 @@ export class RencanaProduksiService {
     return rencanaProduksi;
   }
 
-  public async findByLineDateShift(params: RencanaProduksiFindShiftCmd): Promise<any> {
+  public async findByLineDateShift(params: RencanaProduksiFindShiftCmd): Promise<RencanaProduksi[]> {
     let rencanaProduksi: RencanaProduksi[];
     
     try {

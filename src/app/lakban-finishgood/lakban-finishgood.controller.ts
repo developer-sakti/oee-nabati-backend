@@ -8,6 +8,7 @@ import { RencanaProduksiService } from '../rencana-produksi/rencana-produksi.ser
 import { RencanaProduksiCmd } from '../rencana-produksi/cmd/rencana-produksi.command';
 import { OeeShiftCreateCmd } from '../oee-shift/cmd/oee-shift-create.command';
 import { OeeShiftService } from '../oee-shift/oee-shift.service';
+import { RencanaProduksiFindShiftCmd } from '../rencana-produksi/cmd/rencana-produksi-find-shift.command';
 
 @ApiUseTags('lakban')
 @ApiBearerAuth()
@@ -32,12 +33,15 @@ export class LakbanFinishgoodController {
         oeeShiftCmd.lineId  = po.lineId;
         oeeShiftCmd.shiftId = po.shiftId;
         oeeShiftCmd.date    = po.date;
-
-        console.log(oeeShiftCmd);
         
         let dataOee = await this.oeeShiftService.findByLineDateShift(oeeShiftCmd);
         let storeOeeShift;
-        console.log("data oee : " + dataOee);
+
+        let poCmd = new RencanaProduksiFindShiftCmd();
+        poCmd.line_id  = po.lineId;
+        poCmd.shift_id = po.shiftId;
+        poCmd.date    = po.date;
+        let poByLineDateShiftMany = await this.rencanaProduksiService.findByLineDateShift(poCmd);
 
         if (dataOee === undefined || dataOee === null) {
             oeeShiftCmd.b_finishgood_shift = po.b_finishgood_qty_karton;
@@ -45,9 +49,12 @@ export class LakbanFinishgoodController {
             storeOeeShift   = await this.oeeShiftService.create(oeeShiftCmd);
             if (!storeOeeShift) return Utils.sendResponseSaveFailed("Oee Shift")
         } else {
-            oeeShiftCmd.b_finishgood_shift = dataOee.b_finishgood_shift + po.b_finishgood_qty_karton;
+            oeeShiftCmd.b_finishgood_shift = 0;
+            poByLineDateShiftMany.forEach(element => {
+                oeeShiftCmd.b_finishgood_shift += element.b_finishgood_qty_karton;
+            });
 
-            storeOeeShift   = await this.oeeShiftService.updateTotalProduksi(dataOee.id, oeeShiftCmd);
+            storeOeeShift   = await this.oeeShiftService.updateFinishgood(dataOee.id, oeeShiftCmd);
             if (!storeOeeShift) return Utils.sendResponseUpdateFailed("Oee Shift")
         }
 
