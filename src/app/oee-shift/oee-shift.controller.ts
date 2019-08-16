@@ -9,9 +9,9 @@ import { BadstockTimbangan } from '../badstock-timbangan/badstock-timbangan.enti
 import { BadstockTimbanganService } from '../badstock-timbangan/badstock-timbangan.service';
 import { Utils } from '@app/shared/utils';
 
-@ApiUseTags('OEE Shift')
+@ApiUseTags('OEE')
 @ApiBearerAuth()
-@Controller('oee-shift')
+@Controller('api/v1/oee')
 export class OeeShiftController {
     constructor(
         private readonly rencanaProduksiService: RencanaProduksiService,
@@ -20,21 +20,40 @@ export class OeeShiftController {
         private readonly bsService: BadstockTimbanganService,
     ) {}
 
-    @Get('bydate-shift')
+    @Get('sector')
     @ApiResponse({ status: HttpStatus.OK, type: GetOeeShiftDto, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Oee Shift not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
     @ApiOperation({ title: 'Get Oee Shift List', description: 'Get Oee Shift List from JWT payload.' })
-    async findByDateShift(@Query() req: OeeShiftDateShiftCmd): Promise<any> {
-        return await this.oeeShiftService.findByDateShift(req);
+    async getOeeSector(@Query() req: OeeShiftDateShiftCmd): Promise<any> {
+        return await this.oeeShiftService.findOeeSector(req);
     }
 
-    @Get('bydate-shift/details/:line_id')
+    @Get('shift/bydate')
     @ApiResponse({ status: HttpStatus.OK, type: GetOeeShiftDto, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Oee Shift not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
     @ApiOperation({ title: 'Get Oee Shift List', description: 'Get Oee Shift List from JWT payload.' })
-    async findByDateShiftDetails(@Param("line_id") line_id : number, @Query() req: OeeShiftDateShiftCmd): Promise<any> {
+    async getByDateShift(@Query() req: OeeShiftDateShiftCmd): Promise<any> {
+        let oeeshift = await this.oeeShiftService.findByDateShift(req);
+        let po = await this.rencanaProduksiService.findByDateShift(req);
+
+        if (oeeshift == null && po.length == 0) return Utils.NULL_RETURN;
+
+        return {
+            date        : req.date,
+            shift       : po[0].shift.shift_name,
+            oee_shift   : oeeshift,
+            po          : po
+        }
+    }
+
+    @Get('shift/bydate/:line_id')
+    @ApiResponse({ status: HttpStatus.OK, type: GetOeeShiftDto, description: 'Success!' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Oee Shift not found.' })
+    @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
+    @ApiOperation({ title: 'Get Oee Shift List', description: 'Get Oee Shift List from JWT payload.' })
+    async getByDateShiftDetails(@Param("line_id") line_id : number, @Query() req: OeeShiftDateShiftCmd): Promise<any> {
         let oeeshift = await this.oeeShiftService.findByDateShiftDetails(line_id, req);
         let downtime = await this.downtimeService.findByDateShiftLine(line_id, req);
 

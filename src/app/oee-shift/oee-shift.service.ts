@@ -11,6 +11,36 @@ import { OeeShiftDateLineCmd } from './cmd/oee-shift-date-line.command';
 export class OeeShiftService {
     constructor(@InjectRepository(OeeShift) private repo: Repository<OeeShift>) {}
 
+    public async findOeeSector(params: OeeShiftDateShiftCmd): Promise<any> {
+        let data : OeeShift[];
+        try {
+            data = await this.repo.find({
+                where : {
+                    date : params.date,
+                    shiftId : params.shiftId
+                },
+                relations : ["shift", "line"]
+            })
+
+            let sector_oee = 1;
+            if (data.length > 0) {
+                data.forEach(element => {
+                    sector_oee *= (element.line_oee / 100);
+                });
+
+                sector_oee *= 100;
+
+                return {
+                    date        : params.date,
+                    shift       : data[0].shift.shift_name,
+                    sector_oee  : sector_oee
+                }
+            }
+        } catch (error) {
+            return Utils.EMPTY_ARRAY_RETURN;
+        }        
+    }
+
     public async findByLineDateShift(params: OeeShiftDateLineCmd): Promise<any> {
         let data : OeeShift;
         try {
