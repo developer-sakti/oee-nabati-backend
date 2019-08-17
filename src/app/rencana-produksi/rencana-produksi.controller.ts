@@ -70,6 +70,15 @@ export class RencanaProduksiController {
         return await this.rencanaProduksiService.findWaitingList(req);
     }
 
+    @Get('productivity')
+    @ApiResponse({ status: HttpStatus.OK, type: GetRencanaProduksiDto, description: 'Success!' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })
+    @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
+    @ApiOperation({ title: 'Get RencanaProduksi Waiting List', description: 'Get RencanaProduksi List from JWT payload.' })
+    async findProductivity(): Promise<any> {
+        return await this.rencanaProduksiService.getProductivity();
+    }
+
     @Post()
     @ApiResponse({ status: HttpStatus.OK, type: RencanaProduksi, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })

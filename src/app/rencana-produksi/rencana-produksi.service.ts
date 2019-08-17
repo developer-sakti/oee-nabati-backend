@@ -78,6 +78,24 @@ export class RencanaProduksiService {
       return rencanaProduksi;
   }
 
+  public async getProductivity(): Promise<any> {
+    let rencanaProduksi;
+    let rawQuery = "SELECT DATE_FORMAT(oee_shift.date, '%Y-%m-%d') as date," +
+            " SUM(oee_shift.total_target_produksi) as total_target_produksi" +
+            " FROM oee_shift" +
+            " WHERE oee_shift.date < NOW()" +
+            " GROUP BY DATE(oee_shift.date)" +
+            " LIMIT 7";
+
+    try {
+        rencanaProduksi = await this.rencanaProduksiRepository.query(rawQuery)
+    } catch (error) {}
+    if (!rencanaProduksi) {
+        return Utils.NULL_RETURN;
+    }
+    return rencanaProduksi;
+  }
+
   public async findByLineDate(params: RencanaProduksiFindCmd): Promise<any> {
     let rencanaProduksi: RencanaProduksi[];
     
@@ -209,6 +227,28 @@ export class RencanaProduksiService {
         " GROUP BY YEAR(rencana_produksi.date)" +
         " LIMIT 6"
     }
+    
+    try {
+        data = await this.rencanaProduksiRepository.query(rawQuery, 
+            [params.from_date, params.to_date, params.line_id]);
+    } catch (error) {}
+
+    if (!data) {
+        console.log("Query error")
+        return Utils.EMPTY_ARRAY_RETURN;
+    }
+    
+    return data;
+  }
+
+  public async getStatisticTimePeriodic(params: AnalysisTimePeriodicCmd): Promise<any> {
+    let data: any;
+    let rawQuery = "SELECT CAST(SUM(rencana_produksi.b_finishgood_qty_karton) /" +
+        " SUM(rencana_produksi.target_produksi) * 100 AS DECIMAL(10, 2)) AS percentage_success" + 
+        " FROM rencana_produksi" +
+        " WHERE rencana_produksi.date >= ?" +
+        " AND rencana_produksi.date <= ?" + 
+        " AND rencana_produksi.lineId = ?"
     
     try {
         data = await this.rencanaProduksiRepository.query(rawQuery, 

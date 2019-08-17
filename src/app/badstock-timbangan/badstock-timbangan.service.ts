@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Utils } from '@app/shared/utils';
 import { OeeShiftDateShiftCmd } from '../oee-shift/cmd/oee-shift-date-shift.command';
 import { OeeShiftDateLineCmd } from '../oee-shift/cmd/oee-shift-date-line.command';
+import { AnalysisTimePeriodicCmd } from '../analysis/cmd/analysis-time-periodic.command';
 
 @Injectable()
 export class BadstockTimbanganService {
@@ -38,5 +39,55 @@ export class BadstockTimbanganService {
         } catch (error) {
             return Utils.NULL_RETURN;
         }
+    }
+
+    public async findParetoQualityLoss(params: AnalysisTimePeriodicCmd): Promise<any> {
+        let data: any;
+        let rawQuery = "SELECT b.category as category," +
+            " SUM(a.weight) as karton" +
+            " FROM badstock_timbangan a, badstock_category b, rencana_produksi c" +
+            " WHERE a.badstockCategoryId = b.id" +
+            " AND a.rencanaProduksiId = c.id" +
+            " AND c.date >= ?" +
+            " AND c.date <= ?" +
+            " AND c.lineId = ?" +
+            " GROUP BY a.badstockCategoryId" +
+            " ORDER BY karton DESC" +
+            " LIMIT 6" 
+        
+        try {
+            data = await this.repo.query(rawQuery, 
+                [params.from_date, params.to_date, params.line_id]);
+        } catch (error) {}
+
+        if (!data) {
+            console.log("Query error")
+            return Utils.EMPTY_ARRAY_RETURN;
+        }
+        
+        return data;      
+    }
+
+    public async getStatisticTimePeriodic(params: AnalysisTimePeriodicCmd): Promise<any> {
+        let data: any;
+        let rawQuery = "SELECT COUNT(a.weight) as accumulation," +
+            " SUM(a.weight) as karton" +
+            " FROM badstock_timbangan a, rencana_produksi c" +
+            " WHERE a.rencanaProduksiId = c.id" +
+            " AND c.date >= ?" +
+            " AND c.date <= ?" +
+            " AND c.lineId = ?"
+        
+        try {
+            data = await this.repo.query(rawQuery, 
+                [params.from_date, params.to_date, params.line_id]);
+        } catch (error) {}
+
+        if (!data) {
+            console.log("Query error")
+            return Utils.EMPTY_ARRAY_RETURN;
+        }
+        
+        return data;      
     }
 }
