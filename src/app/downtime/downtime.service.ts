@@ -44,8 +44,6 @@ export class DowntimeService {
         return downtime;
     }
 
-
-
     public async findByDateShiftLine(line_id : number, params : OeeShiftDateShiftCmd): Promise<any> {
         let downtime: Downtime[];
       
@@ -72,7 +70,34 @@ export class DowntimeService {
         return downtime;
     }
 
-    public async findByCategory(category_id : number, params : DowntimeGetbylineCmd): Promise<any> {
+    public async findDowntimeEvent(line_id : number, params : OeeShiftDateShiftCmd): Promise<any> {
+        let data: any;
+        let rawQuery = "SELECT b.reason as reason," +
+            " c.name as machine," +
+            " COUNT(a.duration) AS frequency," +
+            " SUM(a.duration) AS duration" +
+            " FROM downtime a, downtime_reason b, machine c" +
+            " WHERE a.downtimeReasonId = b.id" +
+            " AND a.machineId = c.id" +
+            " AND a.date = ?" + 
+            " AND a.shiftId = ?" +
+            " AND a.lineId = ?" +
+            " GROUP BY a.downtimeReasonId, a.machineId";
+        
+        try {
+            data = await this.downtimeRepository.query(rawQuery, 
+                [params.date, params.shiftId, line_id]);
+        } catch (error) {}
+
+        if (!data) {
+            console.log("Query error")
+            return Utils.EMPTY_ARRAY_RETURN;
+        }
+        
+        return data;
+    }
+
+    public async findByLineDateShiftCategory(category_id : number, line_id : number, params : OeeShiftDateShiftCmd): Promise<any> {
         let downtime: Downtime[];
       
         try {
@@ -84,10 +109,12 @@ export class DowntimeService {
                                 .innerJoin("downtime.downtime_reason", "downtime_reason")
                                 .innerJoin("downtime.line", "line")
                                 .innerJoin("downtime.shift", "shift")
-                                .andWhere("line.id = :value1", {value1 : params.line_id})
-                                .andWhere("downtime_category.id = :value2", {value2 : category_id})
-                                .orderBy("downtime.created_at", "DESC")
-                                .limit(20)
+                                .andWhere("downtime.date = :value1", {value1 : params.date})
+                                .andWhere("shift.id = :value2", {value2 : params.shiftId})
+                                .andWhere("line.id = :value3", {value3 : line_id})
+                                .andWhere("downtime_category.id = :value4", {value4 : category_id})
+                                .orderBy("downtime.duration", "DESC")
+                                .limit(2)
                                 .getMany();
         } catch (error) {}
 
