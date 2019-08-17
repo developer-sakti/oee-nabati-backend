@@ -23,6 +23,7 @@ import { ReworkLineModule } from './app/rework-line/rework-line.module';
 import { RoleModule } from './app/role/role.module';
 import { OeeShiftModule } from './app/oee-shift/oee-shift.module';
 import { AnalysisModule } from './app/analysis/analysis.module';
+import { ReportModule } from './app/report/report.module';
 
 @Module({
   imports: [
@@ -46,7 +47,7 @@ import { AnalysisModule } from './app/analysis/analysis.module';
     LakbanReworkModule, 
     RoleModule, 
     ReworkLineModule, 
-    OeeShiftModule, AnalysisModule
+    OeeShiftModule, AnalysisModule, ReportModule
   ],
   controllers: [AppController],
   providers: [AppService],
