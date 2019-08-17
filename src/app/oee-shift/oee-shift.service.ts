@@ -56,7 +56,7 @@ export class OeeShiftService {
         }        
     }
 
-    public async findByLineDateShift(params: OeeShiftDateLineCmd): Promise<any> {
+    public async  findByLineDateShift(params: OeeShiftDateLineCmd): Promise<any> {
         let data : OeeShift;
         try {
             data = await this.repo.findOne({
