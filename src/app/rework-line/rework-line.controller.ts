@@ -1,4 +1,4 @@
-import { Controller, Post, HttpStatus, Body, Patch } from '@nestjs/common';
+import { Controller, Post, HttpStatus, Body, Patch, UseGuards } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ReworkLineService } from './rework-line.service';
 import { ReworkLineCmd } from './cmd/rework-line-request.command';
@@ -8,6 +8,7 @@ import { RencanaProduksiService } from '../rencana-produksi/rencana-produksi.ser
 import { OeeShiftCreateCmd } from '../oee-shift/cmd/oee-shift-create.command';
 import { OeeShiftService } from '../oee-shift/oee-shift.service';
 import { RencanaProduksiFindShiftCmd } from '../rencana-produksi/cmd/rencana-produksi-find-shift.command';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('rencanaProduksi')
 @ApiBearerAuth()
@@ -19,6 +20,7 @@ export class ReworkLineController {
         ) {}
     
     @Patch()
+    @UseGuards(AuthGuard('jwt'))
     @ApiOperation({ title: 'Post Rework Line', description: 'Save Rework Line.' })
     @ApiResponse({ description: 'Success!', status: HttpStatus.OK})
     @ApiResponse({ description: 'Bad request.', status: HttpStatus.BAD_REQUEST })

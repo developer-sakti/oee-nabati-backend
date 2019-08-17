@@ -1,4 +1,4 @@
-import { Controller, Get, Req, HttpStatus, Post, Body, Query } from '@nestjs/common';
+import { Controller, Get, Req, HttpStatus, Post, Body, Query, UseGuards } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth, ApiResponse, ApiOperation } from '@nestjs/swagger';
 import { RencanaProduksiService } from './rencana-produksi.service';
 import { GetRencanaProduksiDto } from './dto/get-rencana-produksi.dto';
@@ -14,6 +14,7 @@ import { OeeShiftService } from '../oee-shift/oee-shift.service';
 import { OeeShiftCreateCmd } from '../oee-shift/cmd/oee-shift-create.command';
 import { concat } from 'rxjs';
 import { OeeShift } from '../oee-shift/oee-shift.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('rencanaProduksi')
 @ApiBearerAuth()
@@ -25,6 +26,7 @@ export class RencanaProduksiController {
     ) {}
 
     @Get()
+    @UseGuards(AuthGuard('jwt'))
     @ApiResponse({ status: HttpStatus.OK, type: GetRencanaProduksiDto, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
@@ -35,6 +37,7 @@ export class RencanaProduksiController {
     }
 
     @Get('active')
+    @UseGuards(AuthGuard('jwt'))
     @ApiResponse({ status: HttpStatus.OK, type: GetRencanaProduksiDto, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
@@ -44,6 +47,7 @@ export class RencanaProduksiController {
     }
 
     @Get('find')
+    @UseGuards(AuthGuard('jwt'))
     @ApiResponse({ status: HttpStatus.OK, type: GetRencanaProduksiDto, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
@@ -53,6 +57,7 @@ export class RencanaProduksiController {
     }
 
     @Get('find/shift')
+    @UseGuards(AuthGuard('jwt'))
     @ApiResponse({ status: HttpStatus.OK, type: GetRencanaProduksiDto, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
@@ -62,6 +67,7 @@ export class RencanaProduksiController {
     }
 
     @Get('waiting-list')
+    @UseGuards(AuthGuard('jwt'))
     @ApiResponse({ status: HttpStatus.OK, type: GetRencanaProduksiDto, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
@@ -71,6 +77,7 @@ export class RencanaProduksiController {
     }
 
     @Get('productivity')
+    @UseGuards(AuthGuard('jwt'))
     @ApiResponse({ status: HttpStatus.OK, type: GetRencanaProduksiDto, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
@@ -80,6 +87,7 @@ export class RencanaProduksiController {
     }
 
     @Post()
+    @UseGuards(AuthGuard('jwt'))
     @ApiResponse({ status: HttpStatus.OK, type: RencanaProduksi, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })

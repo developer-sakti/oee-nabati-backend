@@ -1,4 +1,4 @@
-import { Controller, Post, HttpStatus, Body, Get, Query, Param } from '@nestjs/common';
+import { Controller, Post, HttpStatus, Body, Get, Query, Param, UseGuards } from '@nestjs/common';
 import { DowntimeService } from './downtime.service';
 import { ApiBearerAuth, ApiUseTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { GetDowntimeDto } from './dto/downtime.dto';
@@ -10,6 +10,7 @@ import { DowntimeGetbylineCmd } from './cmd/downtime-getbyline.command';
 import { OeeShiftService } from '../oee-shift/oee-shift.service';
 import { OeeShiftCreateCmd } from '../oee-shift/cmd/oee-shift-create.command';
 import { Variable } from '@app/shared/variable';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('downtime')
 @ApiBearerAuth()
@@ -21,6 +22,7 @@ export class DowntimeController {
   ) {}
 
   @Post()
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Post Downtime', description: 'Save downtime.' })
   @ApiResponse({ description: 'Success!', status: HttpStatus.OK, type: GetDowntimeDto })
   @ApiResponse({ description: 'Bad request.', status: HttpStatus.BAD_REQUEST })
@@ -72,6 +74,7 @@ export class DowntimeController {
   }
 
   @Get('history')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Get Downtime', description: 'Get downtime.' })
   @ApiResponse({ description: 'Success!', status: HttpStatus.OK })
   @ApiResponse({ description: 'Bad request.', status: HttpStatus.BAD_REQUEST })
@@ -84,6 +87,7 @@ export class DowntimeController {
   }
 
   @Get('category/:category_id')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Get Downtime', description: 'Get downtime.' })
   @ApiResponse({ description: 'Success!', status: HttpStatus.OK })
   @ApiResponse({ description: 'Bad request.', status: HttpStatus.BAD_REQUEST })

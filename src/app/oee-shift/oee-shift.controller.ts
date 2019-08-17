@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Query, Param } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Query, Param, UseGuards } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth, ApiResponse, ApiOperation } from '@nestjs/swagger';
 import { GetOeeShiftDto } from './dto/get-oee-shift.dto';
 import { OeeShiftDateShiftCmd } from './cmd/oee-shift-date-shift.command';
@@ -12,6 +12,7 @@ import { OeeShiftDateTimeCmd } from './cmd/oee-shift-date-time.command';
 import { RencanaProduksiFindShiftCmd } from '../rencana-produksi/cmd/rencana-produksi-find-shift.command';
 import { OeeShiftDateTimeLineCmd } from './cmd/oee-shift-date-time-line.command';
 import { OeeShiftDateLineCmd } from './cmd/oee-shift-date-line.command';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('OEE')
 @ApiBearerAuth()
@@ -25,6 +26,7 @@ export class OeeShiftController {
     ) {}
 
     @Get('sector')
+    @UseGuards(AuthGuard('jwt'))
     @ApiResponse({ status: HttpStatus.OK, type: GetOeeShiftDto, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Oee Shift not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
@@ -64,6 +66,7 @@ export class OeeShiftController {
     }
 
     @Get('shift/bydate')
+    @UseGuards(AuthGuard('jwt'))
     @ApiResponse({ status: HttpStatus.OK, type: GetOeeShiftDto, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Oee Shift not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
@@ -94,6 +97,7 @@ export class OeeShiftController {
     }
 
     @Get('shift/bydate/:line_id')
+    @UseGuards(AuthGuard('jwt'))
     @ApiResponse({ status: HttpStatus.OK, type: GetOeeShiftDto, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Oee Shift not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })

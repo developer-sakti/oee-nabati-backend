@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Query, Body, Response } from '@nestjs/common';
+import { Controller, Get, Post, Query, Body, Response, UseGuards } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { ReportService } from './report.service';
 import { RencanaProduksiService } from '../rencana-produksi/rencana-produksi.service';
@@ -9,6 +9,7 @@ import { ReportTimePeriodicCmd } from './cmd/report-time-periodic.command';
 
 import * as excel from 'exceljs';
 import { saveAs } from 'file-saver';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('Report')
 @ApiBearerAuth()
@@ -23,6 +24,7 @@ export class ReportController {
     ) {}
 
     @Post('excel')
+    @UseGuards(AuthGuard('jwt'))
     @ApiOperation({ title: 'Get Report', description: 'Get Report Production from JWT payload.' })
     async getAnalysisProduction(@Body() body : ReportTimePeriodicCmd, @Response() res): Promise<any> {
         let file_name   : string;
