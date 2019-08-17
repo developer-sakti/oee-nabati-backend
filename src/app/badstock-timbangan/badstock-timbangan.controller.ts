@@ -1,4 +1,4 @@
-import { Controller, Post, HttpStatus, Body } from '@nestjs/common';
+import { Controller, Post, HttpStatus, Body, UseGuards } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { BadstockTimbanganService } from './badstock-timbangan.service';
 import { BadstockRequestCmd } from './cmd/badstock-request.command';
@@ -10,6 +10,7 @@ import { OeeShiftService } from '../oee-shift/oee-shift.service';
 import { OeeShiftDateShiftCmd } from '../oee-shift/cmd/oee-shift-date-shift.command';
 import { OeeShiftDateLineCmd } from '../oee-shift/cmd/oee-shift-date-line.command';
 import { RencanaProduksiFindShiftCmd } from '../rencana-produksi/cmd/rencana-produksi-find-shift.command';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('badstock')
 @ApiBearerAuth()

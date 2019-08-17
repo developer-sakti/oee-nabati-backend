@@ -10,6 +10,8 @@ import { BadstockTimbanganService } from '../badstock-timbangan/badstock-timbang
 import { Utils } from '@app/shared/utils';
 import { OeeShiftDateTimeCmd } from './cmd/oee-shift-date-time.command';
 import { RencanaProduksiFindShiftCmd } from '../rencana-produksi/cmd/rencana-produksi-find-shift.command';
+import { OeeShiftDateTimeLineCmd } from './cmd/oee-shift-date-time-line.command';
+import { OeeShiftDateLineCmd } from './cmd/oee-shift-date-line.command';
 
 @ApiUseTags('OEE')
 @ApiBearerAuth()
@@ -39,6 +41,26 @@ export class OeeShiftController {
         cmdOee.shiftId = shiftId;
 
         return await this.oeeShiftService.findOeeSector(cmdOee);
+    }
+
+    @Get('tv')
+    @ApiResponse({ status: HttpStatus.OK, type: GetOeeShiftDto, description: 'Success!' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Oee Shift not found.' })
+    @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
+    @ApiOperation({ title: 'Get Oee Shift List', description: 'Get Oee Shift List from JWT payload.' })
+    async getTv(@Query() req: OeeShiftDateTimeLineCmd): Promise<any> {
+        let shiftId;
+
+        if (req.time < "14:00:00") shiftId = 1; 
+        else if (req.time < "22:00:00") shiftId = 2; 
+        else shiftId = 3; 
+
+        let cmdOee = new OeeShiftDateLineCmd();
+        cmdOee.date = req.date;
+        cmdOee.shiftId = shiftId;
+        cmdOee.lineId = req.line_id;
+
+        return await this.oeeShiftService.findByLineDateShift(cmdOee);
     }
 
     @Get('shift/bydate')

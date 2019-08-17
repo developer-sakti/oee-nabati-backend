@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Query, UseGuards } from '@nestjs/common';
 import { AnalysisService } from './analysis.service';
 import { RencanaProduksiService } from '../rencana-produksi/rencana-produksi.service';
 import { OeeShiftService } from '../oee-shift/oee-shift.service';
@@ -7,6 +7,7 @@ import { DowntimeService } from '../downtime/downtime.service';
 import { ApiUseTags, ApiBearerAuth, ApiResponse, ApiOperation } from '@nestjs/swagger';
 import { AnalysisTimePeriodicCmd } from './cmd/analysis-time-periodic.command';
 import { Utils } from '@app/shared/utils';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('Analysis')
 @ApiBearerAuth()
@@ -21,6 +22,7 @@ export class AnalysisController {
     ) {}
 
     @Get('production')
+    @UseGuards(AuthGuard('jwt'))
     @ApiOperation({ title: 'Get Production', description: 'Get Analysis Production from JWT payload.' })
     async getAnalysisProduction(@Query() query : AnalysisTimePeriodicCmd): Promise<any> {
         let production      = await this.rencanaProduksiService.findByTimePeriodic(query);
