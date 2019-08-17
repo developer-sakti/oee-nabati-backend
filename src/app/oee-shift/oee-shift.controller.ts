@@ -9,6 +9,7 @@ import { BadstockTimbangan } from '../badstock-timbangan/badstock-timbangan.enti
 import { BadstockTimbanganService } from '../badstock-timbangan/badstock-timbangan.service';
 import { Utils } from '@app/shared/utils';
 import { OeeShiftDateTimeCmd } from './cmd/oee-shift-date-time.command';
+import { RencanaProduksiFindShiftCmd } from '../rencana-produksi/cmd/rencana-produksi-find-shift.command';
 
 @ApiUseTags('OEE')
 @ApiBearerAuth()
@@ -47,15 +48,26 @@ export class OeeShiftController {
     @ApiOperation({ title: 'Get Oee Shift List', description: 'Get Oee Shift List from JWT payload.' })
     async getByDateShift(@Query() req: OeeShiftDateShiftCmd): Promise<any> {
         let oeeshift = await this.oeeShiftService.findByDateShift(req);
-        let po = await this.rencanaProduksiService.findByDateShift(req);
+        let oee = {};
 
-        if (oeeshift == null && po.length == 0) return Utils.NULL_RETURN;
+        if (oeeshift == null) return Utils.NULL_RETURN;
+
+        for (var element of oeeshift) {
+            let poCmd = new RencanaProduksiFindShiftCmd();
+            poCmd.date = req.date;
+            poCmd.shift_id = req.shiftId;
+            poCmd.line_id = element.lineId;
+
+            let po = await this.rencanaProduksiService.findByLineDateShift(poCmd);
+            await Object.assign(element, {
+                po : po
+            })
+        }
 
         return {
             date        : req.date,
-            shift       : po[0].shift.shift_name,
+            shift       : req.shiftId,
             oee_shift   : oeeshift,
-            po          : po
         }
     }
 
@@ -66,13 +78,23 @@ export class OeeShiftController {
     @ApiOperation({ title: 'Get Oee Shift List', description: 'Get Oee Shift List from JWT payload.' })
     async getByDateShiftDetails(@Param("line_id") line_id : number, @Query() req: OeeShiftDateShiftCmd): Promise<any> {
         let oeeshift = await this.oeeShiftService.findByDateShiftDetails(line_id, req);
-        let downtime = await this.downtimeService.findByDateShiftLine(line_id, req);
 
-        if (oeeshift == null && downtime.length == 0) return Utils.NULL_RETURN;
+        let planned = await this.downtimeService.findByLineDateShiftCategory(1, line_id, req);
+        let unplanned = await this.downtimeService.findByLineDateShiftCategory(2, line_id, req);
+        let performance_loss = await this.downtimeService.findByLineDateShiftCategory(3, line_id, req);
+
+        let downtime_event = await this.downtimeService.findDowntimeEvent(line_id, req);
+
+        // if (oeeshift == null ) return Utils.NULL_RETURN;
 
         return {
             oee_shift   : oeeshift,
-            downtime    : downtime
+            six_big_loss: {
+                planned_downtime    : planned,
+                unplanned_downtime  : unplanned,
+                performance_loss    : performance_loss
+            },
+            event : downtime_event
         }
     }
 }
