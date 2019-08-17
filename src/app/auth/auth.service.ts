@@ -48,9 +48,8 @@ export class AuthService {
     const secretOrKey = environment.SECRET_KEY;
     const user = new TokenUserPayload(signedUser);
     const userPOJO = JSON.parse(JSON.stringify(user));
-    const accessToken = jwt.sign(userPOJO, secretOrKey, { expiresIn });
+    const accessToken = jwt.sign(userPOJO, secretOrKey);
     return new TokenDto({
-      expiresIn : expiresIn,
       accessToken : accessToken,
       user : signUser,
     });

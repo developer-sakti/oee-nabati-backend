@@ -1,7 +1,8 @@
-import { Controller, Get, HttpStatus, Req } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Req, UseGuards } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth, ApiResponse, ApiOperation } from '@nestjs/swagger';
 import { BadstockCategoryService } from './badstock-category.service';
 import { GetBadstockCategoryDto } from './dto/get-badstock-category.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('badstock')
 @ApiBearerAuth()
@@ -10,6 +11,7 @@ export class BadstockCategoryController {
     constructor(private readonly badstockCategoryService: BadstockCategoryService) {}
 
     @Get()
+    @UseGuards(AuthGuard('jwt'))
     @ApiResponse({ status: HttpStatus.OK, type: GetBadstockCategoryDto, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'BadstockCategory not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
