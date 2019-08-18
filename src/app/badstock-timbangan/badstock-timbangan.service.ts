@@ -6,6 +6,7 @@ import { Utils } from '@app/shared/utils';
 import { OeeShiftDateShiftCmd } from '../oee-shift/cmd/oee-shift-date-shift.command';
 import { OeeShiftDateLineCmd } from '../oee-shift/cmd/oee-shift-date-line.command';
 import { AnalysisTimePeriodicCmd } from '../analysis/cmd/analysis-time-periodic.command';
+import { BodstockGetbylineShiftDateCmd } from './cmd/badstock-getbyline-shift-date.command';
 
 @Injectable()
 export class BadstockTimbanganService {
@@ -81,6 +82,38 @@ export class BadstockTimbanganService {
         try {
             data = await this.repo.query(rawQuery, 
                 [params.from_date, params.to_date, params.line_id]);
+        } catch (error) {}
+
+        if (!data) {
+            console.log("Query error")
+            return Utils.EMPTY_ARRAY_RETURN;
+        }
+        
+        return data;      
+    }
+
+    public async getForReport(params: BodstockGetbylineShiftDateCmd): Promise<any> {
+        let data: any;
+        let rawQuery = "SELECT @no := @no + 1 as n," +
+            " DATE_FORMAT(a.created_at, '%Y-%m-%d') as submit_date," +
+            " c.date," +
+            " d.name as machine," +
+            " b.category as reason," +
+            " a.weight_kg as kg," +
+            " a.weight as karton" +
+            " FROM badstock_timbangan a, badstock_category b, rencana_produksi c, machine d, (SELECT @no := 0) n" +
+            " WHERE a.badstockCategoryId = b.id" +
+            " AND a.rencanaProduksiId = c.id" +             
+            " AND a.machineId = d.id" +
+            " AND c.date >= ?" +
+            " AND c.date <= ?" +
+            " AND c.lineId = ?" +            
+            " AND c.shiftId = ?" +
+            " ORDER BY c.date DESC"
+        
+        try {
+            data = await this.repo.query(rawQuery, 
+                [params.from_date, params.to_date, params.line_id, params.shift_id]);
         } catch (error) {}
 
         if (!data) {

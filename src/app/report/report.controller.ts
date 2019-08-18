@@ -10,6 +10,7 @@ import { ReportTimePeriodicCmd } from './cmd/report-time-periodic.command';
 import * as excel from 'exceljs';
 import { saveAs } from 'file-saver';
 import { AuthGuard } from '@nestjs/passport';
+import { DowntimeGetbylineShiftDateCmd } from '../downtime/cmd/downtime-getbyline-shift-date.command';
 
 @ApiUseTags('Report')
 @ApiBearerAuth()
@@ -28,13 +29,22 @@ export class ReportController {
     @ApiOperation({ title: 'Get Report', description: 'Get Report Production from JWT payload.' })
     async getAnalysisProduction(@Body() body : ReportTimePeriodicCmd, @Response() res): Promise<any> {
         let file_name   : string;
+
+        let dtCmd = new DowntimeGetbylineShiftDateCmd();
+        dtCmd.line_id = body.line_id;
+        dtCmd.shift_id = body.shift_id;
+        dtCmd.from_date = body.from_date;
+        dtCmd.to_date = body.to_date;
+
+        let data_unplanned_dt       = await this.downtimeService.findByCategoryForReport(2, dtCmd);
+        let data_performance_loss   = await this.downtimeService.findByCategoryForReport(3, dtCmd);
+        let data_badstock_defect    = await this.bsService.getForReport(dtCmd);
         
+        // return res.json(data_badstock_defect);
+
         if (body.format == "xlsx") file_name = "Report.xlsx";
         else file_name = "Report.ods"
-
         let workbook    = new excel.Workbook();
-
-        // let data_po_oee = await this.oeeShiftService.findByLineDateShift();
         
         let worksheet_po   = workbook.addWorksheet('Production_Plan_KPI');
         worksheet_po.columns = [
@@ -65,6 +75,40 @@ export class ReportController {
             { header : 'MTTF', key : 'id' }
         ];
         // worksheet_po.addRows();
+
+        let worksheet_availability   = workbook.addWorksheet('Events_(Availability)');
+        worksheet_availability.columns = [
+            { header : 'No.', key : 'n' },
+            { header : 'Submit_Date', key : 'submit_date', width: 20 },
+            { header : 'Date', key : 'date', width: 20 },
+            { header : 'Event', key : 'category', width: 30 },
+            { header : 'Reason', key : 'reason', width: 30 },
+            { header : 'Duration', key : 'duration', width: 15 },
+        ];
+        worksheet_availability.addRows(data_unplanned_dt);
+
+        let worksheet_performance   = workbook.addWorksheet('Events_(Performance)');
+        worksheet_performance.columns = [
+            { header : 'No.', key : 'n' },
+            { header : 'Submit_Date', key : 'submit_date', width: 20 },
+            { header : 'Date', key : 'date', width: 20 },
+            { header : 'Event', key : 'category', width: 30 },
+            { header : 'Reason', key : 'reason', width: 30 },
+            { header : 'Duration', key : 'duration', width: 15 },
+        ];
+        worksheet_performance.addRows(data_performance_loss);
+
+        let worksheet_badstock_defect   = workbook.addWorksheet('Defect_(Badstock)');
+        worksheet_badstock_defect.columns = [
+            { header : 'No.', key : 'n' },
+            { header : 'Submit_Date', key : 'submit_date', width: 20 },
+            { header : 'Date', key : 'date', width: 20 },
+            { header : 'Machine', key : 'machine', width: 30 },
+            { header : 'Reason', key : 'reason', width: 30 },
+            { header : 'Kg', key : 'kg', width: 15 },
+            { header : 'Karton', key : 'karton', width: 15 },
+        ];
+        worksheet_badstock_defect.addRows(data_badstock_defect);
 
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', 'attachment; filename=' + file_name);
