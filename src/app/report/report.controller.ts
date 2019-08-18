@@ -36,6 +36,7 @@ export class ReportController {
         dtCmd.from_date = body.from_date;
         dtCmd.to_date = body.to_date;
 
+        let data_oee                = await this.oeeShiftService.getForReport(dtCmd);
         let data_unplanned_dt       = await this.downtimeService.findByCategoryForReport(2, dtCmd);
         let data_performance_loss   = await this.downtimeService.findByCategoryForReport(3, dtCmd);
         let data_badstock_defect    = await this.bsService.getForReport(dtCmd);
@@ -46,35 +47,38 @@ export class ReportController {
         else file_name = "Report.ods"
         let workbook    = new excel.Workbook();
         
-        let worksheet_po   = workbook.addWorksheet('Production_Plan_KPI');
-        worksheet_po.columns = [
-            { header : 'Production_Plan_(PRO)', key : 'id' },
-            { header : 'Start', key : 'id' },
-            { header : 'End', key : 'id' },
-            { header : 'Target', key : 'id' },
-            { header : 'SKU', key : 'id' },
-            { header : 'Line', key : 'id' },
-            { header : 'OEE', key : 'id' },
-            { header : 'Availability', key : 'id' },
-            { header : 'Performance', key : 'id' },
-            { header : 'Quality', key : 'id' },
-            { header : 'Good', key : 'id' },
-            { header : 'Defect', key : 'id' },
-            { header : 'Total', key : 'id' },
-            { header : 'Rework', key : 'id' },
-            { header : 'Available_Time', key : 'id' },
-            { header : 'Loading_Time', key : 'id' },
-            { header : 'Planned_Downtime', key : 'id' },
-            { header : 'Operating_Time', key : 'id' },
-            { header : 'Unplanned_Downtime', key : 'id' },
-            { header : 'Net_Operating_Time', key : 'id' },
-            { header : 'Performance Loss', key : 'id' },
-            { header : 'Value Adding', key : 'id' },
-            { header : 'MTTR', key : 'id' },
-            { header : 'MTBF', key : 'id' },
-            { header : 'MTTF', key : 'id' }
+        let worksheet_oee   = workbook.addWorksheet('Production_Plan_KPI');
+        worksheet_oee.columns = [
+            { header : 'No.', key : 'n' },
+            // { header : 'Production_Plan_(PRO)', key : 'id' },
+            // { header : 'Start', key : 'id' },
+            // { header : 'End', key : 'id' },
+            // { header : 'SKU', key : 'id' },
+            { header : 'Date', key : 'date', width: 20  },
+            { header : 'Target', key : 'total_target_produksi', width: 20  },
+            { header : 'Shift', key : 'shift_name', width: 20  },
+            { header : 'Line', key : 'name', width: 20  },
+            { header : 'OEE', key : 'line_oee', width: 20  },
+            { header : 'Availability', key : 'availablity', width: 20  },
+            { header : 'Performance', key : 'performance_rate', width: 20  },
+            { header : 'Quality', key : 'quality_product_rate', width: 20  },
+            { header : 'Good', key : 'b_finishgood_shift', width: 20  },
+            { header : 'Defect', key : 'd_total_defect_qty_karton', width: 20  },
+            // { header : 'Total', key : 'id' },
+            { header : 'Rework', key : 'e_total_rework_qty_karton', width: 20  },
+            { header : 'Available_Time', key : 'available_time', width: 20  },
+            { header : 'Loading_Time', key : 'l_loading_hours', width: 20  },
+            { header : 'Planned_Downtime', key : 'k_total_planned_dt_losses', width: 20  },
+            { header : 'Operating_Time', key : 'n_operating_hours', width: 20  },
+            { header : 'Unplanned_Downtime', key : 'm_total_unplanned_dt', width: 20  },
+            { header : 'Net_Operating_Time(Running_Time)', key : 'p_running_time', width: 20  },
+            { header : 'Performance Loss', key : 'o_total_performance_losses', width: 20  },
+            { header : 'Value Adding', key : 'r_value_added_hours', width: 20  },
+            { header : 'MTTR', key : 'mttr_y1', width: 20  },
+            { header : 'MTBF', key : 'mtbf_x1', width: 20  },
+            { header : 'MTTF', key : 'mttf_z1', width: 20  }
         ];
-        // worksheet_po.addRows();
+        worksheet_oee.addRows(data_oee);
 
         let worksheet_availability   = workbook.addWorksheet('Events_(Availability)');
         worksheet_availability.columns = [

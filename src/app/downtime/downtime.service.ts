@@ -73,7 +73,7 @@ export class DowntimeService {
 
     public async findByCategoryForReport(category_id : number, params : DowntimeGetbylineShiftDateCmd ): Promise<any> {
         let downtime: any;
-        let rawQuery = "SELECT @no := @no + 1 n," +
+        let rawQuery = "SELECT @no := @no + 1 as n," +
             " DATE_FORMAT(a.created_at, '%Y-%m-%d') as submit_date," +
             " a.date," +
             " b.category," +
