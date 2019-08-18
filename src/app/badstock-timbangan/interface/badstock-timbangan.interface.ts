@@ -6,6 +6,7 @@ import { BadstockCategory } from "@app/app/badstock-category/badstock-category.e
 
 export interface IBadstockTimbangan {
   readonly id?: number;
+  readonly weight_kg?: number;
   readonly weight?: number;
 
   readonly created_at?: string;

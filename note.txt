@@ -93,3 +93,11 @@ SELECT MONTH(oee_shift.date) as periodic,
          AND oee_shift.date <= "2019-08-21" 
          AND oee_shift.lineId = 1
          GROUP BY MONTH(oee_shift.date)
+
+{
+  "format": "xlsx",
+  "line_id": 1,
+  "shift_id": 1,
+  "from_date": "2019-08-15",
+  "to_date": "2019-08-21"
+}

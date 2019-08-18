@@ -18,6 +18,7 @@ export class BadstockTimbangan implements IBadstockTimbangan{
   constructor(data: IBadstockTimbangan) {
     if (!!data) {
       this.id = data.id;
+      this.weight_kg = data.weight_kg;
       this.weight = data.weight;
 
       this.created_at = data.created_at;
@@ -36,7 +37,8 @@ export class BadstockTimbangan implements IBadstockTimbangan{
 
   @PrimaryGeneratedColumn() public id: number;
 
-  @Column() public weight: number;
+  @Column({ type : "float" }) public weight_kg: number;
+  @Column({ type : "float" }) public weight: number;
   
   @Column({ type : "timestamp" }) public created_at: string;
   @Column({ type : "datetime", default : null  }) public updated_at: string;

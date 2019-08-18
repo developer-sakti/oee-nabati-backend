@@ -7,6 +7,7 @@ import { DowntimeGetbylineCmd } from './cmd/downtime-getbyline.command';
 import { OeeShiftDateShiftCmd } from '../oee-shift/cmd/oee-shift-date-shift.command';
 import { Variable } from '@app/shared/variable';
 import { AnalysisTimePeriodicCmd } from '../analysis/cmd/analysis-time-periodic.command';
+import { DowntimeGetbylineShiftDateCmd } from './cmd/downtime-getbyline-shift-date.command';
 
 @Injectable()
 export class DowntimeService {
@@ -44,7 +45,7 @@ export class DowntimeService {
         return downtime;
     }
 
-    public async findByDateShiftLine(line_id : number, params : OeeShiftDateShiftCmd): Promise<any> {
+    public async findByDateShiftLine(line_id : number, params :  OeeShiftDateShiftCmd): Promise<any> {
         let downtime: Downtime[];
       
         try {
@@ -66,6 +67,35 @@ export class DowntimeService {
 
         if (!downtime) {
             return Utils.NULL_RETURN;
+        }
+        return downtime;
+    }
+
+    public async findByCategoryForReport(category_id : number, params : DowntimeGetbylineShiftDateCmd ): Promise<any> {
+        let downtime: any;
+        let rawQuery = "SELECT @no := @no + 1 as n," +
+            " DATE_FORMAT(a.created_at, '%Y-%m-%d') as submit_date," +
+            " a.date," +
+            " b.category," +
+            " c.reason," +
+            " a.duration" +
+            " FROM downtime a, downtime_category b, downtime_reason c, (SELECT @no := 0) n" +
+            " WHERE a.downtimeCategoryId = b.id" +
+            " AND a.downtimeReasonId = c.id" +
+            " AND a.downtimeCategoryId = ?" +
+            " AND a.shiftId = ?" +
+            " AND a.lineId = ?" +
+            " AND a.date >= ?" +
+            " AND a.date <= ?" + 
+            " ORDER BY a.date ASC"
+      
+        try {
+            downtime = await this.downtimeRepository.query(rawQuery,
+                [category_id, params.shift_id, params.line_id, params.from_date, params.to_date]);
+        } catch (error) {}
+
+        if (!downtime) {
+            return Utils.EMPTY_ARRAY_RETURN;
         }
         return downtime;
     }

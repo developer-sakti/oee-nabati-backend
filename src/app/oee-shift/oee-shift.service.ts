@@ -8,6 +8,7 @@ import { OeeShiftDateShiftCmd } from './cmd/oee-shift-date-shift.command';
 import { OeeShiftDateLineCmd } from './cmd/oee-shift-date-line.command';
 import { AnalysisTimePeriodicCmd } from '../analysis/cmd/analysis-time-periodic.command';
 import { Variable } from '@app/shared/variable';
+import { ReportCmd } from '../report/cmd/report.command';
 
 @Injectable()
 export class OeeShiftService {
@@ -56,7 +57,7 @@ export class OeeShiftService {
         }        
     }
 
-    public async  findByLineDateShift(params: OeeShiftDateLineCmd): Promise<any> {
+    public async findByLineDateShift(params: OeeShiftDateLineCmd): Promise<any> {
         let data : OeeShift;
         try {
             data = await this.repo.findOne({
@@ -71,6 +72,30 @@ export class OeeShiftService {
         } catch (error) {
             return Utils.NULL_RETURN;
         }        
+    }
+
+    public async getForReport(params: ReportCmd): Promise<any> {
+        let data: any;
+        let rawQuery  = "SELECT *, @no := @no + 1 as n, @available_time := 480 as available_time" +
+            " FROM oee_shift a, initial_shift b, line c, (SELECT @no := 0) n" +
+            " WHERE a.shiftId = b.id" +
+            " AND a.lineId = c.id" +
+            " AND a.date >= ? "+
+            " AND a.date <= ?" +
+            " AND a.lineId = ?" +         
+            " AND a.shiftId = ?";
+        
+        try {
+            data = await this.repo.query(rawQuery, 
+                [params.from_date, params.to_date, params.line_id, params.shift_id]);
+        } catch (error) {}
+
+        if (!data) {
+            console.log("Query error")
+            return Utils.EMPTY_ARRAY_RETURN;
+        }
+        
+        return data;       
     }
 
     public async findByLineDateShiftMany(params: OeeShiftCreateCmd): Promise<any> {
