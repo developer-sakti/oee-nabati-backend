@@ -31,12 +31,12 @@ export class BadstockTimbanganController {
   public async post(@Body() req: BadstockRequestCmd): Promise<any> {
     let po = await this.poService.findById(req.rencanaProduksiId);
 
+    req.weight = req.weight_kg;
     let process = await this.badstockTimbanganService.create(new BadstockTimbangan(req));
-    let update  = await this.poService.updateDefectBadstock(req);
+    if (process == null) return Utils.sendResponseSaveFailed("Badstock")
 
-    if (!process && !update) {
-      return Utils.sendResponseSaveFailed("Badstock")
-    } 
+    let update  = await this.poService.updateDefectBadstock(req);
+    if (update == null) return Utils.sendResponseUpdateFailed("Badstock on Rencana Produksi")
 
     let oeeShiftCmd     = new OeeShiftCreateCmd();
     oeeShiftCmd.lineId  = po.lineId;
@@ -57,7 +57,7 @@ export class BadstockTimbanganController {
       oeeShiftCmd.d_total_defect_qty_karton = po.d_defect_qty_karton;
 
       storeOeeShift   = await this.oeeShiftService.create(oeeShiftCmd);
-      if (!storeOeeShift) return Utils.sendResponseSaveFailed("Oee Shift")
+      if (!storeOeeShift) return Utils.sendResponseSaveFailed("Defect on Oee Shift")
     } else {
         oeeShiftCmd.d_total_defect_qty_karton = 0;
         poByLineDateShiftMany.forEach(element => {
@@ -65,7 +65,7 @@ export class BadstockTimbanganController {
         });
 
         storeOeeShift   = await this.oeeShiftService.updateDefect(dataOee.id, oeeShiftCmd);
-        if (!storeOeeShift) return Utils.sendResponseUpdateFailed("Oee Shift")
+        if (!storeOeeShift) return Utils.sendResponseUpdateFailed("Defect on Oee Shift")
     }
   
     return Utils.sendResponseSaveSuccess(process);
