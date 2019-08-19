@@ -23,7 +23,7 @@ RUN npm i -g npm
 
 COPY package.json .
 
-RUN npm i --silent --production
+RUN npm i --silent
 
 COPY . /backend
 
