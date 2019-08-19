@@ -1,4 +1,4 @@
-import { Controller, Post, HttpStatus, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, HttpStatus, Body, UseGuards, Query, Get } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { BadstockTimbanganService } from './badstock-timbangan.service';
 import { BadstockRequestCmd } from './cmd/badstock-request.command';
@@ -11,6 +11,7 @@ import { OeeShiftDateShiftCmd } from '../oee-shift/cmd/oee-shift-date-shift.comm
 import { OeeShiftDateLineCmd } from '../oee-shift/cmd/oee-shift-date-line.command';
 import { RencanaProduksiFindShiftCmd } from '../rencana-produksi/cmd/rencana-produksi-find-shift.command';
 import { AuthGuard } from '@nestjs/passport';
+import { BadstockGetDateCmd } from './cmd/badstock-get-date.command';
 
 @ApiUseTags('badstock')
 @ApiBearerAuth()
@@ -68,5 +69,12 @@ export class BadstockTimbanganController {
     }
   
     return Utils.sendResponseSaveSuccess(process);
+  }
+
+  @Get('history')
+  @ApiOperation({ title: 'Get Badstock Timbangan', description: 'Get Badstock Timbangan.' })
+  @ApiResponse({ description: 'Success!', status: HttpStatus.OK})
+  public async getHistory(@Query() query : BadstockGetDateCmd) {
+    return await this.badstockTimbanganService.getHistory(query);    
   }
 }

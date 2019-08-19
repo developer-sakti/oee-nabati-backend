@@ -276,7 +276,7 @@ export class RencanaProduksiService {
   public async updateDefectBadstock(params: DeepPartial<BadstockRequestCmd>): Promise<RencanaProduksi> {
     try {
       let po = await this.rencanaProduksiRepository.findOne(params.rencanaProduksiId);
-      po.d_defect_qty_karton    += params.weight;
+      po.d_defect_qty_karton    += params.weight_kg;
       po.q_defect_losses        = po.d_defect_qty_karton * po.standart_ct;
       po.q_total_quality_losses = po.q_rework_losses + po.q_defect_losses;
       

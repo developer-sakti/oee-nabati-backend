@@ -1,7 +1,7 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 
 export class OeeShiftDateLineCmd {
-  @ApiModelProperty() shiftId: number;
-  @ApiModelProperty() lineId: number;
+  @ApiModelProperty({ required : false }) shiftId: number;
+  @ApiModelProperty({ required : false }) lineId: number;
   @ApiModelProperty() date: string;
 }
