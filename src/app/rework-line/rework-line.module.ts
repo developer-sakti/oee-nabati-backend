@@ -5,20 +5,25 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ReworkLine } from './rework-line.entity';
 import { RencanaProduksiService } from '../rencana-produksi/rencana-produksi.service';
 import { RencanaProduksi } from '../rencana-produksi/rencana-produksi.entity';
+import { OeeShiftService } from '../oee-shift/oee-shift.service';
+import { OeeShift } from '../oee-shift/oee-shift.entity';
 
 @Module({
   providers: [
     ReworkLineService,
-    RencanaProduksiService
+    RencanaProduksiService,
+    OeeShiftService
   ],
   controllers: [ReworkLineController],
   imports: [TypeOrmModule.forFeature([
     ReworkLine,
-    RencanaProduksi
+    RencanaProduksi,
+    OeeShift
   ])],
   exports: [
     ReworkLineService,
-    RencanaProduksiService
+    RencanaProduksiService,
+    OeeShiftService
   ],
 })
 export class ReworkLineModule {}

@@ -31,6 +31,17 @@ export class RencanaProduksi implements IRencanaProduksi{
       this.date = data.date;
       this.start_po = data.start_po;
       this.end_po = data.end_po;
+      
+      this.b_finishgood_qty_karton = data.b_finishgood_qty_karton;
+      this.c_total_qty_karton = data.c_total_qty_karton;
+    
+      this.d_defect_qty_karton = data.d_defect_qty_karton;
+      this.e_rework_qty_karton = data.e_rework_qty_karton;
+    
+      this.q_defect_losses = data.q_defect_losses;
+      this.q_rework_losses = data.q_rework_losses;
+    
+      this.q_total_quality_losses = data.q_total_quality_losses;
 
       this.created_at = data.created_at;
       this.updated_at = data.updated_at;
