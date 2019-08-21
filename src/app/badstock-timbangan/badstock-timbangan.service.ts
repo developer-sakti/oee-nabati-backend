@@ -7,6 +7,7 @@ import { OeeShiftDateShiftCmd } from '../oee-shift/cmd/oee-shift-date-shift.comm
 import { OeeShiftDateLineCmd } from '../oee-shift/cmd/oee-shift-date-line.command';
 import { AnalysisTimePeriodicCmd } from '../analysis/cmd/analysis-time-periodic.command';
 import { BodstockGetbylineShiftDateCmd } from './cmd/badstock-getbyline-shift-date.command';
+import { BadstockGetDateCmd } from './cmd/badstock-get-date.command';
 
 @Injectable()
 export class BadstockTimbanganService {
@@ -16,8 +17,7 @@ export class BadstockTimbanganService {
         let data: BadstockTimbangan[];
       
         try {
-            data = await this.repo
-                                .createQueryBuilder("badstock_timbangan")
+            data = await this.repo.createQueryBuilder("badstock_timbangan")
                                 .select(['badstock_timbangan', 'rencana_produksi', 'machine', 'badstock_category'])
                                 .innerJoin("badstock_timbangan.rencana_produksi", "rencana_produksi")
                                 .innerJoin("badstock_timbangan.machine", "machine")
@@ -30,6 +30,26 @@ export class BadstockTimbanganService {
 
         if (!data) {
             return Utils.NULL_RETURN;
+        }
+        return data;
+    }
+
+    public async getHistory(params : BadstockGetDateCmd): Promise<any> {
+        let data: BadstockTimbangan[];
+      
+        try {
+            data = await this.repo.createQueryBuilder("badstock_timbangan")
+                                .select(['badstock_timbangan', 'rencana_produksi', 'machine', 'badstock_category'])
+                                .innerJoin("badstock_timbangan.rencana_produksi", "rencana_produksi")
+                                .innerJoin("badstock_timbangan.machine", "machine")
+                                .innerJoin("badstock_timbangan.badstock_category", "badstock_category")
+                                .andWhere("rencana_produksi.date = :value1", {value1 : params.date})
+                                .orderBy("rencana_produksi.date", "DESC")
+                                .getMany();
+        } catch (error) {}
+
+        if (!data) {
+            return Utils.EMPTY_ARRAY_RETURN;
         }
         return data;
     }

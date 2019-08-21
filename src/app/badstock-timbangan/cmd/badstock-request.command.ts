@@ -5,6 +5,7 @@ import { DowntimeCategory } from '@app/app/downtime-category/downtime-category.e
 import { DowntimeReason } from '@app/app/downtime-reason/downtime-reason.entity';
 
 export class BadstockRequestCmd {
+  @ApiModelProperty() weight_kg: number;
   @ApiModelProperty() weight: number;
 
   @ApiModelProperty() rencanaProduksiId: number;
