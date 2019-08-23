@@ -98,6 +98,29 @@ export class OeeShiftService {
         return data;       
     }
 
+    public async getForAllReport(params: ReportCmd): Promise<any> {
+        let data: any;
+        let rawQuery  = "SELECT *, @no := @no + 1 as n, @available_time := 480 as available_time" +
+            " FROM oee_shift a, initial_shift b, line c, (SELECT @no := 0) n" +
+            " WHERE a.shiftId = b.id" +
+            " AND a.lineId = c.id" +
+            " AND a.date >= ? "+
+            " AND a.date <= ?" +
+            " AND a.lineId = ?";
+        
+        try {
+            data = await this.repo.query(rawQuery, 
+                [params.from_date, params.to_date, params.line_id]);
+        } catch (error) {}
+
+        if (!data) {
+            console.log("Query error")
+            return Utils.EMPTY_ARRAY_RETURN;
+        }
+        
+        return data;       
+    }
+
     public async findByLineDateShiftMany(params: OeeShiftCreateCmd): Promise<any> {
         let data : OeeShift[];
         try {

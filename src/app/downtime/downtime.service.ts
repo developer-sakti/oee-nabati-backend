@@ -100,6 +100,34 @@ export class DowntimeService {
         return downtime;
     }
 
+    public async findByCategoryForAllReport(category_id : number, params : DowntimeGetbylineShiftDateCmd ): Promise<any> {
+        let downtime: any;
+        let rawQuery = "SELECT @no := @no + 1 as n," +
+            " DATE_FORMAT(a.created_at, '%Y-%m-%d') as submit_date," +
+            " a.date," +
+            " b.category," +
+            " c.reason," +
+            " a.duration" +
+            " FROM downtime a, downtime_category b, downtime_reason c, (SELECT @no := 0) n" +
+            " WHERE a.downtimeCategoryId = b.id" +
+            " AND a.downtimeReasonId = c.id" +
+            " AND a.downtimeCategoryId = ?" +
+            " AND a.lineId = ?" +
+            " AND a.date >= ?" +
+            " AND a.date <= ?" + 
+            " ORDER BY a.date ASC"
+      
+        try {
+            downtime = await this.downtimeRepository.query(rawQuery,
+                [category_id, params.line_id, params.from_date, params.to_date]);
+        } catch (error) {}
+
+        if (!downtime) {
+            return Utils.EMPTY_ARRAY_RETURN;
+        }
+        return downtime;
+    }
+
     public async findByCategory(category_id : number, params : DowntimeGetbylineCmd): Promise<any> {
         let downtime: Downtime[];
       
