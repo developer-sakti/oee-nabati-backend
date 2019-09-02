@@ -85,13 +85,12 @@ export class DowntimeService {
             " AND a.downtimeCategoryId = ?" +
             " AND a.shiftId = ?" +
             " AND a.lineId = ?" +
-            " AND a.date >= ?" +
-            " AND a.date <= ?" + 
+            " AND a.date = ?" +
             " ORDER BY a.date ASC"
       
         try {
             downtime = await this.downtimeRepository.query(rawQuery,
-                [category_id, params.shift_id, params.line_id, params.from_date, params.to_date]);
+                [category_id, params.shift_id, params.line_id, params.date]);
         } catch (error) {}
 
         if (!downtime) {

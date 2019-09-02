@@ -125,15 +125,14 @@ export class BadstockTimbanganService {
             " WHERE a.badstockCategoryId = b.id" +
             " AND a.rencanaProduksiId = c.id" +             
             " AND a.machineId = d.id" +
-            " AND c.date >= ?" +
-            " AND c.date <= ?" +
+            " AND c.date = ?" +
             " AND c.lineId = ?" +            
             " AND c.shiftId = ?" +
             " ORDER BY c.date DESC"
         
         try {
             data = await this.repo.query(rawQuery, 
-                [params.from_date, params.to_date, params.line_id, params.shift_id]);
+                [params.date, params.line_id, params.shift_id]);
         } catch (error) {}
 
         if (!data) {
