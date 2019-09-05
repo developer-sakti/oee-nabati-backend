@@ -265,7 +265,7 @@ export class OeeShiftService {
                 " AND oee_shift.lineId = ?" +
                 " GROUP BY MONTH(oee_shift.date)" +
                 " LIMIT 6"
-        } else {
+        } else if (params.time_periodic === Variable.TIME_PERIODIC[3]) {
             rawQuery = "SELECT YEAR(oee_shift.date) as year," +
                 " (SUM(oee_shift.line_oee) / COUNT(oee_shift.line_oee)) AS line_oee," +
                 " (SUM(oee_shift.availablity) / COUNT(oee_shift.line_oee)) AS availablity," +
@@ -277,6 +277,20 @@ export class OeeShiftService {
                 " AND oee_shift.lineId = ?" +
                 " GROUP BY YEAR(oee_shift.date)" +
                 " LIMIT 6"
+        } else {
+            rawQuery = "SELECT DATE_FORMAT(a.date, '%Y-%m-%d') as date, " +
+                " b.shift_name as shift_name," +
+                " a.line_oee AS line_oee," +
+                " a.availablity AS availablity," +
+                " a.performance_rate AS performance_rate," +
+                " a.quality_product_rate" +
+                " AS quality_product_rate" +
+                " FROM oee_shift a, initial_shift b" +
+                " WHERE a.shiftId = b.id " +
+                " AND a.date >= ?" +
+                " AND a.date <= ?" +
+                " AND a.lineId = ?" +
+                " LIMIT 10"
         }
         
         try {
@@ -317,6 +331,16 @@ export class OeeShiftService {
                 " AND oee_shift.date <= ?" +
                 " AND oee_shift.lineId = ?"
         } else if (params.time_periodic === Variable.TIME_PERIODIC[2]) {
+            rawQuery = "SELECT AVG(oee_shift.line_oee) AS oee_avg," +
+                " MAX(oee_shift.line_oee) AS oee_highest," +
+                " MIN(oee_shift.line_oee) AS oee_lowest," +
+                " SUM(oee_shift.l_total_production_time) AS total_production_time," +
+                " SUM(oee_shift.w2_total_downtime) AS total_loss_in_time" +
+                " FROM oee_shift" +
+                " WHERE oee_shift.date >= ?" +
+                " AND oee_shift.date <= ?" +
+                " AND oee_shift.lineId = ?"
+        } else if (params.time_periodic === Variable.TIME_PERIODIC[3]) {
             rawQuery = "SELECT AVG(oee_shift.line_oee) AS oee_avg," +
                 " MAX(oee_shift.line_oee) AS oee_highest," +
                 " MIN(oee_shift.line_oee) AS oee_lowest," +

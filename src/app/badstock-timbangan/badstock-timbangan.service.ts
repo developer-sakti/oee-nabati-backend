@@ -173,4 +173,16 @@ export class BadstockTimbanganService {
         
         return data;      
     }
+
+    public async setKartonWeight(weight_kg : number, bsCategory : number) {
+        let weight_karton : number;
+
+        if (bsCategory == 1) weight_karton = weight_kg;
+        else if (bsCategory == 2) weight_karton = (weight_kg * (1 - 0.4)) * (1 + 0.018) / 1.302;
+        else if (bsCategory == 3) weight_karton = weight_kg / 1.302;
+        else if (bsCategory == 8) weight_karton = weight_kg / (2.33 * 60 / 100);
+        else weight_karton = weight_kg / 3;
+
+        return weight_karton;
+    }
 }
