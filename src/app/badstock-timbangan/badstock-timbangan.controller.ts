@@ -31,9 +31,11 @@ export class BadstockTimbanganController {
   public async post(@Body() req: BadstockRequestCmd): Promise<any> {
     let po = await this.poService.findById(req.rencanaProduksiId);
 
-    req.weight = req.weight_kg;
+    let weight_karton = await this.badstockTimbanganService.setKartonWeight(req.weight_kg, req.badstockCategoryId);
+    req.weight = weight_karton;
+
     let process = await this.badstockTimbanganService.create(new BadstockTimbangan(req));
-    if (process == null) return Utils.sendResponseSaveFailed("Badstock")
+    if (process == null) return Utils.sendResponseSaveFailed("Badstock");
 
     let update  = await this.poService.updateDefectBadstock(req);
     if (update == null) return Utils.sendResponseUpdateFailed("Badstock on Rencana Produksi")

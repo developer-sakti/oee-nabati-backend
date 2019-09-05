@@ -4,6 +4,7 @@ export class Variable {
         "daily",
         "weekly",
         "monthly",
-        "yearly"
+        "yearly",
+        "shiftly"
     ];
 }

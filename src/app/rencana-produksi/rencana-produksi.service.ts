@@ -216,7 +216,7 @@ export class RencanaProduksiService {
         " AND rencana_produksi.lineId = ?" + 
         " GROUP BY MONTH(rencana_produksi.date)" +
         " LIMIT 6"
-    } else {
+    } else if (params.time_periodic === Variable.TIME_PERIODIC[3]){
         rawQuery = "SELECT YEAR(rencana_produksi.date) as year," + 
         " SUM(rencana_produksi.target_produksi) AS target_produksi," + 
         " SUM(rencana_produksi.b_finishgood_qty_karton) AS finish_good" +
@@ -226,6 +226,17 @@ export class RencanaProduksiService {
         " AND rencana_produksi.lineId = ?" + 
         " GROUP BY YEAR(rencana_produksi.date)" +
         " LIMIT 6"
+    } else {
+        rawQuery = "SELECT DATE_FORMAT(a.date, '%Y-%m-%d') as date," +
+		" b.shift_name as shift_name," +
+        " a.target_produksi AS target_produksi, " +
+        " a.b_finishgood_qty_karton AS finish_good" +
+        " FROM rencana_produksi a, initial_shift b" +
+        " WHERE a.shiftId = b.id" +
+        " AND a.date >= ?" +
+        " AND a.date <= ?" +
+        " AND a.lineId = ?" +
+        " LIMIT 10"
     }
     
     try {
