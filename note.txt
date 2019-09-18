@@ -95,18 +95,18 @@ SELECT MONTH(oee_shift.date) as periodic,
          GROUP BY MONTH(oee_shift.date)
 
 {
-  "format": "xlsx",
-  "line_id": 1,
-  "shift_id": 1,
-  "from_date": "2019-08-15",
-  "to_date": "2019-08-21"
+    "format": "xlsx",
+    "line_id": 1,
+    "shift_id": 1,
+    "from_date": "2019-08-15",
+    "to_date": "2019-08-21"
 }
 {
-  "format": "xlsx",
-  "line_id": 1,
-  "shift_id": 0,
-  "from_date": "2019-08-15",
-  "to_date": "2019-08-21"
+    "format": "xlsx",
+    "line_id": 1,
+    "shift_id": 0,
+    "from_date": "2019-08-15",
+    "to_date": "2019-08-21"
 }
 
 Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInVzZXJuYW1lIjoib3BlcmF0b3IiLCJmaXJzdG5hbWUiOiJPcGVyYXRvciIsImxhc3RuYW1lIjoidGVzdCIsInJvbGVJZCI6Miwic3RhdHVzIjoiY29uZmlybSIsImlhdCI6MTU2NjU1NDQyM30.0XkJe7gmLxJnybCCkEIcpsajhYlG0AOi8jGrS9ErIk4

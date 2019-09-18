@@ -24,34 +24,38 @@ import { RoleModule } from './app/role/role.module';
 import { OeeShiftModule } from './app/oee-shift/oee-shift.module';
 import { AnalysisModule } from './app/analysis/analysis.module';
 import { ReportModule } from './app/report/report.module';
+import { ScheduleModule } from 'nest-schedule';
+import { SchedulerSkuModule } from './app/scheduler-sku/scheduler-sku.module';
 
 @Module({
   imports: [
-    AuthModule, 
-    UserModule, 
-    ProfileModule, 
-    TypeOrmModule.forRoot(), 
-    HmiModule, 
-    LineModule, 
-    MachineModule, 
-    InitialShiftModule, 
-    InitialSkuModule, 
-    RencanaProduksiModule, 
-    DowntimeModule, 
-    DowntimeCategoryModule, 
-    DowntimeReasonModule, 
-    DowntimeReasonMachineModule, 
-    BadstockTimbanganModule, 
-    BadstockCategoryModule, 
-    LakbanFinishgoodModule, 
-    LakbanReworkModule, 
-    RoleModule, 
-    ReworkLineModule, 
-    OeeShiftModule, AnalysisModule, ReportModule
+    AuthModule,
+    UserModule,
+    ProfileModule,
+    TypeOrmModule.forRoot(),
+    ScheduleModule.register(),
+    HmiModule,
+    LineModule,
+    MachineModule,
+    InitialShiftModule,
+    InitialSkuModule,
+    RencanaProduksiModule,
+    DowntimeModule,
+    DowntimeCategoryModule,
+    DowntimeReasonModule,
+    DowntimeReasonMachineModule,
+    BadstockTimbanganModule,
+    BadstockCategoryModule,
+    LakbanFinishgoodModule,
+    LakbanReworkModule,
+    RoleModule,
+    ReworkLineModule,
+    OeeShiftModule,
+    AnalysisModule,
+    ReportModule,
+    SchedulerSkuModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {
-  
-}
+export class AppModule {}
