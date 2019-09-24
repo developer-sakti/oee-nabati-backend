@@ -95,9 +95,48 @@ SELECT MONTH(oee_shift.date) as periodic,
          GROUP BY MONTH(oee_shift.date)
 
 {
-  "format": "xlsx",
-  "line_id": 1,
-  "shift_id": 1,
-  "from_date": "2019-08-15",
-  "to_date": "2019-08-21"
+    "format": "xlsx",
+    "line_id": 1,
+    "shift_id": 1,
+    "from_date": "2019-08-15",
+    "to_date": "2019-08-21"
 }
+{
+    "format": "xlsx",
+    "line_id": 1,
+    "shift_id": 0,
+    "from_date": "2019-08-15",
+    "to_date": "2019-08-21"
+}
+
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInVzZXJuYW1lIjoib3BlcmF0b3IiLCJmaXJzdG5hbWUiOiJPcGVyYXRvciIsImxhc3RuYW1lIjoidGVzdCIsInJvbGVJZCI6Miwic3RhdHVzIjoiY29uZmlybSIsImlhdCI6MTU2NjU1NDQyM30.0XkJe7gmLxJnybCCkEIcpsajhYlG0AOi8jGrS9ErIk4
+
+
+SELECT @no := @no + 1 as n, 
+			SUM(a.total_target_produksi) as target,
+			c.name as line,
+			AVG(a.line_oee) as oee,
+			AVG(a.availablity) as availability,
+			AVG(a.performance_rate) as performance,
+			AVG(a.quality_product_rate) as quality,
+			SUM(a.b_finishgood_shift) as good,
+			SUM(a.d_total_defect_qty_karton) as defect,
+			(SUM(a.b_finishgood_shift) + SUM(a.d_total_defect_qty_karton)) as total,
+			SUM(a.e_total_rework_qty_karton) as rework,
+            @available_time := (480 * COUNT(*)) as available_time,
+			SUM(a.l_loading_hours) as loading_time,
+			SUM(a.k_total_planned_dt_losses) as planned_downtime,
+			SUM(a.n_operating_hours) as operating_time,
+			SUM(a.m_total_unplanned_dt) as unplanned_downtime,
+			SUM(a.p_running_time) as net_operating_time,
+			SUM(a.o_total_performance_losses) as performance_losses,
+			SUM(a.r_value_added_hours) as value_adding,
+			SUM(a.mttr_y1) as mttr,
+			SUM(a.mtbf_x1) as mtbf,
+			SUM(a.mttf_z1) as mttf
+            FROM oee_shift a, initial_shift b, line c, (SELECT @no := 0) n
+            WHERE a.shiftId = b.id
+            AND a.lineId = c.id
+            AND a.date >= "2019-08-15"
+            AND a.date <= "2019-08-21"
+            AND a.lineId = 1

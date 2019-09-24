@@ -125,10 +125,40 @@ export class BadstockTimbanganService {
             " WHERE a.badstockCategoryId = b.id" +
             " AND a.rencanaProduksiId = c.id" +             
             " AND a.machineId = d.id" +
-            " AND c.date >= ?" +
-            " AND c.date <= ?" +
+            " AND c.date = ?" +
             " AND c.lineId = ?" +            
             " AND c.shiftId = ?" +
+            " ORDER BY c.date DESC"
+        
+        try {
+            data = await this.repo.query(rawQuery, 
+                [params.date, params.line_id, params.shift_id]);
+        } catch (error) {}
+
+        if (!data) {
+            console.log("Query error")
+            return Utils.EMPTY_ARRAY_RETURN;
+        }
+        
+        return data;      
+    }
+
+    public async getForAllReport(params: BodstockGetbylineShiftDateCmd): Promise<any> {
+        let data: any;
+        let rawQuery = "SELECT @no := @no + 1 as n," +
+            " DATE_FORMAT(a.created_at, '%Y-%m-%d') as submit_date," +
+            " c.date," +
+            " d.name as machine," +
+            " b.category as reason," +
+            " a.weight_kg as kg," +
+            " a.weight as karton" +
+            " FROM badstock_timbangan a, badstock_category b, rencana_produksi c, machine d, (SELECT @no := 0) n" +
+            " WHERE a.badstockCategoryId = b.id" +
+            " AND a.rencanaProduksiId = c.id" +             
+            " AND a.machineId = d.id" +
+            " AND c.date >= ?" +
+            " AND c.date <= ?" +
+            " AND c.lineId = ?" +         
             " ORDER BY c.date DESC"
         
         try {
@@ -142,5 +172,17 @@ export class BadstockTimbanganService {
         }
         
         return data;      
+    }
+
+    public async setKartonWeight(weight_kg : number, bsCategory : number) {
+        let weight_karton : number;
+
+        if (bsCategory == 1) weight_karton = weight_kg;
+        else if (bsCategory == 2) weight_karton = (weight_kg * (1 - 0.4)) * (1 + 0.018) / 1.302;
+        else if (bsCategory == 3) weight_karton = weight_kg / 1.302;
+        else if (bsCategory == 8) weight_karton = weight_kg / (2.33 * 60 / 100);
+        else weight_karton = weight_kg / 3;
+
+        return weight_karton;
     }
 }

@@ -66,7 +66,7 @@ export class OeeShiftService {
                     lineId : params.lineId,
                     shiftId : params.shiftId
                 },
-                relations : ["shift", "line"]
+                relations : ["shift", "line"],
             })
             return data;
         } catch (error) {
@@ -77,17 +77,94 @@ export class OeeShiftService {
     public async getForReport(params: ReportCmd): Promise<any> {
         let data: any;
         let rawQuery  = "SELECT *, @no := @no + 1 as n, @available_time := 480 as available_time" +
-            " FROM oee_shift a, initial_shift b, line c, (SELECT @no := 0) n" +
+            " , e.name as sku_name" +
+            " FROM oee_shift a, initial_shift b, line c, rencana_produksi d, initial_sku e, (SELECT @no := 0) n" +
             " WHERE a.shiftId = b.id" +
             " AND a.lineId = c.id" +
-            " AND a.date >= ? "+
-            " AND a.date <= ?" +
+            " AND d.skuId = e.id" +
+            " AND a.date = d.date" +
+            " AND a.lineId = d.lineId" +
+            " AND a.shiftId = d.shiftId" +
+            " AND a.date = ? "+
             " AND a.lineId = ?" +         
             " AND a.shiftId = ?";
         
         try {
             data = await this.repo.query(rawQuery, 
-                [params.from_date, params.to_date, params.line_id, params.shift_id]);
+                [params.date, params.line_id, params.shift_id]);
+        } catch (error) {}
+
+        if (!data) {
+            console.log("Query error")
+            return Utils.EMPTY_ARRAY_RETURN;
+        }
+        
+        return data;       
+    }
+
+    public async getForAllReport(params: ReportCmd): Promise<any> {
+        let data: any;
+        let rawQuery  = "SELECT *, @no := @no + 1 as n, @available_time := 480 as available_time" +
+            " , e.name as sku_name" +
+            " FROM oee_shift a, initial_shift b, line c, rencana_produksi d, initial_sku e, (SELECT @no := 0) n" +
+            " WHERE a.shiftId = b.id" +
+            " AND a.lineId = c.id" +
+            " AND d.skuId = e.id" +
+            " AND a.date = d.date" +
+            " AND a.lineId = d.lineId" +
+            " AND a.shiftId = d.shiftId" +
+            " AND a.date >= ? "+
+            " AND a.date <= ?" +
+            " AND a.lineId = ?";
+        
+        try {
+            data = await this.repo.query(rawQuery, 
+                [params.from_date, params.to_date, params.line_id]);
+        } catch (error) {}
+
+        if (!data) {
+            console.log("Query error")
+            return Utils.EMPTY_ARRAY_RETURN;
+        }
+        
+        return data;       
+    }
+
+    public async getForKpiReport(params: ReportCmd): Promise<any> {
+        let data: any;
+        let rawQuery  = "SELECT @no := @no + 1 as n, " +
+            " SUM(a.total_target_produksi) as target," +
+            " c.name as line," +
+            " AVG(a.line_oee) as oee," +
+            " AVG(a.availablity) as availability," +
+            " AVG(a.performance_rate) as performance," +
+            " AVG(a.quality_product_rate) as quality," +
+            " SUM(a.b_finishgood_shift) as good," +
+            " SUM(a.d_total_defect_qty_karton) as defect," +
+            " (SUM(a.b_finishgood_shift) + SUM(a.d_total_defect_qty_karton)) as total," +
+            " SUM(a.e_total_rework_qty_karton) as rework," +
+            " @available_time := (480 * COUNT(*)) as available_time," +
+            " SUM(a.l_loading_hours) as loading_time," +
+            " SUM(a.k_total_planned_dt_losses) as planned_downtime," +
+            " SUM(a.n_operating_hours) as operating_time," +
+            " SUM(a.m_total_unplanned_dt) as unplanned_downtime," +
+            " SUM(a.p_running_time) as net_operating_time," +
+            " SUM(a.o_total_performance_losses) as performance_losses," +
+            " SUM(a.r_value_added_hours) as value_adding," +
+            " SUM(a.mttr_y1) as mttr," +
+            " SUM(a.mtbf_x1) as mtbf," +
+            " SUM(a.mttf_z1) as mttf" +
+            " FROM oee_shift a, initial_shift b, line c, (SELECT @no := 0) n" +
+            " WHERE a.shiftId = b.id" +
+            " AND a.lineId = c.id" +
+            " AND a.date >= ?" +
+            " AND a.date <= ?" +
+            " AND a.lineId = ?" +
+            " LIMIT 1";
+        
+        try {
+            data = await this.repo.query(rawQuery, 
+                [params.from_date, params.to_date, params.line_id]);
         } catch (error) {}
 
         if (!data) {
@@ -188,7 +265,7 @@ export class OeeShiftService {
                 " AND oee_shift.lineId = ?" +
                 " GROUP BY MONTH(oee_shift.date)" +
                 " LIMIT 6"
-        } else {
+        } else if (params.time_periodic === Variable.TIME_PERIODIC[3]) {
             rawQuery = "SELECT YEAR(oee_shift.date) as year," +
                 " (SUM(oee_shift.line_oee) / COUNT(oee_shift.line_oee)) AS line_oee," +
                 " (SUM(oee_shift.availablity) / COUNT(oee_shift.line_oee)) AS availablity," +
@@ -200,6 +277,20 @@ export class OeeShiftService {
                 " AND oee_shift.lineId = ?" +
                 " GROUP BY YEAR(oee_shift.date)" +
                 " LIMIT 6"
+        } else {
+            rawQuery = "SELECT DATE_FORMAT(a.date, '%Y-%m-%d') as date, " +
+                " b.shift_name as shift_name," +
+                " a.line_oee AS line_oee," +
+                " a.availablity AS availablity," +
+                " a.performance_rate AS performance_rate," +
+                " a.quality_product_rate" +
+                " AS quality_product_rate" +
+                " FROM oee_shift a, initial_shift b" +
+                " WHERE a.shiftId = b.id " +
+                " AND a.date >= ?" +
+                " AND a.date <= ?" +
+                " AND a.lineId = ?" +
+                " LIMIT 10"
         }
         
         try {
@@ -240,6 +331,16 @@ export class OeeShiftService {
                 " AND oee_shift.date <= ?" +
                 " AND oee_shift.lineId = ?"
         } else if (params.time_periodic === Variable.TIME_PERIODIC[2]) {
+            rawQuery = "SELECT AVG(oee_shift.line_oee) AS oee_avg," +
+                " MAX(oee_shift.line_oee) AS oee_highest," +
+                " MIN(oee_shift.line_oee) AS oee_lowest," +
+                " SUM(oee_shift.l_total_production_time) AS total_production_time," +
+                " SUM(oee_shift.w2_total_downtime) AS total_loss_in_time" +
+                " FROM oee_shift" +
+                " WHERE oee_shift.date >= ?" +
+                " AND oee_shift.date <= ?" +
+                " AND oee_shift.lineId = ?"
+        } else if (params.time_periodic === Variable.TIME_PERIODIC[3]) {
             rawQuery = "SELECT AVG(oee_shift.line_oee) AS oee_avg," +
                 " MAX(oee_shift.line_oee) AS oee_highest," +
                 " MIN(oee_shift.line_oee) AS oee_lowest," +

@@ -3,13 +3,19 @@ import { InitialShiftService } from '@app/app/initial-shift/initial-shift.servic
 import { ApiResponse, ApiOperation, ApiBearerAuth, ApiUseTags } from '@nestjs/swagger';
 import { GetInitialSkuDto } from './dto/get-initial-sku.dto';
 import { InitialSkuService } from './initial-sku.service';
-import { Crud, CrudController } from '@nestjsx/crud';
+import { Crud, CrudController, Override } from '@nestjsx/crud';
 import { InitialSku } from './initial-sku.entity';
 
 @Crud({
-    model: {
+    model : {
         type: InitialSku,
     },
+    routes : {
+        only : [
+            'getManyBase',
+            'getOneBase'
+        ]
+    }
 })
 
 @ApiUseTags('initialSku')
@@ -20,6 +26,7 @@ export class InitialSkuController implements CrudController<InitialSku>{
     }
 
     @Get()
+    @Override('getManyBase')
     @ApiResponse({ status: HttpStatus.OK, type: GetInitialSkuDto, description: 'Success!' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'InitialSku not found.' })
     @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
