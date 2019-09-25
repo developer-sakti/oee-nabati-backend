@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM node:lts-slim
 
 ARG DB_USER
 ARG DB_PASSWORD
@@ -16,15 +16,15 @@ ENV BACKEND_PORT=${BACKEND_PORT}
 RUN mkdir -p /backend
 WORKDIR /backend
 
-RUN apk update
-RUN apk upgrade
-RUN apk add --update alpine-sdk gcc bash sed build-base python
+RUN apt update
+RUN apt upgrade -y
+RUN apt python -y
 RUN npm config set python /usr/bin/python
 RUN npm i -g npm
 
 COPY package.json .
 
-RUN npm i --silent
+RUN npm i
 
 COPY . /backend
 
