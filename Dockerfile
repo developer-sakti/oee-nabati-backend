@@ -18,7 +18,7 @@ WORKDIR /backend
 
 RUN apt update
 RUN apt upgrade -y
-RUN apt python -y
+RUN apt install python -y
 RUN npm config set python /usr/bin/python
 RUN npm i -g npm
 
