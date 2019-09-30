@@ -7,32 +7,29 @@ import { Crud, CrudController, Override } from '@nestjsx/crud';
 import { InitialSku } from './initial-sku.entity';
 
 @Crud({
-    model : {
-        type: InitialSku,
-    },
-    routes : {
-        only : [
-            'getManyBase',
-            'getOneBase'
-        ]
-    }
+  model: {
+    type: InitialSku,
+  },
+  routes: {
+    only: ['getManyBase', 'getOneBase', 'createOneBase', 'updateOneBase'],
+  },
 })
-
 @ApiUseTags('initialSku')
 @ApiBearerAuth()
 @Controller('api/v1/initial-sku')
-export class InitialSkuController implements CrudController<InitialSku>{
-    constructor(public service: InitialSkuService) {
-    }
+export class InitialSkuController implements CrudController<InitialSku> {
+  constructor(public service: InitialSkuService) {}
 
-    @Get()
-    @Override('getManyBase')
-    @ApiResponse({ status: HttpStatus.OK, type: GetInitialSkuDto, description: 'Success!' })
-    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'InitialSku not found.' })
-    @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
-    @ApiOperation({ title: 'Get InitialSku', description: 'Get InitialSku from JWT payload.' })
-    async findAll(@Req() req): Promise<GetInitialSkuDto[]> {
-        const initialSkuList = (await this.service.findAll()).map(initialSku => new GetInitialSkuDto(initialSku));
-        return Promise.resolve(initialSkuList);
-    }
+  @Get()
+  @Override('getManyBase')
+  @ApiResponse({ status: HttpStatus.OK, type: GetInitialSkuDto, description: 'Success!' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'InitialSku not found.' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
+  @ApiOperation({ title: 'Get InitialSku', description: 'Get InitialSku from JWT payload.' })
+  async findAll(@Req() req): Promise<GetInitialSkuDto[]> {
+    const initialSkuList = (await this.service.findAll()).map(
+      initialSku => new GetInitialSkuDto(initialSku),
+    );
+    return Promise.resolve(initialSkuList);
+  }
 }

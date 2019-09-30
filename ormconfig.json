@@ -4,7 +4,7 @@
   "port": 3306,
   "username": "mygetzu",
   "password": "P@ssw0rd|mysql",
-  "database": "oee_nabati_production",
+  "database": "oee_nabati_testing",
   "entities": ["src/**/**.entity{.ts,.js}"],
   "synchronize": true
 }

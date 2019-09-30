@@ -33,7 +33,9 @@ export class InitialSkuService extends TypeOrmCrudService<InitialSku> {
 
   public async create(initialSku: InitialSku): Promise<InitialSku> {
     try {
-      return await this.initialSkuRepository.save(initialSku);
+      const save = await this.initialSkuRepository.save(initialSku);
+      //   console.log('Save = ' + save);
+      return save;
     } catch (error) {
       return Utils.NULL_RETURN;
     }

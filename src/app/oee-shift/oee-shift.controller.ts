@@ -18,109 +18,128 @@ import { AuthGuard } from '@nestjs/passport';
 @ApiBearerAuth()
 @Controller('api/v1/oee')
 export class OeeShiftController {
-    constructor(
-        private readonly rencanaProduksiService: RencanaProduksiService,
-        private readonly oeeShiftService: OeeShiftService,
-        private readonly downtimeService: DowntimeService,
-        private readonly bsService: BadstockTimbanganService,
-    ) {}
+  constructor(
+    private readonly rencanaProduksiService: RencanaProduksiService,
+    private readonly oeeShiftService: OeeShiftService,
+    private readonly downtimeService: DowntimeService,
+    private readonly bsService: BadstockTimbanganService,
+  ) {}
 
-    @Get('sector')
-    @UseGuards(AuthGuard('jwt'))
-    @ApiResponse({ status: HttpStatus.OK, type: GetOeeShiftDto, description: 'Success!' })
-    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Oee Shift not found.' })
-    @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
-    @ApiOperation({ title: 'Get Oee Shift List', description: 'Get Oee Shift List from JWT payload.' })
-    async getOeeSector(@Query() req: OeeShiftDateTimeCmd): Promise<any> {
-        let shiftId;
+  @Get('sector')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({ status: HttpStatus.OK, type: GetOeeShiftDto, description: 'Success!' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Oee Shift not found.' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
+  @ApiOperation({
+    title: 'Get Oee Shift List',
+    description: 'Get Oee Shift List from JWT payload.',
+  })
+  async getOeeSector(@Query() req: OeeShiftDateTimeCmd): Promise<any> {
+    let shiftId;
 
-        if (req.time < "14:00:00") shiftId = 1; 
-        else if (req.time < "22:00:00") shiftId = 2; 
-        else shiftId = 3; 
+    if (req.time < '14:00:00') shiftId = 1;
+    else if (req.time < '22:00:00') shiftId = 2;
+    else shiftId = 3;
 
-        let cmdOee = new OeeShiftDateShiftCmd();
-        cmdOee.date = req.date;
-        cmdOee.shiftId = shiftId;
+    let cmdOee = new OeeShiftDateShiftCmd();
+    cmdOee.date = req.date;
+    cmdOee.shiftId = shiftId;
 
-        return await this.oeeShiftService.findOeeSector(cmdOee);
+    return await this.oeeShiftService.findOeeSector(cmdOee);
+  }
+
+  @Get('tv')
+  @ApiResponse({ status: HttpStatus.OK, type: GetOeeShiftDto, description: 'Success!' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Oee Shift not found.' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
+  @ApiOperation({
+    title: 'Get Oee Shift List',
+    description: 'Get Oee Shift List from JWT payload.',
+  })
+  async getTv(@Query() req: OeeShiftDateTimeLineCmd): Promise<any> {
+    let shiftId;
+
+    if (req.time < '14:00:00') shiftId = 1;
+    else if (req.time < '22:00:00') shiftId = 2;
+    else shiftId = 3;
+
+    let cmdOee = new OeeShiftDateLineCmd();
+    cmdOee.date = req.date;
+    cmdOee.shiftId = shiftId;
+    cmdOee.lineId = req.line_id;
+
+    return await this.oeeShiftService.findByLineDateShift(cmdOee);
+  }
+
+  @Get('shift/bydate')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({ status: HttpStatus.OK, type: GetOeeShiftDto, description: 'Success!' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Oee Shift not found.' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
+  @ApiOperation({
+    title: 'Get Oee Shift List',
+    description: 'Get Oee Shift List from JWT payload.',
+  })
+  async getByDateShift(@Query() req: OeeShiftDateShiftCmd): Promise<any> {
+    let oeeshift = await this.oeeShiftService.findByDateShift(req);
+    let oee = {};
+
+    if (oeeshift == null) return Utils.NULL_RETURN;
+
+    for (var element of oeeshift) {
+      let poCmd = new RencanaProduksiFindShiftCmd();
+      poCmd.date = req.date;
+      poCmd.shift_id = req.shiftId;
+      poCmd.line_id = element.lineId;
+
+      let po = await this.rencanaProduksiService.findByLineDateShift(poCmd);
+      await Object.assign(element, {
+        po: po,
+      });
     }
 
-    @Get('tv')
-    @ApiResponse({ status: HttpStatus.OK, type: GetOeeShiftDto, description: 'Success!' })
-    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Oee Shift not found.' })
-    @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
-    @ApiOperation({ title: 'Get Oee Shift List', description: 'Get Oee Shift List from JWT payload.' })
-    async getTv(@Query() req: OeeShiftDateTimeLineCmd): Promise<any> {
-        let shiftId;
+    return {
+      date: req.date,
+      shift: req.shiftId,
+      oee_shift: oeeshift,
+    };
+  }
 
-        if (req.time < "14:00:00") shiftId = 1; 
-        else if (req.time < "22:00:00") shiftId = 2; 
-        else shiftId = 3; 
+  @Get('shift/bydate/:line_id')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({ status: HttpStatus.OK, type: GetOeeShiftDto, description: 'Success!' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Oee Shift not found.' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
+  @ApiOperation({
+    title: 'Get Oee Shift List',
+    description: 'Get Oee Shift List from JWT payload.',
+  })
+  async getByDateShiftDetails(
+    @Param('line_id') line_id: number,
+    @Query() req: OeeShiftDateShiftCmd,
+  ): Promise<any> {
+    let oeeshift = await this.oeeShiftService.findByDateShiftDetails(line_id, req);
 
-        let cmdOee = new OeeShiftDateLineCmd();
-        cmdOee.date = req.date;
-        cmdOee.shiftId = shiftId;
-        cmdOee.lineId = req.line_id;
+    let bsParams = {
+      ...req,
+      lineId: line_id,
+    };
 
-        return await this.oeeShiftService.findByLineDateShift(cmdOee);
-    }
+    let planned = await this.downtimeService.findByLineDateShiftCategory(1, line_id, req);
+    let unplanned = await this.downtimeService.findByLineDateShiftCategory(2, line_id, req);
+    let performance_loss = await this.downtimeService.findByLineDateShiftCategory(3, line_id, req);
+    let quality_loss = await this.bsService.findByDateShiftLineLimit(bsParams, 2);
 
-    @Get('shift/bydate')
-    @UseGuards(AuthGuard('jwt'))
-    @ApiResponse({ status: HttpStatus.OK, type: GetOeeShiftDto, description: 'Success!' })
-    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Oee Shift not found.' })
-    @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
-    @ApiOperation({ title: 'Get Oee Shift List', description: 'Get Oee Shift List from JWT payload.' })
-    async getByDateShift(@Query() req: OeeShiftDateShiftCmd): Promise<any> {
-        let oeeshift = await this.oeeShiftService.findByDateShift(req);
-        let oee = {};
+    let downtime_event = await this.downtimeService.findDowntimeEvent(line_id, req);
 
-        if (oeeshift == null) return Utils.NULL_RETURN;
-
-        for (var element of oeeshift) {
-            let poCmd = new RencanaProduksiFindShiftCmd();
-            poCmd.date = req.date;
-            poCmd.shift_id = req.shiftId;
-            poCmd.line_id = element.lineId;
-
-            let po = await this.rencanaProduksiService.findByLineDateShift(poCmd);
-            await Object.assign(element, {
-                po : po
-            })
-        }
-
-        return {
-            date        : req.date,
-            shift       : req.shiftId,
-            oee_shift   : oeeshift,
-        }
-    }
-
-    @Get('shift/bydate/:line_id')
-    @UseGuards(AuthGuard('jwt'))
-    @ApiResponse({ status: HttpStatus.OK, type: GetOeeShiftDto, description: 'Success!' })
-    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Oee Shift not found.' })
-    @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.' })
-    @ApiOperation({ title: 'Get Oee Shift List', description: 'Get Oee Shift List from JWT payload.' })
-    async getByDateShiftDetails(@Param("line_id") line_id : number, @Query() req: OeeShiftDateShiftCmd): Promise<any> {
-        let oeeshift = await this.oeeShiftService.findByDateShiftDetails(line_id, req);
-
-        let planned = await this.downtimeService.findByLineDateShiftCategory(1, line_id, req);
-        let unplanned = await this.downtimeService.findByLineDateShiftCategory(2, line_id, req);
-        let performance_loss = await this.downtimeService.findByLineDateShiftCategory(3, line_id, req);
-
-        let downtime_event = await this.downtimeService.findDowntimeEvent(line_id, req);
-
-        // if (oeeshift == null ) return Utils.NULL_RETURN;
-
-        return {
-            oee_shift   : oeeshift,
-            six_big_loss: {
-                planned_downtime    : planned,
-                unplanned_downtime  : unplanned,
-                performance_loss    : performance_loss
-            },
-            event : downtime_event
-        }
-    }
+    return {
+      oee_shift: oeeshift,
+      six_big_loss: {
+        availability_loss: unplanned,
+        performance_loss: performance_loss,
+        quality_loss: quality_loss,
+      },
+      event: downtime_event,
+    };
+  }
 }
