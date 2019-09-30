@@ -1,20 +1,36 @@
-FROM node:lts-slim
+FROM node:lts-alpine
+
+ARG DB_USER
+ARG DB_PASSWORD
+ARG DB_NAME
+# ARG NODE_ENV
+ARG BACKEND_PORT
+
+# ENV NODE_ENV=${NODE_ENV}
+ENV NODE_ENV=development
+ENV DB_USER=${DB_USER}
+ENV DB_PASSWORD=${DB_PASSWORD}
+ENV DB_NAME=${DB_NAME}
+ENV BACKEND_PORT=${BACKEND_PORT}
 
 RUN mkdir -p /backend
 WORKDIR /backend
 
-RUN apt update \
-    && apt upgrade -y \
-    && apt install build-essential -y \
-    && apt autoremove -y \
-    && apt clean \
-    && npm i -g npm
+RUN apk update
+RUN apk upgrade
+RUN apk add --update alpine-sdk gcc bash sed build-base python
+RUN npm config set python /usr/bin/python
+RUN npm i -g npm
+
+COPY package.json .
+
+RUN npm i --silent
 
 COPY . /backend
-RUN rm package-lock.json
 
-RUN npm i
-# RUN npm run prestart:prod
+RUN sed -i "s/DB_USER/$DB_USER/g" ormconfig.json
+RUN sed -i "s/DB_PASSWORD/$DB_PASSWORD/g" ormconfig.json
+RUN sed -i "s/DB_NAME/$DB_NAME/g" ormconfig.json
 
 EXPOSE 8081
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "start"]
