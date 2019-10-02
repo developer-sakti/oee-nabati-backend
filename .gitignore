@@ -390,5 +390,5 @@ Temporary Items
 docker-compose.yml
 .env
 dist
-.ormconfig.json
+ormconfig.json
 src/main.ts

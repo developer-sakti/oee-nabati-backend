@@ -1,10 +1,10 @@
 {
   "type": "mysql",
-  "host": "database",
+  "host": "localhost",
   "port": 3306,
-  "username": "DB_USER",
-  "password": "DB_PASSWORD",
-  "database": "DB_NAME",
+  "username": "mygetzu",
+  "password": "P@ssw0rd|mysql",
+  "database": "oee_nabati_testing",
   "entities": ["src/**/**.entity{.ts,.js}"],
   "synchronize": true
 }
