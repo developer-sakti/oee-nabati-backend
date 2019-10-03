@@ -20,7 +20,7 @@ export class SchedulerSkuService extends NestSchedule {
     super();
   }
 
-  @Cron('0 31 21 * * *', {
+  @Cron('0 41 21 * * *', {
     startTime: new Date(),
     endTime: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
   })
@@ -28,9 +28,13 @@ export class SchedulerSkuService extends NestSchedule {
     const skuLists = await this.skuService.findAll();
     this.products = await this.getProducts();
 
+    console.log(this.products);
+
     await Promise.all(
       this.products.map(async (product, i) => {
         const found = skuLists.some(sku => sku.sku === product.sku);
+
+        console.log('Found same : ' + product.name);
 
         if (!found) {
           let newSku = new InitialSku({
