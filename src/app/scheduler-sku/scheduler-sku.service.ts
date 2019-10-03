@@ -20,7 +20,7 @@ export class SchedulerSkuService extends NestSchedule {
     super();
   }
 
-  @Cron('0 41 21 * * *', {
+  @Cron('0 45 21 * * *', {
     startTime: new Date(),
     endTime: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
   })
