@@ -39,31 +39,31 @@ export class InitialSku implements IInitialSku {
   public name?: string;
 
   @ApiModelProperty()
-  @Column()
+  @Column({ nullable: true })
   desc?: string;
 
   @ApiModelProperty()
-  @Column()
+  @Column({ nullable: true })
   product_id?: number;
 
   @ApiModelProperty()
-  @Column()
+  @Column({ nullable: true })
   gr?: number;
 
   @ApiModelProperty()
-  @Column()
+  @Column({ nullable: true })
   bag?: number;
 
   @ApiModelProperty()
-  @Column()
+  @Column({ nullable: true })
   pcs?: number;
 
   @ApiModelProperty()
-  @Column()
+  @Column({ nullable: true })
   bks?: number;
 
   @ApiModelProperty()
-  @Column()
+  @Column({ nullable: true })
   berat_ctn?: number;
 
   @OneToMany(type => RencanaProduksi, rencana_produksi => rencana_produksi.sku)

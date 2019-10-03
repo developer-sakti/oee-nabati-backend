@@ -20,47 +20,43 @@ export class SchedulerSkuService extends NestSchedule {
     super();
   }
 
-  @Cron('0 40 20 * * *', {
+  @Cron('0 15 21 * * *', {
     startTime: new Date(),
     endTime: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
   })
   async getSku() {
     const skuLists = await this.skuService.findAll();
-
     this.products = await this.getProducts();
-    console.log(skuLists);
 
-    // await Promise.all(
-    //   this.products.map(async (product, i) => {
-    //     const found = skuLists.some(sku => sku.id === product.id);
-    //     // await console.log('Found = ' + found);
+    await Promise.all(
+      this.products.map(async (product, i) => {
+        const found = skuLists.some(sku => sku.sku === product.sku);
 
-    //     // if (!found) {
-    //     await console.log('Product new ' + (i + 1));
+        if (!found) {
+          let newSku = new InitialSku({
+            sku: product.sku,
+            name: product.name,
+            desc: product.desc,
+          });
 
-    //     console.log('bag : ' + product.attribute.bag);
+          if (product.attribute !== null) {
+            newSku.product_id = product.attribute.product_id;
+            newSku.gr = product.attribute.gr;
+            newSku.bag = product.attribute.bag;
+            newSku.pcs = product.attribute.pcs;
+            newSku.bks = product.attribute.bks;
+            newSku.berat_ctn = product.attribute.berat_ctn;
+          }
 
-    //     let newSku = new InitialSku({
-    //       sku: product.sku,
-    //       name: product.name,
-    //       desc: product.desc,
-    //       product_id: product.attribute.product_id,
-    //       gr: product.attribute.gr,
-    //       bag: product.attribute.bag,
-    //       pcs: product.attribute.pcs,
-    //       bks: product.attribute.bks,
-    //       berat_ctn: product.attribute.berat_ctn,
-    //     });
-
-    //     try {
-    //       let save = await this.skuService.create(newSku);
-    //       await console.log('Saved !' + save);
-    //     } catch (error) {
-    //       await console.log('Save failed !');
-    //     }
-    //     // }
-    //   }),
-    // );
+          try {
+            let save = await this.skuService.create(newSku);
+            console.log('Saved !' + save.name);
+          } catch (error) {
+            console.log('Save failed !');
+          }
+        }
+      }),
+    );
   }
 
   async getProducts(): Promise<ISku[]> {
