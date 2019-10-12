@@ -1,4 +1,15 @@
-import { Controller, Get, Req, HttpStatus, Post, Body, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Req,
+  HttpStatus,
+  Post,
+  Body,
+  Query,
+  UseGuards,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import {
   ApiUseTags,
   ApiBearerAuth,
@@ -22,17 +33,28 @@ import { concat } from 'rxjs';
 import { OeeShift } from '../oee-shift/oee-shift.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { RencanaProduksiFindByPoCmd } from './cmd/rencana-produksi-find-po.command';
+import { Crud, CrudController, Override } from '@nestjsx/crud';
 
+@Crud({
+  model: {
+    type: RencanaProduksi,
+  },
+  routes: {
+    only: ['getManyBase', 'getOneBase', 'createOneBase', 'updateOneBase', 'deleteOneBase'],
+  },
+})
 @ApiUseTags('rencanaProduksi')
 @ApiBearerAuth()
 @Controller('api/v1/rencana-produksi')
-export class RencanaProduksiController {
+export class RencanaProduksiController implements CrudController<RencanaProduksi> {
   constructor(
+    public readonly service: RencanaProduksiService,
     private readonly rencanaProduksiService: RencanaProduksiService,
     private readonly oeeShiftService: OeeShiftService,
   ) {}
 
   @Get()
+  @Override('getManyBase')
   @UseGuards(AuthGuard('jwt'))
   @ApiResponse({ status: HttpStatus.OK, type: GetRencanaProduksiDto, description: 'Success!' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'RencanaProduksi not found.' })
@@ -58,7 +80,7 @@ export class RencanaProduksiController {
     description: 'Get RencanaProduksi  from JWT payload.',
   })
   async findActivePO(@Query() req: RencanaProduksiCmd): Promise<any> {
-    return await this.rencanaProduksiService.findOne(req);
+    return await this.rencanaProduksiService.findActivePo(req);
   }
 
   @Get('find')
@@ -135,6 +157,7 @@ export class RencanaProduksiController {
     title: 'Create RencanaProduksi ',
     description: 'Create RencanaProduksi from JWT payload.',
   })
+  @Override('createOneBase')
   async store(@Body() body: RencanaProduksiCreateCmd): Promise<any> {
     let process = await this.rencanaProduksiService.create(body);
     if (!process) return Utils.sendResponseSaveFailed('Rencana produksi');
@@ -169,4 +192,13 @@ export class RencanaProduksiController {
 
     return Utils.sendResponseSaveSuccess(process);
   }
+
+  //   @Delete()
+  //   @UseGuards(AuthGuard('jwt'))
+  //   async delete(@Param('id') id: number): Promise<any> {
+  //     const deleted = await this.rencanaProduksiService.delete(id);
+  //     return deleted;
+  //     // if (deleted) return Utils.sendResponseDeleteSuccess(deleted);
+  //     // else return Utils.sendResponseDeleteFailed('Rencana Produksi');
+  //   }
 }

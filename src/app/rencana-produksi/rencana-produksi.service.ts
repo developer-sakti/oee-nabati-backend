@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RencanaProduksi } from './rencana-produksi.entity';
-import { Repository, DeepPartial } from 'typeorm';
+import { Repository, DeepPartial, DeleteResult } from 'typeorm';
 import { RencanaProduksiCmd } from './cmd/rencana-produksi.command';
 import { Utils } from '@app/shared/utils';
 import { RencanaProduksiFindCmd } from './cmd/rencana-produksi-find.command';
@@ -16,13 +16,17 @@ import { RencanaProduksiFindShiftDateCmd } from './cmd/rencana-produksi-find-shi
 import { AnalysisTimePeriodicCmd } from '../analysis/cmd/analysis-time-periodic.command';
 import { raw } from 'mysql';
 import { Variable } from '@app/shared/variable';
+import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 
 @Injectable()
-export class RencanaProduksiService {
+export class RencanaProduksiService extends TypeOrmCrudService<RencanaProduksi> {
   constructor(
+    @InjectRepository(RencanaProduksi) repo,
     @InjectRepository(RencanaProduksi)
     private readonly rencanaProduksiRepository: Repository<RencanaProduksi>,
-  ) {}
+  ) {
+    super(repo);
+  }
 
   public async findAll(): Promise<RencanaProduksi[]> {
     return await this.rencanaProduksiRepository.find({
@@ -32,10 +36,19 @@ export class RencanaProduksiService {
 
   public async findById(id: number): Promise<any> {
     return await this.rencanaProduksiRepository.findOne({
-      where: {
-        id: id,
-      },
+      where: { id: id },
     });
+  }
+
+  public async delete(id: number): Promise<any> {
+    try {
+      const data = await this.rencanaProduksiRepository.findOne({
+        where: { id: id },
+      });
+      return await this.rencanaProduksiRepository.remove(data);
+    } catch (error) {
+      return Utils.NULL_RETURN;
+    }
   }
 
   public async findByPO(po: string): Promise<RencanaProduksi> {
@@ -46,7 +59,7 @@ export class RencanaProduksiService {
     });
   }
 
-  public async findOne(params: RencanaProduksiCmd): Promise<any> {
+  public async findActivePo(params: RencanaProduksiCmd): Promise<any> {
     let rencanaProduksi: RencanaProduksi;
 
     try {

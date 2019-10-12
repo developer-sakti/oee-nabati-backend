@@ -1,7 +1,7 @@
-import { InitialShift } from "@app/app/initial-shift/initial-shift.entity";
-import { Line } from "@app/app/line/line.entity";
-import { User } from "@app/app/user/user.entity";
-import { InitialSku } from "@app/app/initial-sku/initial-sku.entity";
+import { InitialShift } from '@app/app/initial-shift/initial-shift.entity';
+import { Line } from '@app/app/line/line.entity';
+import { User } from '@app/app/user/user.entity';
+import { InitialSku } from '@app/app/initial-sku/initial-sku.entity';
 
 export interface IRencanaProduksi {
   readonly id?: number;
@@ -21,8 +21,8 @@ export interface IRencanaProduksi {
   readonly bottleneck_ct?: number;
   readonly target_produksi?: number;
   readonly date?: string;
-  readonly start_po?: string; 
-  readonly end_po?: string; 
+  readonly start_po?: string;
+  readonly end_po?: string;
 
   readonly b_finishgood_qty_karton?: number;
   readonly c_total_qty_karton?: number;
@@ -34,7 +34,9 @@ export interface IRencanaProduksi {
   readonly q_rework_losses?: number;
 
   readonly q_total_quality_losses?: number;
-  
+
+  readonly is_active?: number;
+
   readonly created_at?: string;
   readonly updated_at?: string;
   readonly deleted_at?: string;

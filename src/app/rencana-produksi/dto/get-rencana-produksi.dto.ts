@@ -24,19 +24,21 @@ export class GetRencanaProduksiDto {
     this.bottleneck_ct = data.bottleneck_ct;
     this.target_produksi = data.target_produksi;
     this.date = data.date;
-    this.start_po = data.start_po; 
-    this.end_po = data.start_po; 
-  
+    this.start_po = data.start_po;
+    this.end_po = data.start_po;
+
     this.b_finishgood_qty_karton = data.b_finishgood_qty_karton;
     this.c_total_qty_karton = data.c_total_qty_karton;
-  
+
     this.d_defect_qty_karton = data.d_defect_qty_karton;
     this.e_rework_qty_karton = data.e_rework_qty_karton;
-  
+
     this.q_defect_losses = data.q_defect_losses;
     this.q_rework_losses = data.q_rework_losses;
-  
+
     this.q_total_quality_losses = data.q_total_quality_losses;
+
+    this.is_active = data.is_active;
 
     this.created_at = data.created_at;
   }
@@ -57,8 +59,8 @@ export class GetRencanaProduksiDto {
   @ApiModelProperty() bottleneck_ct: number;
   @ApiModelProperty() target_produksi: number;
   @ApiModelProperty() date: string;
-  @ApiModelProperty() start_po?: string; 
-  @ApiModelProperty() end_po?: string; 
+  @ApiModelProperty() start_po?: string;
+  @ApiModelProperty() end_po?: string;
 
   @ApiModelProperty() b_finishgood_qty_karton?: number;
   @ApiModelProperty() c_total_qty_karton?: number;
@@ -70,6 +72,8 @@ export class GetRencanaProduksiDto {
   @ApiModelProperty() q_rework_losses?: number;
 
   @ApiModelProperty() q_total_quality_losses?: number;
+
+  @ApiModelProperty() is_active?: number;
 
   @ApiModelProperty() created_at: string;
 }
