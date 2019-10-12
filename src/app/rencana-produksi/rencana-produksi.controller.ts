@@ -9,6 +9,7 @@ import {
   UseGuards,
   Delete,
   Param,
+  Patch,
 } from '@nestjs/common';
 import {
   ApiUseTags,
@@ -193,12 +194,10 @@ export class RencanaProduksiController implements CrudController<RencanaProduksi
     return Utils.sendResponseSaveSuccess(process);
   }
 
-  //   @Delete()
-  //   @UseGuards(AuthGuard('jwt'))
-  //   async delete(@Param('id') id: number): Promise<any> {
-  //     const deleted = await this.rencanaProduksiService.delete(id);
-  //     return deleted;
-  //     // if (deleted) return Utils.sendResponseDeleteSuccess(deleted);
-  //     // else return Utils.sendResponseDeleteFailed('Rencana Produksi');
-  //   }
+  @Patch('set-active/:id')
+  @UseGuards(AuthGuard('jwt'))
+  async setActive(@Param('id') id: number): Promise<any> {
+    const data = await this.rencanaProduksiService.updateIsActive(id);
+    return data;
+  }
 }

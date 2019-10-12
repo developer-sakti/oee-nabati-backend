@@ -74,6 +74,7 @@ export class RencanaProduksiService extends TypeOrmCrudService<RencanaProduksi> 
         .andWhere('rencana_produksi.start_po < :value2', { value2: params.time })
         .andWhere('rencana_produksi.end_po >= :value3', { value3: params.time })
         .andWhere('line.id = :value4', { value4: params.line_id })
+        .andWhere('rencana_produksi.is_active = 1')
         .getOne();
     } catch (error) {}
     if (!rencanaProduksi) {
@@ -364,6 +365,20 @@ export class RencanaProduksiService extends TypeOrmCrudService<RencanaProduksi> 
       return await this.rencanaProduksiRepository.save(po);
     } catch (error) {
       return Utils.NULL_RETURN;
+    }
+  }
+
+  public async updateIsActive(id: number): Promise<any> {
+    try {
+      let po = await this.rencanaProduksiRepository.findOne(id);
+
+      if (po.is_active == 0) po.is_active = 1;
+      else po.is_active = 0;
+
+      const update = await this.rencanaProduksiRepository.save(po);
+      if (update) return Utils.sendResponseUpdateSuccess(update);
+    } catch (error) {
+      return Utils.sendResponseUpdateFailed('is active PO');
     }
   }
 

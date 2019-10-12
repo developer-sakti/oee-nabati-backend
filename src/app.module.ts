@@ -26,6 +26,7 @@ import { AnalysisModule } from './app/analysis/analysis.module';
 import { ReportModule } from './app/report/report.module';
 import { ScheduleModule } from 'nest-schedule';
 import { SchedulerSkuModule } from './app/scheduler-sku/scheduler-sku.module';
+import { SeederModule } from './app/database/seeder/seeder.module';
 
 @Module({
   imports: [
