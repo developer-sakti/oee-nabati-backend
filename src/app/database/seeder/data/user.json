@@ -1,0 +1,16 @@
+[
+  {
+    "firstname": "Admin",
+    "lastname": "OEE",
+    "username": "admin",
+    "password": "$2b$10$aMCSfzybFl8jicESMVFdYORigd1kKf.KC/.fSaDozOO7YO/OzLGUW",
+    "roleId": 1
+  },
+  {
+    "firstname": "Operator",
+    "lastname": "OEE",
+    "username": "operator",
+    "password": "$2b$10$0v/t4xRxJ/A2YARzRiwsyOMx4K5S0p1J8GufVEVBETPtio361ttfS",
+    "roleId": 2
+  }
+]

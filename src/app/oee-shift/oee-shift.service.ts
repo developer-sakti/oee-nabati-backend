@@ -200,7 +200,10 @@ export class OeeShiftService {
                     date : params.date,
                     shiftId : params.shiftId
                 },
-                relations : ["shift", "line"]
+                relations : ["shift", "line"],
+                order : {
+                    "lineId":"ASC"
+                }
             })
             return data;
         } catch (error) {

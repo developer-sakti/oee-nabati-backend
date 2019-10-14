@@ -33,6 +33,28 @@ export class BadstockTimbanganService {
         }
         return data;
     }
+    public async findByDateShiftLineLimit(params : OeeShiftDateLineCmd, limit : number): Promise<any> {
+        let data: BadstockTimbangan[];
+      
+        try {
+            data = await this.repo.createQueryBuilder("badstock_timbangan")
+                                .select(['badstock_timbangan', 'rencana_produksi', 'machine', 'badstock_category'])
+                                .innerJoin("badstock_timbangan.rencana_produksi", "rencana_produksi")
+                                .innerJoin("badstock_timbangan.machine", "machine")
+                                .innerJoin("badstock_timbangan.badstock_category", "badstock_category")
+                                .andWhere("rencana_produksi.date = :value1", {value1 : params.date})
+                                .andWhere("rencana_produksi.shiftId = :value2", {value2 : params.shiftId})
+                                .andWhere("rencana_produksi.lineId = :value3", {value3 : params.lineId})
+                                .orderBy("badstock_timbangan.weight", "DESC")
+                                .limit(limit)
+                                .getMany();
+        } catch (error) {}
+
+        if (!data) {
+            return Utils.NULL_RETURN;
+        }
+        return data;
+    }
 
     public async getHistory(params : BadstockGetDateCmd): Promise<any> {
         let data: BadstockTimbangan[];
