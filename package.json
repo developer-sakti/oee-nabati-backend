@@ -32,7 +32,7 @@
     "@nestjsx/crud": "^4.2.0",
     "@nestjsx/crud-typeorm": "^4.2.0",
     "bcrypt": "^3.0.6",
-    "class-transformer": "^0.2.3",
+    "class-transformer": "^0.3.1",
     "class-validator": "^0.10.0",
     "exceljs": "^1.15.0",
     "file-saver": "^2.0.2",
